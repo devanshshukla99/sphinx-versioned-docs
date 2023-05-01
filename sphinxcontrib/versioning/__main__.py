@@ -139,9 +139,7 @@ class ClickCommand(click.Command):
     help="Don't attempt to search for nor load a local conf.py file.",
     is_flag=True,
 )
-@click.option(
-    "-N", "--no-colors", help="Disable colors in the terminal output.", is_flag=True
-)
+@click.option("-N", "--no-colors", help="Disable colors in the terminal output.", is_flag=True)
 @click.option(
     "-v",
     "--verbose",
@@ -184,9 +182,7 @@ def cli(config, **options):
 
         # Get and verify git root.
         try:
-            config.update(
-                dict(git_root=get_root(config.git_root or os.getcwd())), overwrite=True
-            )
+            config.update(dict(git_root=get_root(config.git_root or os.getcwd())), overwrite=True)
         except GitError as exc:
             log.error(exc.message)
             log.error(exc.output)
@@ -196,11 +192,7 @@ def cli(config, **options):
         if config.no_local_conf:
             config.update(dict(local_conf=None), overwrite=True)
         elif not config.local_conf:
-            candidates = [
-                p
-                for p in (os.path.join(s, "conf.py") for s in rel_source)
-                if os.path.isfile(p)
-            ]
+            candidates = [p for p in (os.path.join(s, "conf.py") for s in rel_source) if os.path.isfile(p)]
             if candidates:
                 config.update(dict(local_conf=candidates[0]), overwrite=True)
             else:
@@ -233,17 +225,13 @@ def build_options(func):
         is_flag=True,
         help="Override banner-main-ref to be the most recent committed tag.",
     )(func)
-    func = click.option(
-        "-b", "--show-banner", help="Show a warning banner.", is_flag=True
-    )(func)
+    func = click.option("-b", "--show-banner", help="Show a warning banner.", is_flag=True)(func)
     func = click.option(
         "-B",
         "--banner-main-ref",
         help="Don't show banner on this ref and point banner URLs to this ref. Default master.",
     )(func)
-    func = click.option(
-        "-i", "--invert", help="Invert/reverse order of versions.", is_flag=True
-    )(func)
+    func = click.option("-i", "--invert", help="Invert/reverse order of versions.", is_flag=True)(func)
     func = click.option(
         "-p",
         "--priority",
@@ -286,9 +274,7 @@ def build_options(func):
         multiple=True,
         help="Whitelist tags that match the pattern. Can be specified more than once.",
     )(func)
-    func = click.option("-P", "--pdf-file", help="Name of the generated PDF file.")(
-        func
-    )
+    func = click.option("-P", "--pdf-file", help="Name of the generated PDF file.")(func)
     return func
 
 
@@ -316,9 +302,7 @@ def override_root_main_ref(config, remotes, banner):
             )
         else:
             flag = "--banner-main-ref" if banner else "--root-ref"
-            log.warning(
-                "No git tags with docs found in remote. Falling back to %s value.", flag
-            )
+            log.warning("No git tags with docs found in remote. Falling back to %s value.", flag)
 
     ref = config.banner_main_ref if banner else config.root_ref
     return ref in [r["name"] for r in remotes]
@@ -391,9 +375,7 @@ def build(config, rel_source, destination, **options):
     # Get banner main ref.
     if not config.show_banner:
         config.update(
-            dict(
-                banner_greatest_tag=False, banner_main_ref=None, banner_recent_tag=False
-            ),
+            dict(banner_greatest_tag=False, banner_main_ref=None, banner_recent_tag=False),
             overwrite=True,
         )
     elif not override_root_main_ref(config, versions.remotes, True):
@@ -418,9 +400,7 @@ def build(config, rel_source, destination, **options):
     # Pre-build.
     log.info("Pre-running Sphinx to collect versions' master_doc and other info.")
     exported_root = pre_build(config.git_root, versions)
-    if config.banner_main_ref and config.banner_main_ref not in [
-        r["name"] for r in versions.remotes
-    ]:
+    if config.banner_main_ref and config.banner_main_ref not in [r["name"] for r in versions.remotes]:
         log.warning(
             "Banner main ref %s failed during pre-run. Disabling banner.",
             config.banner_main_ref,

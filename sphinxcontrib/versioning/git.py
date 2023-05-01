@@ -157,11 +157,7 @@ def run_command(local_root, command, env_var=True, pipeto=None, retry=0, environ
             )  # Might deadlock if stderr is written to a lot.
         else:
             main_output = main.communicate()[0].decode("utf-8")
-    log.debug(
-        json.dumps(
-            dict(cwd=local_root, command=command, code=main.poll(), output=main_output)
-        )
-    )
+    log.debug(json.dumps(dict(cwd=local_root, command=command, code=main.poll(), output=main_output)))
 
     # Verify success.
     if main.poll() != 0:
@@ -348,9 +344,7 @@ def export(local_root, commit, target):
                     # There used to be a check for broken symlinks here, but it was buggy
                     tar.extract(member=info, path=target)
         except tarfile.TarError as exc:
-            log.debug(
-                'Failed to extract output from "git archive" command: %s', str(exc)
-            )
+            log.debug('Failed to extract output from "git archive" command: %s', str(exc))
 
     # Run command.
     run_command(local_root, ["git", "archive", "--format=tar", commit], pipeto=extract)
@@ -422,9 +416,7 @@ def clone(local_root, new_root, remote, branch, rel_dest, exclude):
                 ],
                 retry=3,
             )
-            run_command(
-                new_root, ["git", "remote", "set-url", "--push", name, push], retry=3
-            )
+            run_command(new_root, ["git", "remote", "set-url", "--push", name, push], retry=3)
         except CalledProcessError as exc:
             raise GitError("Failed to set git remote URL.", exc.output)
 
@@ -434,9 +426,7 @@ def clone(local_root, new_root, remote, branch, rel_dest, exclude):
 
     # Resolve exclude paths.
     exclude_joined = [
-        os.path.relpath(p, new_root)
-        for e in exclude
-        for p in glob.glob(os.path.join(new_root, rel_dest, e))
+        os.path.relpath(p, new_root) for e in exclude for p in glob.glob(os.path.join(new_root, rel_dest, e))
     ]
     log.debug("Expanded %s to %s", repr(exclude), repr(exclude_joined))
 

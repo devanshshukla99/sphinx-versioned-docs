@@ -61,22 +61,14 @@ class Config(object):
 
     def __iter__(self):
         """Yield names and current values of attributes that can be set from Sphinx config files."""
-        for name in (
-            n
-            for n in dir(self)
-            if not n.startswith("_") and not callable(getattr(self, n))
-        ):
+        for name in (n for n in dir(self) if not n.startswith("_") and not callable(getattr(self, n))):
             yield name, getattr(self, name)
 
     def __repr__(self):
         """Class representation."""
         attributes = ("_program_state", "verbose", "root_ref", "overflow")
-        key_value_attrs = ", ".join(
-            "{}={}".format(a, repr(getattr(self, a))) for a in attributes
-        )
-        return "<{}.{} {}>".format(
-            self.__class__.__module__, self.__class__.__name__, key_value_attrs
-        )
+        key_value_attrs = ", ".join("{}={}".format(a, repr(getattr(self, a))) for a in attributes)
+        return "<{}.{} {}>".format(self.__class__.__module__, self.__class__.__name__, key_value_attrs)
 
     def __setitem__(self, key, value):
         """Implement Config[key] = value, updates self._program_state.
@@ -119,11 +111,7 @@ class Config(object):
         valid = {i[0] for i in self}
         for key, value in params.items():
             if not hasattr(self, key):
-                raise AttributeError(
-                    "'{}' object has no attribute '{}'".format(
-                        self.__class__.__name__, key
-                    )
-                )
+                raise AttributeError("'{}' object has no attribute '{}'".format(self.__class__.__name__, key))
             if key not in valid:
                 message = "'{}' object does not support item assignment on '{}'"
                 raise AttributeError(message.format(self.__class__.__name__, key))
@@ -179,8 +167,7 @@ class TempDir(object):
         """Recursively delete directory."""
         shutil.rmtree(
             self.name,
-            onerror=lambda *a: os.chmod(a[1], __import__("stat").S_IWRITE)
-            or os.unlink(a[1]),
+            onerror=lambda *a: os.chmod(a[1], __import__("stat").S_IWRITE) or os.unlink(a[1]),
         )
         if os.path.exists(self.name):
             raise IOError(17, "File exists: '{}'".format(self.name))

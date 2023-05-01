@@ -38,11 +38,7 @@ def read_local_conf(local_conf):
         return dict()
 
     # Filter and return.
-    return {
-        k[4:]: v
-        for k, v in config.items()
-        if k.startswith("scv_") and not k[4:].startswith("_")
-    }
+    return {k[4:]: v for k, v in config.items() if k.startswith("scv_") and not k[4:].startswith("_")}
 
 
 def gather_git_info(root, conf_rel_paths, whitelist_branches, whitelist_tags):
@@ -78,19 +74,13 @@ def gather_git_info(root, conf_rel_paths, whitelist_branches, whitelist_tags):
             log.info("Need to fetch from remote...")
             fetch_commits(root, remotes)
             try:
-                dates_paths = filter_and_date(
-                    root, conf_rel_paths, (i[0] for i in remotes)
-                )
+                dates_paths = filter_and_date(root, conf_rel_paths, (i[0] for i in remotes))
             except GitError as exc:
                 log.error(exc.message)
                 log.error(exc.output)
                 raise HandledError
     except subprocess.CalledProcessError as exc:
-        log.error(
-            json.dumps(
-                dict(command=exc.cmd, cwd=root, code=exc.returncode, output=exc.output)
-            )
-        )
+        log.error(json.dumps(dict(command=exc.cmd, cwd=root, code=exc.returncode, output=exc.output)))
         log.error("Failed to get dates for all remote commits.")
         raise HandledError
     filtered_remotes = [
@@ -153,9 +143,7 @@ def pre_build(local_root, versions):
             "Building root (before setting root_dirs) in temporary directory: %s",
             temp_dir,
         )
-        source = os.path.dirname(
-            os.path.join(exported_root, remote["sha"], remote["conf_rel_path"])
-        )
+        source = os.path.dirname(os.path.join(exported_root, remote["sha"], remote["conf_rel_path"]))
         build(source, temp_dir, versions, remote["name"], True)
         existing = os.listdir(temp_dir)
 
@@ -174,9 +162,7 @@ def pre_build(local_root, versions):
             "Partially running sphinx-build to read configuration for: %s",
             remote["name"],
         )
-        source = os.path.dirname(
-            os.path.join(exported_root, remote["sha"], remote["conf_rel_path"])
-        )
+        source = os.path.dirname(os.path.join(exported_root, remote["sha"], remote["conf_rel_path"]))
         try:
             config = read_config(source, remote["name"])
         except HandledError:
@@ -202,17 +188,13 @@ def build_all(exported_root, destination, versions):
         # Build root.
         remote = versions[Config.from_context().root_ref]
         log.info("Building root: %s", remote["name"])
-        source = os.path.dirname(
-            os.path.join(exported_root, remote["sha"], remote["conf_rel_path"])
-        )
+        source = os.path.dirname(os.path.join(exported_root, remote["sha"], remote["conf_rel_path"]))
         build(source, destination, versions, remote["name"], True)
 
         # Build all refs.
         for remote in list(versions.remotes):
             log.info("Building ref: %s", remote["name"])
-            source = os.path.dirname(
-                os.path.join(exported_root, remote["sha"], remote["conf_rel_path"])
-            )
+            source = os.path.dirname(os.path.join(exported_root, remote["sha"], remote["conf_rel_path"]))
             target = os.path.join(destination, remote["root_dir"])
             try:
                 build(source, target, versions, remote["name"], False)

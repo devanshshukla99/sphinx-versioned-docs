@@ -55,9 +55,7 @@ class EventHandlers(object):
         templates_dir = os.path.join(os.path.dirname(__file__), "_templates")
         if app.builder.name != "latex":
             app.builder.templates.pathchain.insert(0, templates_dir)
-            app.builder.templates.loaders.insert(
-                0, SphinxFileSystemLoader(templates_dir)
-            )
+            app.builder.templates.loaders.insert(0, SphinxFileSystemLoader(templates_dir))
             app.builder.templates.templatepathlen += 1
 
         # Add versions.html to sidebar.
@@ -65,9 +63,7 @@ class EventHandlers(object):
             # default_sidebars was deprecated in Sphinx 1.6+, so only use it if possible (to maintain
             # backwards compatibility), else don't use it.
             try:
-                app.config.html_sidebars[
-                    "**"
-                ] = StandaloneHTMLBuilder.default_sidebars + ["versions.html"]
+                app.config.html_sidebars["**"] = StandaloneHTMLBuilder.default_sidebars + ["versions.html"]
             except AttributeError:
                 app.config.html_sidebars["**"] = ["versions.html"]
         elif "versions.html" not in app.config.html_sidebars["**"]:
@@ -81,10 +77,7 @@ class EventHandlers(object):
         :param sphinx.environment.BuildEnvironment env: Sphinx build environment.
         """
         if cls.ABORT_AFTER_READ:
-            config = {
-                n: getattr(app.config, n)
-                for n in (a for a in dir(app.config) if a.startswith("scv_"))
-            }
+            config = {n: getattr(app.config, n) for n in (a for a in dir(app.config) if a.startswith("scv_"))}
             config["found_docs"] = tuple(str(d) for d in env.found_docs)
             config["master_doc"] = str(app.config.master_doc)
             cls.ABORT_AFTER_READ.put(config)
@@ -104,9 +97,7 @@ class EventHandlers(object):
         cls.VERSIONS.context = context
         versions = cls.VERSIONS
         this_remote = versions[cls.CURRENT_VERSION]
-        banner_main_remote = (
-            versions[cls.BANNER_MAIN_VERSION] if cls.SHOW_BANNER else None
-        )
+        banner_main_remote = versions[cls.BANNER_MAIN_VERSION] if cls.SHOW_BANNER else None
 
         # Update Jinja2 context.
         context["bitbucket_version"] = cls.CURRENT_VERSION
@@ -120,9 +111,7 @@ class EventHandlers(object):
         context["scv_banner_main_ref_is_tag"] = (
             banner_main_remote["kind"] == "tags" if cls.SHOW_BANNER else None
         )
-        context["scv_banner_main_version"] = (
-            banner_main_remote["name"] if cls.SHOW_BANNER else None
-        )
+        context["scv_banner_main_version"] = banner_main_remote["name"] if cls.SHOW_BANNER else None
         context["scv_banner_recent_tag"] = cls.BANNER_RECENT_TAG
         context["scv_is_branch"] = this_remote["kind"] == "heads"
         context["scv_is_greatest_tag"] = this_remote == versions.greatest_tag_remote
@@ -152,13 +141,9 @@ class EventHandlers(object):
         if app.config.html_last_updated_fmt is not None:
             file_path = app.env.doc2path(pagename)
             if os.path.isfile(file_path):
-                lufmt = app.config.html_last_updated_fmt or getattr(locale, "_")(
-                    "%b %d, %Y"
-                )
+                lufmt = app.config.html_last_updated_fmt or getattr(locale, "_")("%b %d, %Y")
                 mtime = datetime.datetime.fromtimestamp(os.path.getmtime(file_path))
-                context["last_updated"] = format_date(
-                    lufmt, mtime, language=app.config.language
-                )
+                context["last_updated"] = format_date(lufmt, mtime, language=app.config.language)
 
 
 def setup(app):
@@ -170,9 +155,7 @@ def setup(app):
     :rtype: dict
     """
     # Used internally. For rebuilding all pages when one or versions fail.
-    app.add_config_value(
-        "sphinxcontrib_versioning_versions", SC_VERSIONING_VERSIONS, "html"
-    )
+    app.add_config_value("sphinxcontrib_versioning_versions", SC_VERSIONING_VERSIONS, "html")
 
     # Needed for banner.
     app.config.html_static_path.append(STATIC_DIR)
@@ -218,10 +201,7 @@ def _build(argv, config, versions, current_name, is_root):
     EventHandlers.IS_ROOT = is_root
     EventHandlers.VERSIONS = versions
     SC_VERSIONING_VERSIONS[:] = [
-        p
-        for r in versions.remotes
-        for p in sorted(r.items())
-        if p[0] not in ("sha", "date")
+        p for r in versions.remotes for p in sorted(r.items()) if p[0] not in ("sha", "date")
     ]
 
     # Update argv.
@@ -284,9 +264,7 @@ def build(source, target, versions, current_name, is_root):
     config = Config.from_context()
 
     log.debug("Running sphinx-build for %s with args: %s", current_name, str(argv))
-    child = multiprocessing.Process(
-        target=_build, args=(argv, config, versions, current_name, is_root)
-    )
+    child = multiprocessing.Process(target=_build, args=(argv, config, versions, current_name, is_root))
     child.start()
     child.join()  # Block.
     if child.exitcode != 0:
@@ -312,9 +290,7 @@ def read_config(source, current_name):
     with TempDir() as temp_dir:
         argv = (source, temp_dir)
         log.debug("Running sphinx-build for config values with args: %s", str(argv))
-        child = multiprocessing.Process(
-            target=_read_config, args=(argv, config, current_name, queue)
-        )
+        child = multiprocessing.Process(target=_read_config, args=(argv, config, current_name, queue))
         child.start()
         child.join()  # Block.
         if child.exitcode != 0:
