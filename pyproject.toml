@@ -1,0 +1,59 @@
+[build-system]
+requires = [
+         "setuptools_scm",
+         "wheel"
+         ]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+write_to = "sphinxcontrib/_version.py"
+
+[tool.black]
+line-length = 110
+
+[tool.towncrier]
+    package = "sphinx_versioned_docs"
+    filename = "CHANGELOG.rst"
+    directory = "changelog/"
+    issue_format = "`#{issue} <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/{issue}>`__"
+    title_format = "{version} ({project_date})"
+
+    [[tool.towncrier.type]]
+        directory = "breaking"
+        name = "Backwards Incompatible Changes"
+        showcontent = true
+
+    [[tool.towncrier.type]]
+        directory = "api"
+        name = "API Changes"
+        showcontent = true
+
+    [[tool.towncrier.type]]
+      directory = "removal"
+      name = "Deprecations and Removals"
+      showcontent = true
+
+    [[tool.towncrier.type]]
+      directory = "feature"
+      name = "Features"
+      showcontent = true
+
+    [[tool.towncrier.type]]
+      directory = "bugfix"
+      name = "Bug Fixes"
+      showcontent = true
+
+    [[tool.towncrier.type]]
+      directory = "docs"
+      name = "Added/Improved Documentation"
+      showcontent = true
+
+    [[tool.towncrier.type]]
+      directory = "docfix"
+      name = "Documentation Fixes"
+      showcontent = true
+
+    [[tool.towncrier.type]]
+      directory = "trivial"
+      name = "Trivial/Internal Changes"
+      showcontent = true
