@@ -4,7 +4,7 @@ sphinx-versioned-docs
 
 Sphinx extension that allows building versioned docs for self-hosting.
 
-This project is a fork of `Smile-SA/sphinx-versions https://github.com/Smile-SA/sphinx-versions`_
+This project is a fork of `Smile-SA/sphinx-versions <https://github.com/Smile-SA/sphinx-versions>`_, which is a fork of `sphinxcontrib-versioning <https://github.com/Robpol86/sphinxcontrib-versioning>`_.
 
 How to use
 ==========
