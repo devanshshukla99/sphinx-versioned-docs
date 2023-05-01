@@ -21,9 +21,9 @@ class ColorFormatter(logging.Formatter):
         self.verbose = verbose
         self.colors = colors
         if verbose:
-            fmt = '%(asctime)s %(process)-5d %(levelname)-8s %(name)-40s %(message)s'
+            fmt = "%(asctime)s %(process)-5d %(levelname)-8s %(name)-40s %(message)s"
         else:
-            fmt = '%(message)s'
+            fmt = "%(message)s"
         super(ColorFormatter, self).__init__(fmt)
 
     def format(self, record):
@@ -38,7 +38,7 @@ class ColorFormatter(logging.Formatter):
             return formatted
 
         # Arrow.
-        formatted = '=> ' + formatted
+        formatted = "=> " + formatted
 
         # Colors.
         if not self.colors:
@@ -68,7 +68,13 @@ def setup_logging(verbose=0, colors=False, name=None):
     handler_stdout = logging.StreamHandler(sys.stdout)
     handler_stdout.setFormatter(formatter)
     handler_stdout.setLevel(logging.DEBUG)
-    handler_stdout.addFilter(type('', (logging.Filter,), {'filter': staticmethod(lambda r: r.levelno <= logging.INFO)}))
+    handler_stdout.addFilter(
+        type(
+            "",
+            (logging.Filter,),
+            {"filter": staticmethod(lambda r: r.levelno <= logging.INFO)},
+        )
+    )
     root_logger.addHandler(handler_stdout)
 
     handler_stderr = logging.StreamHandler(sys.stderr)
