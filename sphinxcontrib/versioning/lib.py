@@ -30,12 +30,12 @@ class Config(object):
         self.show_banner = False
 
         # Strings.
-        self.banner_main_ref = 'master'
+        self.banner_main_ref = "master"
         self.chdir = None
         self.git_root = None
         self.local_conf = None
         self.priority = None
-        self.root_ref = 'master'
+        self.root_ref = "master"
 
         # Tuples.
         self.overflow = tuple()
@@ -47,7 +47,7 @@ class Config(object):
         self.verbose = 0
 
         # Custom.
-        self.pdf_file = None # Name of the pdf
+        self.pdf_file = None  # Name of the pdf
 
     def __contains__(self, item):
         """Implement 'key in Config'.
@@ -61,14 +61,22 @@ class Config(object):
 
     def __iter__(self):
         """Yield names and current values of attributes that can be set from Sphinx config files."""
-        for name in (n for n in dir(self) if not n.startswith('_') and not callable(getattr(self, n))):
+        for name in (
+            n
+            for n in dir(self)
+            if not n.startswith("_") and not callable(getattr(self, n))
+        ):
             yield name, getattr(self, name)
 
     def __repr__(self):
         """Class representation."""
-        attributes = ('_program_state', 'verbose', 'root_ref', 'overflow')
-        key_value_attrs = ', '.join('{}={}'.format(a, repr(getattr(self, a))) for a in attributes)
-        return '<{}.{} {}>'.format(self.__class__.__module__, self.__class__.__name__, key_value_attrs)
+        attributes = ("_program_state", "verbose", "root_ref", "overflow")
+        key_value_attrs = ", ".join(
+            "{}={}".format(a, repr(getattr(self, a))) for a in attributes
+        )
+        return "<{}.{} {}>".format(
+            self.__class__.__module__, self.__class__.__name__, key_value_attrs
+        )
 
     def __setitem__(self, key, value):
         """Implement Config[key] = value, updates self._program_state.
@@ -111,13 +119,17 @@ class Config(object):
         valid = {i[0] for i in self}
         for key, value in params.items():
             if not hasattr(self, key):
-                raise AttributeError("'{}' object has no attribute '{}'".format(self.__class__.__name__, key))
+                raise AttributeError(
+                    "'{}' object has no attribute '{}'".format(
+                        self.__class__.__name__, key
+                    )
+                )
             if key not in valid:
                 message = "'{}' object does not support item assignment on '{}'"
                 raise AttributeError(message.format(self.__class__.__name__, key))
             if key in self._already_set:
                 if ignore_set:
-                    log.debug('%s already set in config, skipping.', key)
+                    log.debug("%s already set in config, skipping.", key)
                     continue
                 if not overwrite:
                     message = "'{}' object does not support item re-assignment on '{}'"
@@ -135,7 +147,7 @@ class HandledError(click.ClickException):
 
     def show(self, **_):
         """Error messages should be logged before raising this exception."""
-        logging.critical('Failure.')
+        logging.critical("Failure.")
 
 
 class TempDir(object):
@@ -146,7 +158,7 @@ class TempDir(object):
 
         :param bool defer_atexit: cleanup() to atexit instead of after garbage collection.
         """
-        self.name = tempfile.mkdtemp('sphinxcontrib_versioning')
+        self.name = tempfile.mkdtemp("sphinxcontrib_versioning")
         if defer_atexit:
             atexit.register(shutil.rmtree, self.name, True)
             return
@@ -165,6 +177,10 @@ class TempDir(object):
 
     def cleanup(self):
         """Recursively delete directory."""
-        shutil.rmtree(self.name, onerror=lambda *a: os.chmod(a[1], __import__('stat').S_IWRITE) or os.unlink(a[1]))
+        shutil.rmtree(
+            self.name,
+            onerror=lambda *a: os.chmod(a[1], __import__("stat").S_IWRITE)
+            or os.unlink(a[1]),
+        )
         if os.path.exists(self.name):
             raise IOError(17, "File exists: '{}'".format(self.name))

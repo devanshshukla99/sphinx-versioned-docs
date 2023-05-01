@@ -3,7 +3,9 @@
 import re
 import os
 
-RE_SEMVER = re.compile(r'^v?V?(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:\.(\d+))?(?:\.(\d+))?(?:\.(\d+))?(?:\.(\d+))?([\w.+-]*)$')
+RE_SEMVER = re.compile(
+    r"^v?V?(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:\.(\d+))?(?:\.(\d+))?(?:\.(\d+))?(?:\.(\d+))?([\w.+-]*)$"
+)
 
 
 def semvers(names):
@@ -62,25 +64,27 @@ def multi_sort(remotes, sort):
     exploded_semver = list()
 
     # Convert name to int if alpha is in sort.
-    if 'alpha' in sort:
-        alpha_max_len = max(len(r['name']) for r in remotes)
-        for name in (r['name'] for r in remotes):
-            exploded_alpha.append([ord(i) for i in name] + [0] * (alpha_max_len - len(name)))
+    if "alpha" in sort:
+        alpha_max_len = max(len(r["name"]) for r in remotes)
+        for name in (r["name"] for r in remotes):
+            exploded_alpha.append(
+                [ord(i) for i in name] + [0] * (alpha_max_len - len(name))
+            )
 
     # Parse versions if semver is in sort.
-    if 'semver' in sort:
-        exploded_semver = semvers(r['name'] for r in remotes)
+    if "semver" in sort:
+        exploded_semver = semvers(r["name"] for r in remotes)
 
     # Build sort_mapping dict.
     sort_mapping = dict()
     for i, remote in enumerate(remotes):
         key = list()
         for sort_by in sort:
-            if sort_by == 'alpha':
+            if sort_by == "alpha":
                 key.extend(exploded_alpha[i])
-            elif sort_by == 'time':
-                key.append(-remote['date'])
-            elif sort_by == 'semver':
+            elif sort_by == "time":
+                key.append(-remote["date"])
+            elif sort_by == "semver":
                 key.extend(exploded_semver[i])
         sort_mapping[id(remote)] = key
 
@@ -107,17 +111,20 @@ class Versions(object):
         :param str priority: May be "branches" or "tags". Groups either before the other. Maintains order otherwise.
         :param bool invert: Invert sorted/grouped remotes at the end of processing.
         """
-        self.remotes = [dict(
-            id='/'.join(r[2:0:-1]),  # str; kind/name
-            sha=r[0],  # str
-            name=r[1],  # str
-            kind=r[2],  # str
-            date=r[3],  # int
-            conf_rel_path=r[4],  # str
-            found_docs=tuple(),  # tuple of str
-            master_doc='contents',  # str
-            root_dir=r[1],  # str
-        ) for r in remotes]
+        self.remotes = [
+            dict(
+                id="/".join(r[2:0:-1]),  # str; kind/name
+                sha=r[0],  # str
+                name=r[1],  # str
+                kind=r[2],  # str
+                date=r[3],  # int
+                conf_rel_path=r[4],  # str
+                found_docs=tuple(),  # tuple of str
+                master_doc="contents",  # str
+                root_dir=r[1],  # str
+            )
+            for r in remotes
+        ]
         self.context = dict()
         self.greatest_tag_remote = None
         self.recent_branch_remote = None
@@ -130,10 +137,10 @@ class Versions(object):
             multi_sort(self.remotes, [s.strip().lower() for s in sort])
 
         # Priority.
-        if priority == 'branches':
-            self.remotes.sort(key=lambda r: 1 if r['kind'] == 'tags' else 0)
-        elif priority == 'tags':
-            self.remotes.sort(key=lambda r: 0 if r['kind'] == 'tags' else 1)
+        if priority == "branches":
+            self.remotes.sort(key=lambda r: 1 if r["kind"] == "tags" else 0)
+        elif priority == "tags":
+            self.remotes.sort(key=lambda r: 0 if r["kind"] == "tags" else 1)
 
         # Invert.
         if invert:
@@ -142,14 +149,18 @@ class Versions(object):
         # Get significant remotes.
         if self.remotes:
             remotes = self.remotes[:]
-            multi_sort(remotes, ('time',))
+            multi_sort(remotes, ("time",))
             self.recent_remote = remotes[0]
-            self.recent_branch_remote = ([r for r in remotes if r['kind'] != 'tags'] or [None])[0]
-            self.recent_tag_remote = ([r for r in remotes if r['kind'] == 'tags'] or [None])[0]
+            self.recent_branch_remote = (
+                [r for r in remotes if r["kind"] != "tags"] or [None]
+            )[0]
+            self.recent_tag_remote = (
+                [r for r in remotes if r["kind"] == "tags"] or [None]
+            )[0]
             if self.recent_tag_remote:
-                multi_sort(remotes, ('semver',))
-                greatest_tag_remote = [r for r in remotes if r['kind'] == 'tags'][0]
-                if RE_SEMVER.search(greatest_tag_remote['name']):
+                multi_sort(remotes, ("semver",))
+                greatest_tag_remote = [r for r in remotes if r["kind"] == "tags"][0]
+                if RE_SEMVER.search(greatest_tag_remote["name"]):
                     self.greatest_tag_remote = greatest_tag_remote
 
     def __bool__(self):
@@ -167,7 +178,7 @@ class Versions(object):
     def __getitem__(self, item):
         """Retrieve a version dict from self.remotes by any of its attributes."""
         # First assume item is an attribute.
-        for key in ('id', 'sha', 'name', 'date'):
+        for key in ("id", "sha", "name", "date"):
             for remote in self.remotes:
                 if remote[key] == item:
                     return remote
@@ -178,7 +189,7 @@ class Versions(object):
             length = 0
         if length >= 5:
             for remote in self.remotes:
-                if item in remote['sha']:
+                if item in remote["sha"]:
                     return remote
         # Finally assume it's an index. Raises IndexError if item is int.
         try:
@@ -191,18 +202,26 @@ class Versions(object):
     def __iter__(self):
         """Yield name and urls of branches and tags."""
         for remote in self.remotes:
-            name = remote['name']
+            name = remote["name"]
             yield name, self.vpathto(name)
 
     @property
     def branches(self):
         """Return list of (name and urls, pdf_urls) only branches."""
-        return [(r['name'], self.vpathto(r['name']), self.pathtopdf(r['name'])) for r in self.remotes if r['kind'] == 'heads']
+        return [
+            (r["name"], self.vpathto(r["name"]), self.pathtopdf(r["name"]))
+            for r in self.remotes
+            if r["kind"] == "heads"
+        ]
 
     @property
     def tags(self):
         """Return list of (name and urls, pdf_urls) only tags."""
-        return [(r['name'], self.vpathto(r['name']), self.pathtopdf(r['name'])) for r in self.remotes if r['kind'] == 'tags']
+        return [
+            (r["name"], self.vpathto(r["name"]), self.pathtopdf(r["name"]))
+            for r in self.remotes
+            if r["kind"] == "tags"
+        ]
 
     def vhasdoc(self, other_version):
         """Return True if the other version has the current document. Like Sphinx's hasdoc().
@@ -214,9 +233,9 @@ class Versions(object):
         :return: If current document is in the other version.
         :rtype: bool
         """
-        if self.context['current_version'] == other_version:
+        if self.context["current_version"] == other_version:
             return True
-        return self.context['pagename'] in self[other_version]['found_docs']
+        return self.context["pagename"] in self[other_version]["found_docs"]
 
     def vpathto(self, other_version):
         """Return relative path to current document in another version. Like Sphinx's pathto().
@@ -230,28 +249,30 @@ class Versions(object):
         :return: Relative path.
         :rtype: str
         """
-        is_root = self.context['scv_is_root']
-        pagename = self.context['pagename']
-        if self.context['current_version'] == other_version and not is_root:
-            return '{}.html'.format(pagename.split('/')[-1])
+        is_root = self.context["scv_is_root"]
+        pagename = self.context["pagename"]
+        if self.context["current_version"] == other_version and not is_root:
+            return "{}.html".format(pagename.split("/")[-1])
 
         other_remote = self[other_version]
-        other_root_dir = other_remote['root_dir']
-        components = ['..'] * pagename.count('/')
-        components += [other_root_dir] if is_root else ['..', other_root_dir]
-        components += [pagename if self.vhasdoc(other_version) else other_remote['master_doc']]
-        return '{}.html'.format(__import__('posixpath').join(*components))
+        other_root_dir = other_remote["root_dir"]
+        components = [".."] * pagename.count("/")
+        components += [other_root_dir] if is_root else ["..", other_root_dir]
+        components += [
+            pagename if self.vhasdoc(other_version) else other_remote["master_doc"]
+        ]
+        return "{}.html".format(__import__("posixpath").join(*components))
 
     def pathtopdf(self, other_version):
-        is_root = self.context['scv_is_root']
-        pagename = self.context['pagename']
+        is_root = self.context["scv_is_root"]
+        pagename = self.context["pagename"]
         # if self.context['current_version'] == other_version and not is_root:
         #     return '{}.html'.format(pagename.split('/')[-1])
 
         other_remote = self[other_version]
-        other_root_dir = other_remote['root_dir']
-        components = ['..'] * pagename.count('/')
-        components += [other_root_dir] if is_root else ['..', other_root_dir]
+        other_root_dir = other_remote["root_dir"]
+        components = [".."] * pagename.count("/")
+        components += [other_root_dir] if is_root else ["..", other_root_dir]
         components += ["_static"]
         components += [os.path.splitext(self.pdf_file)[0]]
-        return '{}.pdf'.format(__import__('posixpath').join(*components))
+        return "{}.pdf".format(__import__("posixpath").join(*components))
