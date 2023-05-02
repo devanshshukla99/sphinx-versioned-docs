@@ -61,6 +61,7 @@ class VersionedDocs:
     def _get_versions_to_build(self):
         self._versions_to_build.extend(self.versions.repo.tags)
         self._versions_to_build.extend(self.versions.repo.branches)
+        log.info(f"versions to build: {self._versions_to_build}")
 
     def _handle_paths(self):
         if self.chdir:
