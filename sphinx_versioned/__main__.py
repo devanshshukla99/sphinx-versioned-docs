@@ -37,7 +37,6 @@ class ConfigInject(SphinxConfig):
 class VersionedDocs:
     def __init__(self, config) -> None:
         self.config = config
-        print(config)
         self._parse_config(config)
 
         self._versions_to_build = []
@@ -57,11 +56,17 @@ class VersionedDocs:
         for varname, value in config.items():
             setattr(self, varname, value)
         return True
+    
+    def _log_all_version_to_build(self) -> bool:
+        for tag in self._versions_to_build:
+            log.info(f"found version: {tag.name}")
+        return True
 
-    def _get_versions_to_build(self):
+
+    def _get_versions_to_build(self) -> bool:
         self._versions_to_build.extend(self.versions.repo.tags)
         self._versions_to_build.extend(self.versions.repo.branches)
-        log.info(f"versions to build: {self._versions_to_build}")
+        return self._log_all_version_to_build()
 
     def _handle_paths(self):
         if self.chdir:
@@ -107,8 +112,6 @@ class VersionedDocs:
             log.success("build succeded ;)")
 
     def _build_all_version(self):
-        log.debug(f"Tags: {self.versions.repo.tags}")
-
         # get active branch
         self._active_branch = self.versions.active_branch
 

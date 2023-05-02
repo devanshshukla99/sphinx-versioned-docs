@@ -61,7 +61,7 @@ class EventHandlers(object):
         elif "versions.html" not in app.config.html_sidebars["**"]:
             app.config.html_sidebars["**"].append("versions.html")
 
-        log.error(f"Theme: {app.config.html_theme}")
+        log.info(f"Theme: {app.config.html_theme}")
         # Insert flyout script
         if app.config.html_theme == "sphinx_rtd_theme":
             app.add_js_file("_rtd_versions.js")
