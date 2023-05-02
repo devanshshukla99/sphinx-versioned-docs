@@ -2,7 +2,7 @@
 sphinx-versioned-docs
 =====================
 
-|build| |status|
+|build| |codestyle| |docs|
 
 Sphinx extension that allows building versioned docs for self-hosting.
 
@@ -22,3 +22,7 @@ Most basic usage:
 
 .. |codestyle| image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/psf/black
+
+.. |docs| image:: https://readthedocs.org/projects/sphinx-versioned-docs/badge/?version=latest
+    :target: https://sphinx-versioned-docs.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
