@@ -1,4 +1,4 @@
-<!-- {% if html_theme == 'sphinx_rtd_theme' %} -->
+{% if html_theme == "sphinx_rtd_theme" %}
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
   <span class="rst-current-version" data-toggle="rst-current-version">
     <span class="fa fa-book"> Other Versions</span>
@@ -24,43 +24,54 @@
     {%- endif %}
   </div>
 </div>
-<!-- {% elif html_theme == 'rasabaster' %}
+{% elif html_theme == "alabaster" %}
 <div class="versions">
-    <p class="caption">Versions</p>
-    <div class="versions-content">
-      <div>
-        <span class="current-version">
-          viewing: {{ current_version }}
-        </span>
-      </div>
-      <div class="other-versions">
-          {%- if versions.tags %}
-          <p>tags</p>
-          <div class="dropdown-content">
-            {%- for name, url, pdf_url in versions.tags %}
-              <a href="{{ url }}">{{ name }}</a>
-            {%- endfor %}
-          </div>
-          {%- endif %}
-          {%- if versions.branches %}
-          <p>branches</p>
-          <div class="dropdown-content">
-            {%- for name, url, pdf_url in versions.branches %}
-              <a href="{{ url }}">{{ name }}</a>
-            {%- endfor %}
-          </div>
-          {%- endif %}
-      </div>
+  <p class="caption">Versions</p>
+  <div class="versions-content">
+    <div>
+      <span class="current-version">
+        viewing: {{ current_version }}
+      </span>
     </div>
+    <div class="other-versions">
+      {%- if versions.tags %}
+      <p>tags</p>
+      <div class="dropdown-content">
+        {%- for name, url in versions.tags.items() %}
+        <a href="{{ url }}">{{ name }}</a>
+        {%- endfor %}
+      </div>
+      {%- endif %}
+      {%- if versions.branches %}
+      <p>branches</p>
+      <div class="dropdown-content">
+        {%- for name, url in versions.branches.items() %}
+        <a href="{{ url }}">{{ name }}</a>
+        {%- endfor %}
+      </div>
+      {%- endif %}
+    </div>
+  </div>
 </div>
-
 {% else %}
 <h3>{{ _('Versions') }}</h3>
--->
-<!-- {{ versions }} 
+{{ versions }}
 <ul>
-  {% for name, url in versions %}
-  <li><a href="{{ url }}">{{ name }}</a></li>
-  {% endfor %}
+  {%- if versions.tags %}
+  <p>tags</p>
+  <div class="dropdown-content">
+    {%- for name, url in versions.tags.items() %}
+    <a href="{{ url }}">{{ name }}</a>
+    {%- endfor %}
+  </div>
+  {%- endif %}
+  {%- if versions.branches %}
+  <p>branches</p>
+  <div class="dropdown-content">
+    {%- for name, url in versions.branches.items() %}
+    <a href="{{ url }}">{{ name }}</a>
+    {%- endfor %}
+  </div>
+  {%- endif %}
 </ul>
-{% endif %} -->
+{% endif %}
