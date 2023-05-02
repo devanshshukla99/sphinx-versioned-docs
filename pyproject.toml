@@ -6,7 +6,7 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
-write_to = "sphinxcontrib/_version.py"
+write_to = "sphinx_versioned/_version.py"
 
 [tool.black]
 line-length = 110

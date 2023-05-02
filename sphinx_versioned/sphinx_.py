@@ -1,147 +1,19 @@
 """Interface with Sphinx."""
 
-import pathlib
-import datetime
-import logging
 import multiprocessing
 import os
-import typer
 import sys
-from shutil import copyfile, rmtree
 
 from loguru import logger as log
-from sphinx import application, locale
-from sphinx.cmd.build import build_main, make_main
 from sphinx.builders.html import StandaloneHTMLBuilder
 from sphinx.config import Config as SphinxConfig
-from sphinx.errors import SphinxError
 from sphinx.jinja2glue import SphinxFileSystemLoader
 
-from sphinxcontrib.versioning import __version__
-from sphinxcontrib.versioning.lib import HandledError, TempDir
+from sphinx_versioned._version import __version__
 from sphinx.util.fileutil import copy_asset_file
 
 SC_VERSIONING_VERSIONS = list()  # Updated after forking.
 STATIC_DIR = os.path.join(os.path.dirname(__file__), "_static")
-CLICK_COMMAND = None
-
-
-class Config(object):
-    """The global configuration and state of the running program."""
-
-    def __init__(self):
-        """Constructor."""
-        self._already_set = set()
-        self._program_state = dict()
-
-        # Booleans.
-        self.banner_greatest_tag = False
-        self.banner_recent_tag = False
-        self.greatest_tag = False
-        self.invert = False
-        self.no_colors = False
-        self.no_local_conf = False
-        self.recent_tag = False
-        self.show_banner = False
-
-        # Strings.
-        self.banner_main_ref = "master"
-        self.chdir = None
-        self.git_root = None
-        self.local_conf = None
-        self.priority = None
-        self.root_ref = "master"
-
-        # Tuples.
-        self.overflow = tuple()
-        self.sort = tuple()
-        self.whitelist_branches = tuple()
-        self.whitelist_tags = tuple()
-
-        # Integers.
-        self.verbose = 0
-
-        # Custom.
-        self.pdf_file = None  # Name of the pdf
-
-    def __contains__(self, item):
-        """Implement 'key in Config'.
-
-        :param str item: Key to search for.
-
-        :return: If item in self._program_state.
-        :rtype: bool
-        """
-        return item in self._program_state
-
-    def __iter__(self):
-        """Yield names and current values of attributes that can be set from Sphinx config files."""
-        for name in (n for n in dir(self) if not n.startswith("_") and not callable(getattr(self, n))):
-            yield name, getattr(self, name)
-
-    def __repr__(self):
-        """Class representation."""
-        attributes = ("_program_state", "verbose", "root_ref", "overflow")
-        key_value_attrs = ", ".join("{}={}".format(a, repr(getattr(self, a))) for a in attributes)
-        return "<{}.{} {}>".format(self.__class__.__module__, self.__class__.__name__, key_value_attrs)
-
-    def __setitem__(self, key, value):
-        """Implement Config[key] = value, updates self._program_state.
-
-        :param str key: Key to set in self._program_state.
-        :param value: Value to set in self._program_state.
-        """
-        self._program_state[key] = value
-
-    @classmethod
-    def from_context(cls):
-        """Retrieve this class' instance from the current Click context.
-
-        :return: Instance of this class.
-        :rtype: Config
-        """
-        try:
-            ctx = CLICK_COMMAND.get_current_context()
-            print("*************************")
-            print(ctx)
-            print("*************************")
-        except RuntimeError:
-            return cls()
-        return ctx.find_object(cls)
-
-    def pop(self, *args):
-        """Pop item from self._program_state.
-
-        :param iter args: Passed to self._program_state.
-
-        :return: Object from self._program_state.pop().
-        """
-        return self._program_state.pop(*args)
-
-    def update(self, params, ignore_set=False, overwrite=False):
-        """Set instance values from dictionary.
-
-        :param dict params: Click context params.
-        :param bool ignore_set: Skip already-set values instead of raising AttributeError.
-        :param bool overwrite: Allow overwriting already-set values.
-        """
-        log = logging.getLogger(__name__)
-        valid = {i[0] for i in self}
-        for key, value in params.items():
-            if not hasattr(self, key):
-                raise AttributeError("'{}' object has no attribute '{}'".format(self.__class__.__name__, key))
-            if key not in valid:
-                message = "'{}' object does not support item assignment on '{}'"
-                raise AttributeError(message.format(self.__class__.__name__, key))
-            if key in self._already_set:
-                if ignore_set:
-                    log.debug("%s already set in config, skipping.", key)
-                    continue
-                if not overwrite:
-                    message = "'{}' object does not support item re-assignment on '{}'"
-                    raise AttributeError(message.format(self.__class__.__name__, key))
-            setattr(self, key, value)
-            self._already_set.add(key)
 
 
 class EventHandlers(object):
@@ -271,23 +143,6 @@ class EventHandlers(object):
             if STATIC_DIR not in app.config.html_static_path:
                 app.config.html_static_path.append(STATIC_DIR)
 
-        # Reset last_updated with file's mtime (will be last git commit authored date).
-        if app.config.html_last_updated_fmt is not None:
-            file_path = app.env.doc2path(pagename)
-            if os.path.isfile(file_path):
-                lufmt = app.config.html_last_updated_fmt or getattr(locale, "_")("%b %d, %Y")
-                mtime = datetime.datetime.fromtimestamp(os.path.getmtime(file_path))
-                context["last_updated"] = format_date(lufmt, mtime, language=app.config.language)
-
-
-class ConfigInject(SphinxConfig):
-    """Inject this extension info self.extensions. Append after user's extensions."""
-
-    def __init__(self, *args):
-        """Constructor."""
-        super(ConfigInject, self).__init__(*args)
-        self.extensions.append("sphinxcontrib.versioning.sphinx_")
-
 
 def setup(app):
     """Called by Sphinx during phase 0 (initialization).
@@ -298,15 +153,15 @@ def setup(app):
     :rtype: dict
     """
     # Used internally. For rebuilding all pages when one or versions fail.
-    app.add_config_value("sphinxcontrib_versioning_versions", SC_VERSIONING_VERSIONS, "html")
+    # app.add_config_value("sphinx_versioned_versions", SC_VERSIONING_VERSIONS, "html")
 
     # Needed for banner.
     if not app.config.html_static_path:
         app.config.html_static_path.append(STATIC_DIR)
 
     # Tell Sphinx which config values can be set by the user.
-    for name, default in Config():
-        app.add_config_value("scv_{}".format(name), default, "html")
+    # for name, default in Config():
+    #     app.add_config_value("scv_{}".format(name), default, "html")
 
     # Event handlers.
     app.connect("builder-inited", EventHandlers.builder_inited)

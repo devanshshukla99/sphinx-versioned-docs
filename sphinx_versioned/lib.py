@@ -8,8 +8,6 @@ import shutil
 import tempfile
 import weakref
 
-import typer
-
 
 class HandledError(Exception):
     """Abort the program."""
@@ -31,7 +29,7 @@ class TempDir(object):
 
         :param bool defer_atexit: cleanup() to atexit instead of after garbage collection.
         """
-        self.name = tempfile.mkdtemp("sphinxcontrib_versioning")
+        self.name = tempfile.mkdtemp("sphinx_versioned")
         if defer_atexit:
             atexit.register(shutil.rmtree, self.name, True)
             return
