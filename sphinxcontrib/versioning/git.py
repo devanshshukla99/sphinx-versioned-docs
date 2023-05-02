@@ -251,7 +251,7 @@ def filter_and_date(local_root, conf_rel_paths, commits):
     for commit in commits:
         if commit in dates_paths:
             continue
-        command = ["git", "ls-tree", "--name-only", "-r", commit] + conf_rel_paths
+        command = ["git", "ls-tree", "--name-only", "-r", commit, conf_rel_paths]
         try:
             output = run_command(local_root, command)
         except CalledProcessError as exc:

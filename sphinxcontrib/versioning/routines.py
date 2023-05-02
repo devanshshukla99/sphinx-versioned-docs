@@ -112,7 +112,7 @@ def gather_git_info(root, conf_rel_paths, whitelist_branches, whitelist_tags):
     return whitelisted_remotes
 
 
-def pre_build(local_root, versions):
+def pre_build(local_root, versions, root_ref, config):
     """Build docs for all versions to determine root directory and master_doc names.
 
     Need to build docs to (a) avoid filename collision with files from root_ref and branch/tag names and (b) determine
@@ -137,7 +137,7 @@ def pre_build(local_root, versions):
         export(local_root, sha, target)
 
     # Build root.
-    remote = versions[Config.from_context().root_ref]
+    remote = versions[root_ref]
     with TempDir() as temp_dir:
         log.debug(
             "Building root (before setting root_dirs) in temporary directory: %s",
@@ -164,7 +164,7 @@ def pre_build(local_root, versions):
         )
         source = os.path.dirname(os.path.join(exported_root, remote["sha"], remote["conf_rel_path"]))
         try:
-            config = read_config(source, remote["name"])
+            config = read_config(source, config, remote["name"])
         except HandledError:
             log.warning("Skipping. Will not be building: %s", remote["name"])
             versions.remotes.pop(versions.remotes.index(remote))
@@ -175,7 +175,7 @@ def pre_build(local_root, versions):
     return exported_root
 
 
-def build_all(exported_root, destination, versions):
+def build_all(exported_root, destination, versions, root_ref):
     """Build all versions.
 
     :param str exported_root: Tempdir path with exported commits as subdirectories.
@@ -186,7 +186,7 @@ def build_all(exported_root, destination, versions):
 
     while True:
         # Build root.
-        remote = versions[Config.from_context().root_ref]
+        remote = versions[root_ref]
         log.info("Building root: %s", remote["name"])
         source = os.path.dirname(os.path.join(exported_root, remote["sha"], remote["conf_rel_path"]))
         build(source, destination, versions, remote["name"], True)

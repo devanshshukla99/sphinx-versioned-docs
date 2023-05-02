@@ -1,41 +1,30 @@
-{% if html_theme == 'sphinx_rtd_theme' %}
+<!-- {% if html_theme == 'sphinx_rtd_theme' %} -->
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-    <span class="rst-current-version" data-toggle="rst-current-version">
-        <span class="fa fa-book"> Other Versions</span>
-        v: {{ current_version }}
-        <span class="fa fa-caret-down"></span>
-    </span>
-    <div class="rst-other-versions">
-        {%- if versions.tags %}
-        <dl>
-            <dt>Tags</dt>
-            {%- for name, url, pdf_url in versions.tags %}
-            <dd><a href="{{ url }}">{{ name }}</a></dd>
-            {%- endfor %}
-        </dl>
-        {%- endif %}
-        {%- if versions.branches %}
-        <dl>
-            <dt>Branches</dt>
-            {%- for name, url, pdf_url in versions.branches %}
-            <dd><a href="{{ url }}">{{ name }}</a></dd>
-            {%- endfor %}
-        </dl>
-        {%- endif %}
-        {%- if versions.pdf_file %}
-        <dl>
-            <dt>PDF</dt>
-            {%- for name, url, pdf_url in versions.tags %}
-            <dd><a href="{{ pdf_url }}" download>{{ name }}</a></dd>
-            {%- endfor %}
-            {%- for name, url, pdf_url in versions.branches %}
-            <dd><a href="{{ pdf_url }}" download>{{ name }}</a></dd>
-            {%- endfor %}
-        </dl>
-        {%- endif %}
-    </div>
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: {{ current_version }}
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    {%- if versions.tags %}
+    <dl>
+      <dt>Tags</dt>
+      {%- for name, url in versions.tags.items() %}
+      <dd><a href="{{ url }}">{{ name }}</a></dd>
+      {%- endfor %}
+    </dl>
+    {%- endif %}
+    {%- if versions.branches %}
+    <dl>
+      <dt>Branches</dt>
+      {%- for name, url in versions.branches.items() %}
+      <dd><a href="{{ url }}">{{ name }}</a></dd>
+      {%- endfor %}
+    </dl>
+    {%- endif %}
+  </div>
 </div>
-{% elif html_theme == 'rasabaster' %}
+<!-- {% elif html_theme == 'rasabaster' %}
 <div class="versions">
     <p class="caption">Versions</p>
     <div class="versions-content">
@@ -67,9 +56,11 @@
 
 {% else %}
 <h3>{{ _('Versions') }}</h3>
+-->
+<!-- {{ versions }} 
 <ul>
-    {%- for name, url in versions %}
-    <li><a href="{{ url }}">{{ name }}</a></li>
-    {%- endfor %}
+  {% for name, url in versions %}
+  <li><a href="{{ url }}">{{ name }}</a></li>
+  {% endfor %}
 </ul>
-{%- endif %}
+{% endif %} -->
