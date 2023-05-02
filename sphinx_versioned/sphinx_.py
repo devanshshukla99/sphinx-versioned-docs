@@ -1,12 +1,10 @@
 """Interface with Sphinx."""
 
-import multiprocessing
 import os
 import sys
 
 from loguru import logger as log
 from sphinx.builders.html import StandaloneHTMLBuilder
-from sphinx.config import Config as SphinxConfig
 from sphinx.jinja2glue import SphinxFileSystemLoader
 
 from sphinx_versioned._version import __version__
@@ -110,38 +108,8 @@ class EventHandlers(object):
         context["current_version"] = cls.CURRENT_VERSION
         context["github_version"] = cls.CURRENT_VERSION
         context["html_theme"] = app.config.html_theme
-        context["scv_banner_greatest_tag"] = cls.BANNER_GREATEST_TAG
-        context["scv_banner_main_ref_is_branch"] = (
-            banner_main_remote["kind"] == "heads" if cls.SHOW_BANNER else None
-        )
-        context["scv_banner_main_ref_is_tag"] = (
-            banner_main_remote["kind"] == "tags" if cls.SHOW_BANNER else None
-        )
-        context["scv_banner_main_version"] = banner_main_remote["name"] if cls.SHOW_BANNER else None
-        context["scv_banner_recent_tag"] = cls.BANNER_RECENT_TAG
-        # context["scv_is_branch"] = this_remote["kind"] == "heads"
-        # context["scv_is_greatest_tag"] = this_remote == versions.greatest_tag_remote
-        # context["scv_is_recent_branch"] = this_remote == versions.recent_branch_remote
-        # context["scv_is_recent_ref"] = this_remote == versions.recent_remote
-        # context["scv_is_recent_tag"] = this_remote == versions.recent_tag_remote
         context["scv_is_root"] = cls.IS_ROOT
-        # context["scv_is_tag"] = this_remote["kind"] == "tags"
-        context["scv_show_banner"] = cls.SHOW_BANNER
         context["versions"] = cls.VERSIONS
-        # context["vhasdoc"] = versions.vhasdoc
-        # context["vpathto"] = versions.vpathto
-
-        # Insert banner into body.
-        if cls.SHOW_BANNER and "body" in context:
-            parsed = app.builder.templates.render("banner.html", context)
-            context["body"] = parsed + context["body"]
-            # Handle overridden css_files.
-            css_files = context.setdefault("css_files", list())
-            if "_static/banner.css" not in css_files:
-                css_files.append("_static/banner.css")
-            # Handle overridden html_static_path.
-            if STATIC_DIR not in app.config.html_static_path:
-                app.config.html_static_path.append(STATIC_DIR)
 
 
 def setup(app):
