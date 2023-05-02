@@ -42,7 +42,7 @@ class VersionedDocs:
 
         self._versions_to_build = []
         self._failed_build = []
-        self._quite = "-Q" if self.quite else ""
+        self._quite = "-Q" if self.quite else None
 
         self._handle_paths()
 
@@ -84,20 +84,23 @@ class VersionedDocs:
 
     def _checkout_and_build(self, tag):
         # Checkout tag/branch
-        self.versions.checkout(tag.name)
-        EventHandlers.CURRENT_VERSION = tag.name
+        self.versions.checkout(tag)
+        EventHandlers.CURRENT_VERSION = tag
 
         with TempDir() as temp_dir:
             log.debug(f"Checking out the latest tag in temporary directory: {temp_dir}")
             source = str(self.local_conf.parent)
             target = temp_dir
-            argv = (source, target, self._quite)
+            argv = (source, target)
+            if self._quite:
+                argv += (self._quite,)
             result = build_main(argv)
             if result != 0:
                 # Register failed builds
                 self._failed_build.append(tag)
                 raise SphinxError
-            output_with_tag = pathlib.Path(self.output_dir) / tag.name
+
+            output_with_tag = pathlib.Path(self.output_dir) / tag
             if not output_with_tag.exists():
                 output_with_tag.mkdir(parents=True, exist_ok=True)
             shutil.copytree(temp_dir, output_with_tag, False, None, dirs_exist_ok=True)
@@ -111,7 +114,7 @@ class VersionedDocs:
 
         self._built_version = []
         # for tag in self._versions_to_build:
-        tag = self._versions_to_build[-1]
+        tag = self._versions_to_build[-1].name
         log.info(f"Building: {tag}")
         try:
             self._checkout_and_build(tag)
