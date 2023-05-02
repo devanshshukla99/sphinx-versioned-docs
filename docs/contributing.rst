@@ -18,21 +18,6 @@ To install required dependencies, use the command:
 
    $ pipenv install --dev
 
-This will install in your local virtualenv all the required dependencies to contribute to this project.
-
-The ``--dev`` option allows the installation of the *dev-packages* dependencies.
-
-
-Install build and distribution tools
-------------------------------------
-
-* Install latest version of required tools
-
-.. code:: bash
-
-   pip install --user -U setuptools wheel twine
-
-
 Build and upload a new version of sphinx-versions
 =================================================
 

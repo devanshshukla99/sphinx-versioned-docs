@@ -19,18 +19,6 @@ alabaster
 .. figure:: screenshots/alabaster.png
     :target: _images/alabaster.png
 
-classic
--------
-
-.. figure:: screenshots/classic.png
-    :target: _images/classic.png
-
-nature
-------
-
-.. figure:: screenshots/nature.png
-    :target: _images/nature.png
-
 sphinxdoc
 ---------
 
