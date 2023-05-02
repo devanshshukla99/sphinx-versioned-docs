@@ -118,9 +118,10 @@ class VersionedDocs:
         except SphinxError:
             self._built_version.append(tag)
             log.error(f"build failed for {tag}")
-
-        # restore to active branch
-        self.versions.checkout(self._active_branch.name)
+            exit(-1)
+        finally:
+            # restore to active branch
+            self.versions.checkout(self._active_branch.name)
 
 
 @app.command("build")
