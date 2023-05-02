@@ -42,7 +42,7 @@ Update the version
 You need to update two different files :
 
 * ``setup.py``: contains the `VERSION` constant, used to identify the version built and uploaded to the nexus.
-* ``sphinxcontrib/versioning/__init__.py``: contains the ``__version__`` constant, used to identify the package version.
+* ``sphinx_versioned._version.py``: contains the ``__version__`` constant, used to identify the package version.
 
 
 Update the README.rst
