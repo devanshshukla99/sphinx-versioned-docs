@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.9]
+        python-version: ["3.9"]
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8]
+        python-version: ["3.9"]
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
@@ -58,31 +58,31 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            python-version: 3.8
+            python-version: "3.8"
             toxenv: py38
           - os: windows-latest
-            python-version: 3.8
+            python-version: "3.8"
             toxenv: py38
           - os: macos-latest
-            python-version: 3.8
+            python-version: "3.8"
             toxenv: py38
           - os: ubuntu-latest
-            python-version: 3.9
+            python-version: "3.9"
             toxenv: py39
           - os: windows-latest
-            python-version: 3.9
+            python-version: "3.9"
             toxenv: py39
           - os: macos-latest
-            python-version: 3.9
+            python-version: "3.9"
             toxenv: py39
           - os: ubuntu-latest
-            python-version: 3.10
+            python-version: "3.10"
             toxenv: py310
           - os: windows-latest
-            python-version: 3.10
+            python-version: "3.10"
             toxenv: py310
           - os: macos-latest
-            python-version: 3.10
+            python-version: "3.10"
             toxenv: py310
     steps:
       - name: Check out repository
@@ -107,13 +107,13 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            python-version: 3.9
+            python-version: "3.9"
             toxenv: sphinx_rtd_theme
           - os: ubuntu-latest
-            python-version: 3.9
+            python-version: "3.9"
             toxenv: astropy_sphinx_theme
           - os: ubuntu-latest
-            python-version: 3.9
+            python-version: "3.9"
             toxenv: alabaster
     steps:
       - name: Check out repository
