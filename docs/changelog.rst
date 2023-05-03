@@ -1,3 +1,5 @@
 .. _changelog:
 
-.. include:: ../README.rst
+=========
+Changelog
+=========

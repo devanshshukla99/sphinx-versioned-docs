@@ -226,7 +226,7 @@ htmlhelp_basename = "responsedoc"
 #  dir menu entry, description, category)
 # texinfo_documents = [
 #     (master_doc, 'response', 'Response Documentation',
-#      author, 'response', 'Pytest plugin for mocking and capturing connection requests.',
+#      author, 'response',
 #      'Miscellaneous'),
 # ]
 
