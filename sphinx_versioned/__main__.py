@@ -83,7 +83,7 @@ class VersionedDocs:
         if not self.local_conf.exists():
             log.error(f"conf.py does not exist at {self.local_conf}")
             raise FileNotFoundError(f"conf.py not found at {self.local_conf.parent}")
-        log.success(f"Located conf.py")
+        log.success(f"located conf.py")
         return True
 
     def _checkout_and_build(self, tag):
