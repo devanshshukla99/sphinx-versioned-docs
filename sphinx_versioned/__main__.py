@@ -120,7 +120,7 @@ class VersionedDocs:
             log.success(f"pre-build succeded for {tag} :)")
 
     def _pre_build_versions(self):
-        if not self.pre_build:
+        if not self.prebuild:
             log.info("No pre-builing...")
             self._versions_to_build = self._versions_to_pre_build
             return
@@ -202,7 +202,7 @@ def main(
         "--root-ref",
         help="The branch/tag at the root of DESTINATION. Will also be in subdir.",
     ),
-    pre_build: bool = typer.Option(True, help="Disables the pre-builds; halves the runtime"),
+    prebuild: bool = typer.Option(True, help="Disables the pre-builds; halves the runtime"),
     select_branches: str = typer.Option(
         None, "-b", "--branches", help="Build docs for specific branches and tags"
     ),
