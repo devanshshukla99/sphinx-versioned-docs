@@ -1,27 +1,14 @@
-===============================
-sphinx-versioned-docs |version|
-===============================
+=====================
+sphinx-versioned-docs
+=====================
 
 A Sphinx extension that lets you build Sphinx docs for all versions of your project without needing special hosting
 services.
 
-+--------------------+--------------------+
-| **A Few Examples**                      |
-+--------------------+--------------------+
-| *alabaster*        | *sphinx_rtd_theme* |
-|                    |                    |
-| |alabaster|        | |sphinx_rtd_theme| |
-+--------------------+--------------------+
-
-.. |alabaster|          image:: screenshots/alabaster.png
-   :target:                 _images/alabaster.png
-.. |sphinx_rtd_theme|   image:: screenshots/sphinx_rtd_theme.png
-   :target:                 _images/sphinx_rtd_theme.png
-
 Project Links
 =============
 
-* Documentation: 
+* Documentation: https://sphinx-versioned-docs.readthedocs.io/en/latest/
 * Source code: https://github.com/devanshshukla99/sphinx-versioned-docs
 
 .. toctree::

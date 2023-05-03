@@ -18,7 +18,8 @@ Most basic usage:
     sphinx-versioned --help
     sphinx-versioned build --help
 
-.. |build| image:: https://github.com/devanshshukla99/pytest-remote-response/actions/workflows/main.yml/badge.svg
+.. |build| image:: https://github.com/devanshshukla99/sphinx-versioned-docs/actions/workflows/main.yml/badge.svg
+    :alt: CI
 
 .. |codestyle| image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/psf/black

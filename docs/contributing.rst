@@ -4,31 +4,19 @@
 How to contribute
 =================
 
-Make sure you meet the :ref:`requirements to use <requirements-to-use>` the project, first.
+Welcome contributors!
 
-Requirements
+Installation
 ============
 
-Install the virtualenv dependencies
------------------------------------
+In order to contribute to this project you'll need to install the package via source with all dependencies.
 
-To install required dependencies, use the command:
+.. code:: bash
 
-.. code-block:: shell
-
-   $ pipenv install --dev
+   python -m pip install -e .[all]
 
 Build and upload a new version of sphinx-versions
 =================================================
-
-Update the version
-------------------
-
-You need to update two different files :
-
-* ``setup.py``: contains the `VERSION` constant, used to identify the version built and uploaded to the nexus.
-* ``sphinx_versioned._version.py``: contains the ``__version__`` constant, used to identify the package version.
-
 
 Update the README.rst
 ---------------------

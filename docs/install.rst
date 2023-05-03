@@ -14,8 +14,8 @@ Installing from source
 
 .. code-block:: console
 
-    $ git clone https://github.com/devanshshukla99/pytest-remote-response
-    $ cd pytest-remote-response
+    $ git clone https://github.com/devanshshukla99/sphinx-versioned-docs
+    $ cd sphinx-versioned-docs
     $ pip install .
 
 
