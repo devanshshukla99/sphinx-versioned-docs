@@ -53,9 +53,36 @@
     </div>
   </div>
 </div>
+{% elif html_theme == "bootstrap-astropy" %}
+<div class="injected">
+  <div class="rst-versions rst-badge" data-toggle="rst-versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book">&nbsp;</span>
+      v: {{ current_version }}
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      {%- if versions.tags %}
+      <dl>
+        <dt>Tags</dt>
+        {%- for name, url in versions.tags.items() %}
+        <dd><a href="{{ url }}">{{ name }}</a></dd>
+        {%- endfor %}
+      </dl>
+      {%- endif %}
+      {%- if versions.branches %}
+      <dl>
+        <dt>Branches</dt>
+        {%- for name, url in versions.branches.items() %}
+        <dd><a href="{{ url }}">{{ name }}</a></dd>
+        {%- endfor %}
+      </dl>
+      {%- endif %}
+    </div>
+  </div>
+</div>
 {% else %}
 <h3>{{ _('Versions') }}</h3>
-{{ versions }}
 <ul>
   {%- if versions.tags %}
   <p>tags</p>
