@@ -9,7 +9,7 @@ This guide will go over the basics of the project.
 Make sure that you've already :ref:`installed <install>` it.
 
 
-Building Docs Locally
+Building docs locally
 =====================
 
 Before we begin make sure you have some Sphinx docs already in your project. If not, read `First Steps with Sphinx <http://www.sphinx-doc.org/en/stable/tutorial.html>`_ first. If you just want something quick
@@ -17,45 +17,37 @@ and dirty you can do the following:
 
 .. code-block:: bash
 
-    git checkout -b feature_branch master  # Create new branch from master.
+    git checkout -b feature_branch main  # Create new branch from main.
     mkdir docs  # All documentation will go here (optional, can be anywhere).
     echo "master_doc = 'index'" > docs/conf.py  # Create Sphinx config file.
     echo -e "Test\n====\n\nSample Documentation" > docs/index.rst  # Create one doc.
     git add docs
     git commit
-    git push origin feature_branch  # Required.
 
-.. note::
 
-    It is **required** to push doc files to origin. ``sphinx-versioned-docs`` only works with remote branches/tags and ignores any
-    local changes (committed, staged, unstaged, etc). If you don't push to origin ``sphinx-versioned-docs`` won't see them. This
-    eliminates race conditions when multiple CI jobs are building docs at the same time.
+Building versioned docs
+=======================
 
-.. _build-all-versions:
-
-Build All Versions
-==================
-
-Now that you've got docs pushed to origin and they build fine with ``sphinx-build`` let's try building them with
-sphinx-versions:
+By default, ``sphinx-versioned-docs`` will try to build all tags and branches present in the git repo, using the command:
 
 .. code-block:: bash
 
-    sphinx-versioned build -r feature_branch docs docs/_build/html
-    open docs/_build/html/index.html
+    sphinx-versioned build
 
-.. More information about all of the options can be found at :ref:`settings` or by running with ``--help`` but just for
-.. convenience:
+However, to build some particular branch(s) and tag(s), they can be specified in the ``--branches`` argument as:
 
-.. * ``-r feature_branch`` tells the program to build our newly created/pushed branch at the root of the "html" directory.
-..   We do this assuming there are no docs in master yet. Otherwise you can omit this argument.
-.. * ``docs/_build/html`` is the destination directory that holds generated HTML files.
-.. * The final ``docs`` argument is the directory where we put our RST files in, relative to the git root (e.g. if you
-..   clone your repo to another directory, that would be the git root directory). You can add more relative paths if you've
-..   moved the location of your RST files between different branches/tags.
+.. code-block:: bash
 
-.. The command should have worked and your docs should be available in `docs/_build/html/index.html` with a "Versions"
-.. section in the sidebar.
+    sphinx-versioned build --branches "main, docs"
 
-.. .. note:: You can add a `-P pdf-file-name.pdf` option to also generate a pdf of all versions of your documentation
+This command will build the ``main`` and ``docs`` branches.
 
+After the build has succeded, your docs should be available in `docs/_build/<branch>/index.html` with a "Versions" section in the sidebar.
+
+.. note::
+
+    To get output from the sphinx builder, ``--no-quite`` option is required.
+
+.. note::
+
+    By default, ``sphinx-versioned-docs`` pre-builds the branches to see which of them fails; but this behaviour can be mitigated using the ``--no-prebuild`` argument.

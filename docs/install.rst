@@ -9,6 +9,13 @@ Installation
 Requirements
 ============
 
+- GitPython>=3.1.31
+- loguru>=0.7.0
+- setuptools>=66.0.0
+- sphinx>=4.6.0
+- typer>=0.9.0
+- rich
+
 Installing from source
 ----------------------
 
@@ -19,7 +26,7 @@ Installing from source
     $ pip install .
 
 
-Installing from PyPi
+Installing using pip
 --------------------
 
 .. code-block:: bash
