@@ -2,7 +2,9 @@
 sphinx-versioned-docs
 =====================
 
-|build| |CI themes| |docs| |codestyle|
+|versions| |license|
+
+|build| |CI themes| |docs| |status| |codestyle|
 
 Sphinx extension that allows building versioned docs for self-hosting.
 Supported on Linux and macOS.
@@ -36,6 +38,18 @@ How to use
     │ --quite           --no-quite             No output from `sphinx` [default: quite]                                            │
     │ --help                                   Show this message and exit.                                                         │
     ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+.. |versions| image:: https://img.shields.io/pypi/pyversions/sphinx-versioned-docs.svg?logo=python&logoColor=FBE072
+    :target: https://pypi.org/project/sphinx-versioned-docs/
+    :alt: Python versions supported
+
+.. |status| image:: https://img.shields.io/pypi/status/sphinx-versioned-docs.svg
+    :target: https://pypi.org/project/sphinx-versioned-docs/
+    :alt: Package stability
+
+.. |license| image:: https://img.shields.io/pypi/l/sphinx-versioned-docs 
+    :target: https://pypi.org/project/sphinx-versioned-docs/
+    :alt: License
 
 .. |build| image:: https://github.com/devanshshukla99/sphinx-versioned-docs/actions/workflows/main.yml/badge.svg
     :alt: CI
