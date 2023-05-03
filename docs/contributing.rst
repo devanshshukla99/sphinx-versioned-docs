@@ -15,8 +15,8 @@ In order to contribute to this project you'll need to install the package via so
 
    python -m pip install -e .[all]
 
-Build and upload a new version of sphinx-versions
-=================================================
+Build and upload a new version of sphinx-versioned-docs
+=======================================================
 
 Update the README.rst
 ---------------------
@@ -40,4 +40,4 @@ Upload your package to nexus
 
    twine upload dist/*
 
-After this command, your package is available on  https://pypi.org. Anyone can install it using `pip install sphinx-versions`.
+After this command, your package is available on  https://pypi.org. Anyone can install it using `pip install sphinx-versioned-docs`.

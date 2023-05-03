@@ -5,10 +5,11 @@ sphinx-versioned-docs
 A Sphinx extension that lets you build Sphinx docs for all versions of your project without needing special hosting
 services.
 
+.. include:: ../README.rst
+
 Project Links
 =============
 
-* Documentation: https://sphinx-versioned-docs.readthedocs.io/en/latest/
 * Source code: https://github.com/devanshshukla99/sphinx-versioned-docs
 
 .. toctree::

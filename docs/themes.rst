@@ -4,41 +4,17 @@
 Supported Themes
 ================
 
-Below are screen shots of the supported built-in Sphinx themes. You can the "Versions" section in each screen shot on
-sidebars.
+This project supports multiple themes such as:
 
-sphinx_rtd_theme
-----------------
+|CI themes|
 
-.. figure:: screenshots/sphinx_rtd_theme.png
-    :target: _images/sphinx_rtd_theme.png
+- sphinx_rtd_theme
+- astropy_sphinx_theme
+- alabaster
+- sphinxdoc
+- pyramid
+- bizstyle
+- traditional
 
-alabaster
----------
-
-.. figure:: screenshots/alabaster.png
-    :target: _images/alabaster.png
-
-sphinxdoc
----------
-
-.. figure:: screenshots/sphinxdoc.png
-    :target: _images/sphinxdoc.png
-
-bizstyle
---------
-
-.. figure:: screenshots/bizstyle.png
-    :target: _images/bizstyle.png
-
-pyramid
--------
-
-.. figure:: screenshots/pyramid.png
-    :target: _images/pyramid.png
-
-traditional
------------
-
-.. figure:: screenshots/traditional.png
-    :target: _images/traditional.png
+.. |CI themes| image:: https://github.com/devanshshukla99/sphinx-versioned-docs/actions/workflows/CI-themes.yml/badge.svg
+    :alt: CI themes

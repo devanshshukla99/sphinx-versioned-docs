@@ -2,9 +2,12 @@
 sphinx-versioned-docs
 =====================
 
-|build| |docs| |codestyle|
+|build| |CI themes| |docs| |codestyle|
 
 Sphinx extension that allows building versioned docs for self-hosting.
+Supported on Linux and macOS.
+
+It works by producing docs for all(specified) branches in separate folders and injects a readthedocs-like version selector menu/badge.
 
 This project is a fork of `Smile-SA/sphinx-versions <https://github.com/Smile-SA/sphinx-versions>`_ with significant changes.
 
@@ -13,12 +16,26 @@ Get started using the `documentation`_
 How to use
 ==========
 
-Most basic usage:
-
 .. code:: bash
 
     sphinx-versioned --help
     sphinx-versioned build --help
+
+.. code::
+
+     Usage: sphinx-versioned build [OPTIONS]
+
+    ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+    │ --chdir                            TEXT  Make this the current working directory before running. [default: None]             │
+    │ --output      -O                   TEXT  Output directory [default: docs/_build]                                             │
+    │ --git-root                         TEXT  Path to directory in the local repo. Default is CWD.                                │
+    │ --local-conf                       TEXT  Path to conf.py for sphinx-versions to read config from. [default: docs/conf.py]    │
+    │ --root-ref    -r                   TEXT  The branch/tag at the root of DESTINATION. Will also be in subdir. [default: main]  │
+    │ --prebuild        --no-prebuild          Disables the pre-builds; halves the runtime [default: prebuild]                     │
+    │ --branches    -b                   TEXT  Build docs for specific branches and tags [default: None]                           │
+    │ --quite           --no-quite             No output from `sphinx` [default: quite]                                            │
+    │ --help                                   Show this message and exit.                                                         │
+    ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
 .. |build| image:: https://github.com/devanshshukla99/sphinx-versioned-docs/actions/workflows/main.yml/badge.svg
     :alt: CI
@@ -29,5 +46,8 @@ Most basic usage:
 .. |docs| image:: https://readthedocs.org/projects/sphinx-versioned-docs/badge/?version=latest
     :target: https://sphinx-versioned-docs.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
+
+.. |CI themes| image:: https://github.com/devanshshukla99/sphinx-versioned-docs/actions/workflows/CI-themes.yml/badge.svg
+    :alt: CI themes
  
 .. _documentation: https://sphinx-versioned-docs.readthedocs.io/en/latest/
