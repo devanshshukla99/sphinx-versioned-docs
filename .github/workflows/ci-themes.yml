@@ -1,0 +1,11 @@
+ on:
+   workflow_run:
+     workflows: ["build"]
+     types: [requested] #requested
+
+ jobs:
+   on-success:
+     runs-on: ubuntu-latest
+     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+     steps:
+       - run: echo "First workflow was a success"
