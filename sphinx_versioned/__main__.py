@@ -120,6 +120,11 @@ class VersionedDocs:
             log.success(f"pre-build succeded for {tag} :)")
 
     def _pre_build_versions(self):
+        if not self.pre_build:
+            log.info("No pre-builing...")
+            self._versions_to_build = self._versions_to_pre_build
+            return
+
         log.info("Pre-building...")
 
         # get active branch
