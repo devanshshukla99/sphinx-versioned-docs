@@ -13,8 +13,8 @@ formats:
    - pdf
 
 python:
-  version: 3.10
+  version: 3.8
   install:
-    - requirements: docs/requirements.txt
-    - method: setuptools
+    - requirements: requirements.txt
+    - method: pip
       path: .
