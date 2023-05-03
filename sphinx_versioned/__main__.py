@@ -208,7 +208,8 @@ def main(
     ),
     quite: bool = typer.Option(True, help="No output from `sphinx`"),
 ) -> None:
-    select_branches = re.split(",|\ ", select_branches)
+    if select_branches:
+        select_branches = re.split(",|\ ", select_branches)
     return VersionedDocs(locals())
 
 
