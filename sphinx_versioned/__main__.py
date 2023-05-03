@@ -1,3 +1,4 @@
+import re
 import os
 import typer
 import shutil
@@ -38,14 +39,17 @@ class VersionedDocs:
     def __init__(self, config) -> None:
         self.config = config
         self._parse_config(config)
+        self._handle_paths()
 
         self._versions_to_pre_build = []
         self._versions_to_build = []
         self._failed_build = []
         self._quite = "-Q" if self.quite else None
 
-        self._handle_paths()
-        self._get_versions_to_pre_build()
+        # selectively build branches / build all branches
+        self._versions_to_pre_build = (
+            self._select_specific_branches() if self.select_branches else self._get_all_versions()
+        )
         self._pre_build_versions()
 
         # Adds our extension to the sphinx-config
@@ -82,11 +86,22 @@ class VersionedDocs:
         log.success(f"located conf.py")
         return
 
-    def _get_versions_to_pre_build(self) -> bool:
-        self._versions_to_pre_build.extend(self.versions.repo.tags)
-        self._versions_to_pre_build.extend(self.versions.repo.branches)
-        log.info("Pre-building...")
-        return self._log_versions(self._versions_to_pre_build)
+    def _get_all_versions(self) -> bool:
+        _all_versions = []
+        _all_versions.extend(self.versions.repo.tags)
+        _all_versions.extend(self.versions.repo.branches)
+        self._log_versions(_all_versions)
+        return _all_versions
+
+    def _select_specific_branches(self) -> list:
+        _all_versions = self._get_all_versions()
+        _select_specific_branches = []
+
+        for tag in _all_versions:
+            if tag.name in self.select_branches:
+                log.info(f"Selecting tag for further processing: {tag.name}")
+                _select_specific_branches.append(tag)
+        return _select_specific_branches
 
     def _prebuild(self, tag):
         # Checkout tag/branch
@@ -105,6 +120,8 @@ class VersionedDocs:
             log.success(f"pre-build succeded for {tag} :)")
 
     def _pre_build_versions(self):
+        log.info("Pre-building...")
+
         # get active branch
         self._active_branch = self.versions.active_branch
 
@@ -180,10 +197,14 @@ def main(
         "--root-ref",
         help="The branch/tag at the root of DESTINATION. Will also be in subdir.",
     ),
-    show_banner: bool = typer.Option(False, "--show-banner", help="Show a warning banner."),
+    pre_build: bool = typer.Option(True, help="Disables the pre-builds; halves the runtime"),
+    select_branches: str = typer.Option(
+        None, "-b", "--branches", help="Build docs for specific branches and tags"
+    ),
     quite: bool = typer.Option(True, help="No output from `sphinx`"),
 ) -> None:
-    versioned_docs = VersionedDocs(locals())
+    select_branches = re.split(",|\ ", select_branches)
+    return VersionedDocs(locals())
 
 
 if __name__ == "__main__":
