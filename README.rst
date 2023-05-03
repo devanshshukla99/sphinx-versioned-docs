@@ -2,7 +2,7 @@
 sphinx-versioned-docs
 =====================
 
-|build| |codestyle| |docs|
+|build| |docs| |codestyle|
 
 Sphinx extension that allows building versioned docs for self-hosting.
 
