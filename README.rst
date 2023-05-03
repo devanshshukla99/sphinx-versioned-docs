@@ -8,6 +8,8 @@ Sphinx extension that allows building versioned docs for self-hosting.
 
 This project is a fork of `Smile-SA/sphinx-versions <https://github.com/Smile-SA/sphinx-versions>`_ with significant changes.
 
+Get started using the `documentation`_
+
 How to use
 ==========
 
@@ -27,3 +29,5 @@ Most basic usage:
 .. |docs| image:: https://readthedocs.org/projects/sphinx-versioned-docs/badge/?version=latest
     :target: https://sphinx-versioned-docs.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
+ 
+.. _documentation: https://sphinx-versioned-docs.readthedocs.io/en/latest/
