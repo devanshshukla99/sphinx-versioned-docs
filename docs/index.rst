@@ -19,6 +19,7 @@ Project Links
     install
     tutorial
     themes
+    api
 
 .. toctree::
     :maxdepth: 1

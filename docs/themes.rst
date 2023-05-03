@@ -1,7 +1,7 @@
 .. _themes:
 
 ================
-Supported Themes
+Supported themes
 ================
 
 This project supports multiple themes such as:
