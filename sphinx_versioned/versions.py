@@ -23,7 +23,7 @@ class GitVersions(object):
             if self.repo.bare:
                 log.error("Bare repo")
                 exit(-1)
-        log.success("Latched into the git repo")
+        log.success("latched into the git repo")
 
         self._parse_branches()
         pass
