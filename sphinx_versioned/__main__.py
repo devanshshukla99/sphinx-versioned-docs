@@ -109,7 +109,7 @@ class VersionedDocs:
 
     def _build(self, tag, _prebuild=False):
         # Checkout tag/branch
-        self.versions.checkout(tag)
+        self.git_versions.checkout(tag)
         EventHandlers.CURRENT_VERSION = tag
 
         with TempDir() as temp_dir:

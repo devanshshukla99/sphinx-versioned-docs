@@ -72,7 +72,7 @@ class BuiltVersions:
             self.build_directory.mkdir(parents=True, exist_ok=True)
 
         self._parse()
-    
+
     def _parse_name(self, arr) -> bool:
         return [x.name for x in arr]
 
@@ -85,7 +85,7 @@ class BuiltVersions:
                 self._raw_tags.append(tag)
             else:
                 self._raw_branches.append(tag)
-        
+
         if self._parse_to_name:
             self._raw_branches = self._parse_name(self._raw_branches)
             self._raw_tags = self._parse_name(self._raw_tags)
