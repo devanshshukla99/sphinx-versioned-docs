@@ -63,14 +63,18 @@ class GitVersions(object):
 
 
 class BuiltVersions:
-    def __init__(self, versions, build_directory) -> None:
+    def __init__(self, versions, build_directory, parse_to_name=True) -> None:
         self._versions = versions
         self.build_directory = pathlib.Path(build_directory)
+        self._parse_to_name = parse_to_name
 
         if not self.build_directory.exists():
             self.build_directory.mkdir(parents=True, exist_ok=True)
 
         self._parse()
+    
+    def _parse_name(self, arr) -> bool:
+        return [x.name for x in arr]
 
     def _parse(self) -> bool:
         self._raw_tags = []
@@ -81,9 +85,13 @@ class BuiltVersions:
                 self._raw_tags.append(tag)
             else:
                 self._raw_branches.append(tag)
+        
+        if self._parse_to_name:
+            self._raw_branches = self._parse_name(self._raw_branches)
+            self._raw_tags = self._parse_name(self._raw_tags)
 
-        self._branches = {x.name: self.build_directory / x.name for x in self._raw_branches}
-        self._tags = {x.name: self.build_directory / x.name for x in self._raw_tags}
+        self._branches = {x: self.build_directory / x for x in self._raw_branches}
+        self._tags = {x: self.build_directory / x for x in self._raw_tags}
         return True
 
     @property

@@ -80,7 +80,7 @@ class VersionedDocs:
         self.chdir = self.chdir if self.chdir else os.getcwd()
         log.debug(f"Working directory {self.chdir}")
 
-        self.versions = GitVersions(self.git_root, self.output_dir)
+        self.git_versions = GitVersions(self.git_root, self.output_dir)
         self.local_conf = pathlib.Path(self.local_conf)
         if self.local_conf.name != "conf.py":
             self.local_conf = self.local_conf / "conf.py"
@@ -92,8 +92,8 @@ class VersionedDocs:
 
     def _get_all_versions(self) -> bool:
         _all_versions = []
-        _all_versions.extend(self.versions.repo.tags)
-        _all_versions.extend(self.versions.repo.branches)
+        _all_versions.extend(self.git_versions.repo.tags)
+        _all_versions.extend(self.git_versions.repo.branches)
         self._log_versions(_all_versions)
         return _all_versions
 
@@ -142,7 +142,7 @@ class VersionedDocs:
         log.info("Pre-building...")
 
         # get active branch
-        self._active_branch = self.versions.active_branch
+        self._active_branch = self.git_versions.active_branch
 
         for tag in self._versions_to_pre_build:
             log.info(f"pre-building: {tag}")
@@ -153,15 +153,21 @@ class VersionedDocs:
                 log.error(f"Pre-build failed for {tag}")
             finally:
                 # restore to active branch
-                self.versions.checkout(self._active_branch.name)
+                self.git_versions.checkout(self._active_branch.name)
 
     def build(self):
         # get active branch
-        self._active_branch = self.versions.active_branch
+        self._active_branch = self.git_versions.active_branch
 
         self._built_version = []
         self._log_versions(self._versions_to_build, msg="building versions")
-        EventHandlers.VERSIONS = BuiltVersions(self._versions_to_build, self.versions.build_directory)
+        if self.pass_versions:
+            EventHandlers.VERSIONS = BuiltVersions(
+                self.pass_versions, self.git_versions.build_directory, parse_to_name=False
+            )
+        else:
+            EventHandlers.VERSIONS = BuiltVersions(self._versions_to_build, self.git_versions.build_directory)
+        log.info(f"Selecting tags for versions menu {EventHandlers.VERSIONS}")
 
         for tag in self._versions_to_build:
             log.info(f"Building: {tag}")
@@ -173,7 +179,7 @@ class VersionedDocs:
                 exit(-1)
             finally:
                 # restore to active branch
-                self.versions.checkout(self._active_branch)
+                self.git_versions.checkout(self._active_branch)
 
 
 @app.command()
@@ -198,6 +204,11 @@ def main(
     list_branches: bool = typer.Option(
         False, "--list-branches", "-l", help="List all branches/tags detected via GitPython"
     ),
+    pass_versions: str = typer.Option(
+        None,
+        "--versions",
+        help="Passes the versions list to the menu directly  (doesn't pull the versions info from git)",
+    ),
     quite: bool = typer.Option(True, help="No output from `sphinx`"),
     verbose: bool = typer.Option(
         False, "--verbose", "-v", help="Debug logging. Specify more than once for more logging."
@@ -209,6 +220,10 @@ def main(
     if reset_intersphinx_mapping:
         log.error("Forcing --no-prebuild")
         prebuild = False
+        log.debug(f"selected branches: {select_branches}")
+    if pass_versions:
+        pass_versions = list(filter(None, re.split(",|\ ", pass_versions)))
+        log.debug(f"passed versions: {pass_versions}")
     return VersionedDocs(locals())
 
 
