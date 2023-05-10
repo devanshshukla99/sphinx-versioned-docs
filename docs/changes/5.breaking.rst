@@ -1,0 +1,1 @@
+Breaking previously forked functionality of ``sphinx-versions``.

@@ -1,0 +1,1 @@
+Fixed click 8+ compatibility and ``add_css_file``.

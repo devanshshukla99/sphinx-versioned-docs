@@ -1,0 +1,1 @@
+Added tests to verify the package against ``sphinx_rtd_theme``, ``astropy_sphinx_theme`` and ``alabaster`` themes.
