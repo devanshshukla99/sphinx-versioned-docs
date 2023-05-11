@@ -3,3 +3,7 @@
 =========
 Changelog
 =========
+
+.. include:: ../CHANGELOG.rst
+
+
