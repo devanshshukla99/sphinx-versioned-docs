@@ -1,1 +1,0 @@
-Removed windows from the list of compatible platforms due to an issue with ``pwd``, which is probably a dependency of ``gitpython``.

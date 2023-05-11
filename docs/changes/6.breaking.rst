@@ -1,1 +1,0 @@
-The package will now be called via ``sphinx-versioned``.

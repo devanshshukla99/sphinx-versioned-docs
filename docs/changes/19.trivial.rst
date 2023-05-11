@@ -1,1 +1,0 @@
-Migrating to ``towncrier`` for changelog management.

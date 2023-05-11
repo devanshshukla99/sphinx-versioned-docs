@@ -1,1 +1,0 @@
-Pre-builing all tags and branches to list only succesful builds in the versions menu. It will double the build time; however, it can be avoided by disabling the pre-building using ``--no-prebuild`` arg or by specifically selecting the tag/branch names via ``--branches`` argument, note that it takes a ``str`` argument of the form "main, master".

@@ -1,1 +1,0 @@
-Updated documentation, added ``docs/install.rst``, ``docs/api.rst`` and more.

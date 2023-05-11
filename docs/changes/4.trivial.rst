@@ -1,2 +1,0 @@
-Added CI infrastructure to test the package against an empty package created using sphinx-quickstart.
-

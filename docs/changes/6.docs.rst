@@ -1,1 +1,0 @@
-Updated documentation with respect to new functionalities.

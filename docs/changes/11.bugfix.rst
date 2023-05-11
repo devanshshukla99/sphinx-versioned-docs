@@ -1,1 +1,0 @@
-Fixed version menu loading issue with ``sphinx_rtd_theme``.
