@@ -12,9 +12,9 @@ write_to = "sphinx_versioned/_version.py"
 line-length = 110
 
 [tool.towncrier]
-    package = "sphinx_versioned_docs"
+    package = "sphinx_versioned"
     filename = "CHANGELOG.rst"
-    directory = "changelog/"
+    directory = "docs/changes/"
     issue_format = "`#{issue} <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/{issue}>`__"
     title_format = "{version} ({project_date})"
 
