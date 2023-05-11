@@ -22,7 +22,7 @@ sphinx extension
 
 ----------
 
-Versions container
+versions container
 ------------------
 
 .. automodule:: sphinx_versioned.versions
@@ -32,7 +32,7 @@ Versions container
 
 ----------
 
-Util
+util
 ----
 
 .. automodule:: sphinx_versioned.lib
@@ -40,4 +40,3 @@ Util
     :undoc-members:
     :show-inheritance:
 
-----------
