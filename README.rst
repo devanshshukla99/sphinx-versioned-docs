@@ -21,11 +21,10 @@ How to use
 .. code:: bash
 
     sphinx-versioned --help
-    sphinx-versioned build --help
 
 .. code::
 
-     Usage: sphinx-versioned build [OPTIONS]
+     Usage: sphinx-versioned [OPTIONS]
 
     ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
     │ --chdir                            TEXT  Make this the current working directory before running. [default: None]             │
