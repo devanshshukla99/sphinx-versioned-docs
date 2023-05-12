@@ -18,15 +18,6 @@ from sphinx_versioned.sphinx_ import EventHandlers
 app = typer.Typer()
 
 
-@app.callback()
-def cli(
-    verbose: bool = typer.Option(
-        False, "--verbose", "-v", help="Debug logging. Specify more than once for more logging."
-    ),
-):
-    pass
-
-
 class ConfigInject(SphinxConfig):
     """Inject this extension info self.extensions. Append after user's extensions."""
 
@@ -184,7 +175,7 @@ class VersionedDocs:
                 self.versions.checkout(self._active_branch)
 
 
-@app.command("build")
+@app.command()
 def main(
     chdir: str = typer.Option(
         None, "--chdir", help="Make this the current working directory before running."
@@ -207,6 +198,9 @@ def main(
         None, "-b", "--branches", help="Build docs for specific branches and tags"
     ),
     quite: bool = typer.Option(True, help="No output from `sphinx`"),
+    verbose: bool = typer.Option(
+        False, "--verbose", "-v", help="Debug logging. Specify more than once for more logging."
+    ),
 ) -> None:
     if select_branches:
         select_branches = re.split(",|\ ", select_branches)

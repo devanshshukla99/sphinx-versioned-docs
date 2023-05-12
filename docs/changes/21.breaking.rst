@@ -1,0 +1,1 @@
+Migrating call command from ``sphinx-versioned build`` to just ``sphinx-versioned`` for simplicity.

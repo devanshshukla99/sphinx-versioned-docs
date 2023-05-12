@@ -32,13 +32,13 @@ By default, ``sphinx-versioned-docs`` will try to build all tags and branches pr
 
 .. code-block:: bash
 
-    sphinx-versioned build
+    sphinx-versioned
 
 However, to build some particular branch(s) and tag(s), they can be specified in the ``--branches`` argument as:
 
 .. code-block:: bash
 
-    sphinx-versioned build --branches "main, docs"
+    sphinx-versioned --branches "main, docs"
 
 This command will build the ``main`` and ``docs`` branches.
 
