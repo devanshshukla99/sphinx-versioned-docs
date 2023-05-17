@@ -1,5 +1,6 @@
 import re
 import os
+import sys
 import typer
 import shutil
 import pathlib
@@ -14,6 +15,11 @@ from loguru import logger as log
 from sphinx_versioned.lib import TempDir
 from sphinx_versioned.sphinx_ import EventHandlers
 
+logger_format = (
+    "| <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{line}</cyan> | - <level>{message}</level>"
+)
+log.remove()
+log.add(sys.stderr, format=logger_format)
 
 app = typer.Typer()
 
