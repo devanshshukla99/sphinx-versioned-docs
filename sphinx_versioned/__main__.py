@@ -37,6 +37,10 @@ class VersionedDocs:
         self._failed_build = []
         self._quite = "-Q" if self.quite else None
 
+        if self.list_branches:
+            self._get_all_versions()
+            return
+
         # selectively build branches / build all branches
         self._versions_to_pre_build = (
             self._select_specific_branches() if self.select_branches else self._get_all_versions()
@@ -196,6 +200,9 @@ def main(
     prebuild: bool = typer.Option(True, help="Disables the pre-builds; halves the runtime"),
     select_branches: str = typer.Option(
         None, "-b", "--branches", help="Build docs for specific branches and tags"
+    ),
+    list_branches: bool = typer.Option(
+        False, "--list-branches", "-l", help="List all branches/tags detected via GitPython"
     ),
     quite: bool = typer.Option(True, help="No output from `sphinx`"),
     verbose: bool = typer.Option(
