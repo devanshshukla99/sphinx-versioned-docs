@@ -1,6 +1,7 @@
 """Collect and sort version strings."""
 
 import os
+
 os.environ["GIT_PYTHON_REFRESH"] = "quiet"
 
 import git
