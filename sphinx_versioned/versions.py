@@ -1,8 +1,10 @@
 """Collect and sort version strings."""
 
 import os
-import pathlib
+os.environ["GIT_PYTHON_REFRESH"] = "quiet"
+
 import git
+import pathlib
 from loguru import logger as log
 
 
