@@ -1,3 +1,18 @@
+1.1 (2023-05-19)
+================
+
+Backwards Incompatible Changes
+------------------------------
+
+- Migrating call command from ``sphinx-versioned build`` to just ``sphinx-versioned`` for simplicity. (`#21 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/21>`__)
+
+
+Features
+--------
+
+- Added ``--list-branches`` and ``-l`` arg in cli-app. (`#22 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/22>`__)
+
+
 1.0 (2023-05-03)
 ================
 

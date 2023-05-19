@@ -1,1 +1,0 @@
-Added ``--list-branches`` and ``-l`` arg in cli-app.
