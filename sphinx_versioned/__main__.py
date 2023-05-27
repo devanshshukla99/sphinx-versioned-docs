@@ -41,7 +41,10 @@ class VersionedDocs:
         self._versions_to_pre_build = []
         self._versions_to_build = []
         self._failed_build = []
-        self._quite = "-Q" if self.quite else None
+        self._additional_args = ()
+
+        self._additional_args += ("-Q",) if self.quite else ()
+        self._additional_args += ("-vv",) if self.verbose else ()
 
         if self.list_branches:
             self._get_all_versions()
@@ -51,12 +54,12 @@ class VersionedDocs:
         self._versions_to_pre_build = (
             self._select_specific_branches() if self.select_branches else self._get_all_versions()
         )
-        self._pre_build_versions()
+        self._pre_build()
 
         # Adds our extension to the sphinx-config
         application.Config = ConfigInject
 
-        self._build_versions()
+        self.build()
         pass
 
     def _parse_config(self, config):
@@ -104,23 +107,33 @@ class VersionedDocs:
                 _select_specific_branches.append(tag)
         return _select_specific_branches
 
-    def _prebuild(self, tag):
+    def _build(self, tag, _prebuild=False):
         # Checkout tag/branch
         self.versions.checkout(tag)
+        EventHandlers.CURRENT_VERSION = tag
+
         with TempDir() as temp_dir:
             log.debug(f"Checking out the latest tag in temporary directory: {temp_dir}")
             source = str(self.local_conf.parent)
             target = temp_dir
             argv = (source, target)
-            if self._quite:
-                argv += (self._quite,)
+            argv += self._additional_args
             result = build_main(argv)
             if result != 0:
                 raise SphinxError
 
-            log.success(f"pre-build succeded for {tag} :)")
+            if _prebuild:
+                log.success(f"pre-build succeded for {tag} :)")
+                return True
 
-    def _pre_build_versions(self):
+            output_with_tag = pathlib.Path(self.output_dir) / tag
+            if not output_with_tag.exists():
+                output_with_tag.mkdir(parents=True, exist_ok=True)
+            shutil.copytree(temp_dir, output_with_tag, False, None, dirs_exist_ok=True)
+            log.success(f"build succeded for {tag} ;)")
+            return True
+
+    def _pre_build(self):
         if not self.prebuild:
             log.info("No pre-builing...")
             self._versions_to_build = self._versions_to_pre_build
@@ -134,7 +147,7 @@ class VersionedDocs:
         for tag in self._versions_to_pre_build:
             log.info(f"pre-building: {tag}")
             try:
-                self._prebuild(tag)
+                self._build(tag, _prebuild=True)
                 self._versions_to_build.append(tag)
             except SphinxError:
                 log.error(f"Pre-build failed for {tag}")
@@ -142,29 +155,7 @@ class VersionedDocs:
                 # restore to active branch
                 self.versions.checkout(self._active_branch.name)
 
-    def _build(self, tag):
-        # Checkout tag/branch
-        self.versions.checkout(tag)
-        EventHandlers.CURRENT_VERSION = tag
-
-        with TempDir() as temp_dir:
-            log.debug(f"Checking out the latest tag in temporary directory: {temp_dir}")
-            source = str(self.local_conf.parent)
-            target = temp_dir
-            argv = (source, target)
-            if self._quite:
-                argv += (self._quite,)
-            result = build_main(argv)
-            if result != 0:
-                raise SphinxError
-
-            output_with_tag = pathlib.Path(self.output_dir) / tag
-            if not output_with_tag.exists():
-                output_with_tag.mkdir(parents=True, exist_ok=True)
-            shutil.copytree(temp_dir, output_with_tag, False, None, dirs_exist_ok=True)
-            log.success(f"build succeded for {tag} ;)")
-
-    def _build_versions(self):
+    def build(self):
         # get active branch
         self._active_branch = self.versions.active_branch
 
@@ -196,12 +187,6 @@ def main(
     ),
     local_conf: str = typer.Option(
         "docs/conf.py", "--local-conf", help="Path to conf.py for sphinx-versions to read config from."
-    ),
-    root_ref: str = typer.Option(
-        "main",
-        "-r",
-        "--root-ref",
-        help="The branch/tag at the root of DESTINATION. Will also be in subdir.",
     ),
     reset_intersphinx_mapping: bool = typer.Option(
         False, "--reset-intersphinx", "-rI", help="Reset intersphinx mapping; acts as a patch for issue #17"
