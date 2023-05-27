@@ -36,6 +36,7 @@ class EventHandlers(object):
     SHOW_BANNER = False
     VERSIONS = None
     ASSETS_TO_COPY = []
+    RESET_INTERSPHINX_MAPPING = False
 
     @staticmethod
     def builder_inited(app):
@@ -73,7 +74,13 @@ class EventHandlers(object):
             EventHandlers.ASSETS_TO_COPY.append("fontawesome-webfont.woff")
 
     @classmethod
-    def copy_custom_files(cls, app, exc):
+    def builder_finished_tasks(cls, app, exc):
+        if cls.RESET_INTERSPHINX_MAPPING:
+            log.debug("Reset intersphinx mappings")
+            for key, value in app.config.intersphinx_mapping.values():
+                app.config.intersphinx_mapping[key] = value
+            print(app.config.intersphinx_mapping)
+
         if app.builder.format == "html" and not exc:
             staticdir = os.path.join(app.builder.outdir, "_static")
             for asset in cls.ASSETS_TO_COPY:
@@ -140,5 +147,5 @@ def setup(app):
     app.connect("builder-inited", EventHandlers.builder_inited)
     app.connect("env-updated", EventHandlers.env_updated)
     app.connect("html-page-context", EventHandlers.html_page_context)
-    app.connect("build-finished", EventHandlers.copy_custom_files)
+    app.connect("build-finished", EventHandlers.builder_finished_tasks)
     return dict(version=__version__)

@@ -203,6 +203,9 @@ def main(
         "--root-ref",
         help="The branch/tag at the root of DESTINATION. Will also be in subdir.",
     ),
+    reset_intersphinx_mapping: bool = typer.Option(
+        False, "--reset-intersphinx", "-rI", help="Reset intersphinx mapping; acts as a patch for issue #17"
+    ),
     prebuild: bool = typer.Option(True, help="Disables the pre-builds; halves the runtime"),
     select_branches: str = typer.Option(
         None, "-b", "--branches", help="Build docs for specific branches and tags"
@@ -217,6 +220,10 @@ def main(
 ) -> None:
     if select_branches:
         select_branches = re.split(",|\ ", select_branches)
+    EventHandlers.RESET_INTERSPHINX_MAPPING = reset_intersphinx_mapping
+    if reset_intersphinx_mapping:
+        log.error("Forcing --no-prebuild")
+        prebuild = False
     return VersionedDocs(locals())
 
 
