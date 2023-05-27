@@ -188,12 +188,6 @@ def main(
     local_conf: str = typer.Option(
         "docs/conf.py", "--local-conf", help="Path to conf.py for sphinx-versions to read config from."
     ),
-    root_ref: str = typer.Option(
-        "main",
-        "-r",
-        "--root-ref",
-        help="The branch/tag at the root of DESTINATION. Will also be in subdir.",
-    ),
     reset_intersphinx_mapping: bool = typer.Option(
         False, "--reset-intersphinx", "-rI", help="Reset intersphinx mapping; acts as a patch for issue #17"
     ),
