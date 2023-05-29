@@ -73,7 +73,7 @@ class VersionedDocs:
         msg="found version",
     ) -> bool:
         for tag in versions:
-            log.info(f"{msg}: {tag.name}")
+            log.info(f"{msg}: {tag}")
         return True
 
     def _handle_paths(self):
@@ -95,15 +95,15 @@ class VersionedDocs:
         _all_versions.extend(self.git_versions.repo.tags)
         _all_versions.extend(self.git_versions.repo.branches)
         self._log_versions(_all_versions)
-        return _all_versions
+        return [x.name for x in _all_versions]
 
     def _select_specific_branches(self) -> list:
         _all_versions = self._get_all_versions()
         _select_specific_branches = []
 
         for tag in _all_versions:
-            if tag.name in self.select_branches:
-                log.info(f"Selecting tag for further processing: {tag.name}")
+            if tag in self.select_branches:
+                log.info(f"Selecting tag for further processing: {tag}")
                 _select_specific_branches.append(tag)
         return _select_specific_branches
 
@@ -162,11 +162,9 @@ class VersionedDocs:
         self._built_version = []
         self._log_versions(self._versions_to_build, msg="building versions")
         if self.pass_versions:
-            EventHandlers.VERSIONS = BuiltVersions(
-                self.pass_versions, self.git_versions.build_directory, parse_to_name=False
-            )
+            EventHandlers.VERSIONS = BuiltVersions(self.pass_versions, self.git_versions)
         else:
-            EventHandlers.VERSIONS = BuiltVersions(self._versions_to_build, self.git_versions.build_directory)
+            EventHandlers.VERSIONS = BuiltVersions(self._versions_to_build, self.git_versions)
         log.info(f"Selecting tags for versions menu {EventHandlers.VERSIONS}")
 
         for tag in self._versions_to_build:
@@ -207,7 +205,7 @@ def main(
     pass_versions: str = typer.Option(
         None,
         "--versions",
-        help="Passes the versions list to the menu directly  (doesn't pull the versions info from git)",
+        help="Passes the versions list to the menu directly  (doesn't use the versions info from git)",
     ),
     quite: bool = typer.Option(True, help="No output from `sphinx`"),
     verbose: bool = typer.Option(
