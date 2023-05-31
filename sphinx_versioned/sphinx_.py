@@ -65,10 +65,9 @@ class EventHandlers(object):
 
         log.info(f"Theme: {app.config.html_theme}")
         # Insert flyout script
-        if app.config.html_theme == "sphinx_rtd_theme" or app.config.html_theme == "bootstrap-astropy":
+        if app.config.html_theme == "bootstrap-astropy":
             app.add_js_file("_rtd_versions.js")
             EventHandlers.ASSETS_TO_COPY.append("_rtd_versions.js")
-        if app.config.html_theme == "bootstrap-astropy":
             app.add_css_file("badge_only.css")
             EventHandlers.ASSETS_TO_COPY.append("badge_only.css")
             EventHandlers.ASSETS_TO_COPY.append("fontawesome-webfont.woff")
