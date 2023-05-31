@@ -36,7 +36,7 @@ jobs:
         with:
           python-version: "3.9"
       - name: Run sphinx-versioned to build docs
-        uses: |
+        run: |
           python -m pip install -e .[docs]
           sphinx-versioned
       - name: Setup Pages
