@@ -24,19 +24,24 @@ How to use
 
 .. code::
 
-     Usage: sphinx-versioned [OPTIONS]
+    Usage: sphinx-versioned [OPTIONS]
 
-    ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-    │ --chdir                            TEXT  Make this the current working directory before running. [default: None]             │
-    │ --output      -O                   TEXT  Output directory [default: docs/_build]                                             │
-    │ --git-root                         TEXT  Path to directory in the local repo. Default is CWD.                                │
-    │ --local-conf                       TEXT  Path to conf.py for sphinx-versions to read config from. [default: docs/conf.py]    │
-    │ --root-ref    -r                   TEXT  The branch/tag at the root of DESTINATION. Will also be in subdir. [default: main]  │
-    │ --prebuild        --no-prebuild          Disables the pre-builds; halves the runtime [default: prebuild]                     │
-    │ --branches    -b                   TEXT  Build docs for specific branches and tags [default: None]                           │
-    │ --quite           --no-quite             No output from `sphinx` [default: quite]                                            │
-    │ --help                                   Show this message and exit.                                                         │
-    ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+    ╭─ Options ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+    │ --chdir                                     TEXT         Make this the current working directory before running. [default: None]    │
+    │ --output              -O                    TEXT         Output directory [default: docs/_build]                                    │
+    │ --git-root                                  TEXT         Path to directory in the local repo. Default is CWD.                       │
+    │ --local-conf                                TEXT         Path to conf.py for sphinx-versions to read config from.                   │
+    │                                                          [default: docs/conf.py]                                                    │
+    │ --reset-intersphinx   -rI                                Reset intersphinx mapping; acts as a patch for issue #17                   │
+    │ --prebuild                 --no-prebuild                 Disables the pre-builds; halves the runtime [default: prebuild]            │
+    │ --branches            -b                    TEXT         Build docs for specific branches and tags [default: None]                  │
+    │ --list-branches       -l                                 List all branches/tags detected via GitPython                              │
+    │ --quite                    --no-quite                    No output from `sphinx` [default: quite]                                   │
+    │ --verbose             -v                                 Debug logging. Specify more than once for more logging.                    │
+    │                                                          installation.                                                              │
+    │                                                          [default: None]                                                            │
+    │ --help                                                   Show this message and exit.                                                │
+    ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
 .. |versions| image:: https://img.shields.io/pypi/pyversions/sphinx-versioned-docs.svg?logo=python&logoColor=FBE072
     :target: https://pypi.org/project/sphinx-versioned-docs/
