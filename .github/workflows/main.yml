@@ -28,7 +28,7 @@ jobs:
           pip install tox
       - name: run tests
         run: |
-          tox -e testenv
+          tox -e py39
 
   codestyle:
     runs-on: ubuntu-latest
