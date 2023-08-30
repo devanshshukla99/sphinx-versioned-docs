@@ -179,28 +179,47 @@ class VersionedDocs:
 @app.command()
 def main(
     chdir: str = typer.Option(
-        None, "--chdir", help="Make this the current working directory before running."
+        None,
+        "--chdir",
+        help="Make this the current working directory before running.",
     ),
     output_dir: str = typer.Option("docs/_build", "--output", "-O", help="Output directory"),
     git_root: str = typer.Option(
-        None, "--git-root", help="Path to directory in the local repo. Default is CWD.", show_default=False
+        None,
+        "--git-root",
+        help="Path to directory in the local repo. Default is CWD.",
+        show_default=False,
     ),
     local_conf: str = typer.Option(
-        "docs/conf.py", "--local-conf", help="Path to conf.py for sphinx-versions to read config from."
+        "docs/conf.py",
+        "--local-conf",
+        help="Path to conf.py for sphinx-versions to read config from.",
     ),
     reset_intersphinx_mapping: bool = typer.Option(
-        False, "--reset-intersphinx", "-rI", help="Reset intersphinx mapping; acts as a patch for issue #17"
+        False,
+        "--reset-intersphinx",
+        "-rI",
+        help="Reset intersphinx mapping; acts as a patch for issue #17",
     ),
     prebuild: bool = typer.Option(True, help="Disables the pre-builds; halves the runtime"),
     select_branches: str = typer.Option(
-        None, "-b", "--branches", help="Build docs for specific branches and tags"
+        None,
+        "-b",
+        "--branches",
+        help="Build docs for specific branches and tags",
     ),
     list_branches: bool = typer.Option(
-        False, "--list-branches", "-l", help="List all branches/tags detected via GitPython"
+        False,
+        "--list-branches",
+        "-l",
+        help="List all branches/tags detected via GitPython",
     ),
     quite: bool = typer.Option(True, help="No output from `sphinx`"),
     verbose: bool = typer.Option(
-        False, "--verbose", "-v", help="Debug logging. Specify more than once for more logging."
+        False,
+        "--verbose",
+        "-v",
+        help="Debug logging. Specify more than once for more logging.",
     ),
 ) -> None:
     if select_branches:
