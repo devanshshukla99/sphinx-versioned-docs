@@ -63,7 +63,7 @@ class VersionedDocs:
 
         self.build()
 
-        # Add a `index.html` to redirects to `main-branch` kwarg `output_dir`
+        # Adds a top-level `index.html` in `output_dir` which redirects to `output_dir`/`main-branch`/index.html
         self._generate_top_level_index()
         pass
 
@@ -117,7 +117,6 @@ class VersionedDocs:
             log.error(f"main branch {self.main_branch} not found!!")
             exit(-1)
 
-        log.debug(f"main branch {self.main_branch} found")
         with open(self.output_dir / "index.html", "w") as findex:
             findex.write(
                 f"""
@@ -129,6 +128,7 @@ class VersionedDocs:
             </head>
             """
             )
+        log.debug(f"main branch '{self.main_branch}' found")
         return
 
     def _build(self, tag, _prebuild=False):
