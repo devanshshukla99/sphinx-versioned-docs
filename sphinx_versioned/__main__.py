@@ -38,6 +38,8 @@ class VersionedDocs:
         self._parse_config(config)
         self._handle_paths()
 
+        self.output_dir = pathlib.Path(self.output_dir)
+
         self._versions_to_pre_build = []
         self._versions_to_build = []
         self._failed_build = []
@@ -60,6 +62,9 @@ class VersionedDocs:
         application.Config = ConfigInject
 
         self.build()
+
+        # Add a `index.html` to redirects to `main-branch` kwarg `output_dir`
+        self._generate_top_level_index()
         pass
 
     def _parse_config(self, config):
@@ -106,6 +111,24 @@ class VersionedDocs:
                 log.info(f"Selecting tag for further processing: {tag.name}")
                 _select_specific_branches.append(tag)
         return _select_specific_branches
+    
+    def _generate_top_level_index(self):
+        if self.main_branch not in [x.name for x in self._built_version]:
+            log.error(f"main branch {self.main_branch} not found!!")
+            exit(-1)
+
+        log.debug(f"main branch {self.main_branch} found")
+        with open(self.output_dir / "index.html", "w") as findex:
+            findex.write(f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta http-equiv="refresh" content="0; url =
+                {self.main_branch}/index.html" />
+            </head>
+            """)
+        return
+
 
     def _build(self, tag, _prebuild=False):
         # Checkout tag/branch
@@ -126,9 +149,10 @@ class VersionedDocs:
                 log.success(f"pre-build succeded for {tag} :)")
                 return True
 
-            output_with_tag = pathlib.Path(self.output_dir) / tag
+            output_with_tag = self.output_dir / tag
             if not output_with_tag.exists():
                 output_with_tag.mkdir(parents=True, exist_ok=True)
+
             shutil.copytree(temp_dir, output_with_tag, False, None, dirs_exist_ok=True)
             log.success(f"build succeded for {tag} ;)")
             return True
@@ -213,6 +237,12 @@ def main(
         "--list-branches",
         "-l",
         help="List all branches/tags detected via GitPython",
+    ),
+    main_branch: str = typer.Option(
+        "main",
+        "-m",
+        "--main-branch",
+        help="Main branch to which the top-level `index.html` redirects to."
     ),
     quite: bool = typer.Option(True, help="No output from `sphinx`"),
     verbose: bool = typer.Option(
