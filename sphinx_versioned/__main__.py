@@ -21,7 +21,7 @@ logger_format = (
 log.remove()
 log.add(sys.stderr, format=logger_format)
 
-app = typer.Typer()
+app = typer.Typer(add_completion=False)
 
 
 class ConfigInject(SphinxConfig):
