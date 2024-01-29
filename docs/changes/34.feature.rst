@@ -1,0 +1,2 @@
+Generates a top-level index page which redirect to the index page of the main branch.
+By default, the main branch is "main" / can be changed using the `--main-branch` kwarg.
