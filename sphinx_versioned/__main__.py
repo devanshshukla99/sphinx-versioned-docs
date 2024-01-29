@@ -111,7 +111,7 @@ class VersionedDocs:
                 log.info(f"Selecting tag for further processing: {tag.name}")
                 _select_specific_branches.append(tag)
         return _select_specific_branches
-    
+
     def _generate_top_level_index(self):
         if self.main_branch not in [x.name for x in self._built_version]:
             log.error(f"main branch {self.main_branch} not found!!")
@@ -119,16 +119,17 @@ class VersionedDocs:
 
         log.debug(f"main branch {self.main_branch} found")
         with open(self.output_dir / "index.html", "w") as findex:
-            findex.write(f"""
+            findex.write(
+                f"""
             <!DOCTYPE html>
             <html>
             <head>
                 <meta http-equiv="refresh" content="0; url =
                 {self.main_branch}/index.html" />
             </head>
-            """)
+            """
+            )
         return
-
 
     def _build(self, tag, _prebuild=False):
         # Checkout tag/branch
@@ -242,7 +243,7 @@ def main(
         "main",
         "-m",
         "--main-branch",
-        help="Main branch to which the top-level `index.html` redirects to."
+        help="Main branch to which the top-level `index.html` redirects to.",
     ),
     quite: bool = typer.Option(True, help="No output from `sphinx`"),
     verbose: bool = typer.Option(
