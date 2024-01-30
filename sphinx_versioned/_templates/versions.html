@@ -10,7 +10,7 @@
     <dl>
       <dt>Tags</dt>
       {%- for name, url in versions.tags.items() %}
-      <dd><a href="{{ url }}">{{ name }}</a></dd>
+      <dd><a href="{{ relpath }}{{ url }}">{{ name }}</a></dd>
       {%- endfor %}
     </dl>
     {%- endif %}
@@ -18,7 +18,7 @@
     <dl>
       <dt>Branches</dt>
       {%- for name, url in versions.branches.items() %}
-      <dd><a href="{{ url }}">{{ name }}</a></dd>
+      <dd><a href="{{ relpath }}{{ url }}">{{ name }}</a></dd>
       {%- endfor %}
     </dl>
     {%- endif %}
@@ -38,7 +38,7 @@
       <p>tags</p>
       <div class="dropdown-content">
         {%- for name, url in versions.tags.items() %}
-        <a href="{{ url }}">{{ name }}</a>
+        <a href="{{ relpath }}{{ url }}">{{ name }}</a>
         {%- endfor %}
       </div>
       {%- endif %}
@@ -46,7 +46,7 @@
       <p>branches</p>
       <div class="dropdown-content">
         {%- for name, url in versions.branches.items() %}
-        <a href="{{ url }}">{{ name }}</a>
+        <a href="{{ relpath }}{{ url }}">{{ name }}</a>
         {%- endfor %}
       </div>
       {%- endif %}
@@ -66,7 +66,7 @@
       <dl>
         <dt>Tags</dt>
         {%- for name, url in versions.tags.items() %}
-        <dd><a href="{{ url }}">{{ name }}</a></dd>
+        <dd><a href="{{ relpath }}{{ url }}">{{ name }}</a></dd>
         {%- endfor %}
       </dl>
       {%- endif %}
@@ -74,7 +74,7 @@
       <dl>
         <dt>Branches</dt>
         {%- for name, url in versions.branches.items() %}
-        <dd><a href="{{ url }}">{{ name }}</a></dd>
+        <dd><a href="{{ relpath }}{{ url }}">{{ name }}</a></dd>
         {%- endfor %}
       </dl>
       {%- endif %}
@@ -88,7 +88,7 @@
   <p>tags</p>
   <div class="dropdown-content">
     {%- for name, url in versions.tags.items() %}
-    <a href="{{ url }}">{{ name }}</a>
+    <a href="{{ relpath }}{{ url }}">{{ name }}</a>
     {%- endfor %}
   </div>
   {%- endif %}
@@ -96,7 +96,7 @@
   <p>branches</p>
   <div class="dropdown-content">
     {%- for name, url in versions.branches.items() %}
-    <a href="{{ url }}">{{ name }}</a>
+    <a href="{{ relpath }}{{ url }}">{{ name }}</a>
     {%- endfor %}
   </div>
   {%- endif %}

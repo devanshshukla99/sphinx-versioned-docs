@@ -1,0 +1,1 @@
+Fixed a bug where versions menu was working from the top-level however, it used fail when accessing other versions from deep links.
