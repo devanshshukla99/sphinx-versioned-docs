@@ -5,9 +5,9 @@ import typer
 import shutil
 import pathlib
 from sphinx import application
-from sphinx.config import Config as SphinxConfig
-from sphinx.cmd.build import build_main
 from sphinx.errors import SphinxError
+from sphinx.cmd.build import build_main
+from sphinx.config import Config as SphinxConfig
 from sphinx_versioned.versions import GitVersions, BuiltVersions
 
 from loguru import logger as log
@@ -15,13 +15,9 @@ from loguru import logger as log
 from sphinx_versioned.lib import TempDir
 from sphinx_versioned.sphinx_ import EventHandlers
 
-logger_format = (
-    "| <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{line}</cyan> | - <level>{message}</level>"
-)
-log.remove()
-log.add(sys.stderr, format=logger_format)
+logger_format = "| <level>{level: <8}</level> | - <level>{message}</level>"
 
-app = typer.Typer()
+app = typer.Typer(add_completion=False)
 
 
 class ConfigInject(SphinxConfig):
@@ -37,6 +33,8 @@ class VersionedDocs:
         self.config = config
         self._parse_config(config)
         self._handle_paths()
+
+        self.output_dir = pathlib.Path(self.output_dir)
 
         self._versions_to_pre_build = []
         self._versions_to_build = []
@@ -60,6 +58,11 @@ class VersionedDocs:
         application.Config = ConfigInject
 
         self.build()
+
+        # Adds a top-level `index.html` in `output_dir` which redirects to `output_dir`/`main-branch`/index.html
+        self._generate_top_level_index()
+
+        print(f"\n\033[92m Successfully built {', '.join([x.name for x in self._built_version])} \033[0m")
         pass
 
     def _parse_config(self, config):
@@ -107,6 +110,25 @@ class VersionedDocs:
                 _select_specific_branches.append(tag)
         return _select_specific_branches
 
+    def _generate_top_level_index(self):
+        if self.main_branch not in [x.name for x in self._built_version]:
+            log.error(f"main branch {self.main_branch} not found!!")
+            exit(-1)
+
+        with open(self.output_dir / "index.html", "w") as findex:
+            findex.write(
+                f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta http-equiv="refresh" content="0; url =
+                {self.main_branch}/index.html" />
+            </head>
+            """
+            )
+        log.debug(f"main branch '{self.main_branch}' found")
+        return
+
     def _build(self, tag, _prebuild=False):
         # Checkout tag/branch
         self.versions.checkout(tag)
@@ -126,9 +148,10 @@ class VersionedDocs:
                 log.success(f"pre-build succeded for {tag} :)")
                 return True
 
-            output_with_tag = pathlib.Path(self.output_dir) / tag
+            output_with_tag = self.output_dir / tag
             if not output_with_tag.exists():
                 output_with_tag.mkdir(parents=True, exist_ok=True)
+
             shutil.copytree(temp_dir, output_with_tag, False, None, dirs_exist_ok=True)
             log.success(f"build succeded for {tag} ;)")
             return True
@@ -155,12 +178,14 @@ class VersionedDocs:
                 # restore to active branch
                 self.versions.checkout(self._active_branch.name)
 
+        log.success(f"Prebuilding successful for {', '.join([x.name for x in self._versions_to_build])}")
+        return
+
     def build(self):
         # get active branch
         self._active_branch = self.versions.active_branch
 
         self._built_version = []
-        self._log_versions(self._versions_to_build, msg="building versions")
         EventHandlers.VERSIONS = BuiltVersions(self._versions_to_build, self.versions.build_directory)
 
         for tag in self._versions_to_build:
@@ -220,12 +245,21 @@ def main(
         "-l",
         help="List all branches/tags detected via GitPython",
     ),
+    main_branch: str = typer.Option(
+        "main",
+        "-m",
+        "--main-branch",
+        help="Main branch to which the top-level `index.html` redirects to.",
+    ),
     quite: bool = typer.Option(True, help="No output from `sphinx`"),
     verbose: bool = typer.Option(
         False,
         "--verbose",
         "-v",
-        help="Debug logging. Specify more than once for more logging.",
+        help="Passed directly to sphinx. Specify more than once for more logging in sphinx.",
+    ),
+    loglevel: str = typer.Option(
+        "info", "-log", "--log", help="Provide logging level. Example --log debug, default=info"
     ),
 ) -> None:
     if select_branches:
@@ -245,6 +279,8 @@ def main(
         log.info("Monkeypatching older sphinx app.add_stylesheet -> app.add_css_file")
         application.Sphinx.add_stylesheet = application.Sphinx.add_css_file
 
+    log.remove()
+    log.add(sys.stderr, format=logger_format, level=loglevel.upper())
     return VersionedDocs(locals())
 
 
