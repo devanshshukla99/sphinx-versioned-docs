@@ -126,6 +126,7 @@ class EventHandlers(object):
         context["relpath"] = relpath
         return
 
+
 def setup(app):
     """Called by Sphinx during phase 0 (initialization).
 
