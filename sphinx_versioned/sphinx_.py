@@ -121,6 +121,10 @@ class EventHandlers(object):
         context["scv_is_root"] = cls.IS_ROOT
         context["versions"] = cls.VERSIONS
 
+        # Relative path to master_doc
+        relpath = (pagename.count("/")) * "../"
+        context["relpath"] = relpath
+        return
 
 def setup(app):
     """Called by Sphinx during phase 0 (initialization).
