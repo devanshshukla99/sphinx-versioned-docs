@@ -226,6 +226,12 @@ def main(
         "-rI",
         help="Reset intersphinx mapping; acts as a patch for issue #17",
     ),
+    sphinx_compatibility: bool = typer.Option(
+        False,
+        "--sphinx-compatibility",
+        "-Sc",
+        help="Adds compatibility for older sphinx versions by monkey patching certain functions.",
+    ),
     prebuild: bool = typer.Option(True, help="Disables the pre-builds; halves the runtime"),
     select_branches: str = typer.Option(
         None,
@@ -258,10 +264,20 @@ def main(
 ) -> None:
     if select_branches:
         select_branches = re.split(",|\ ", select_branches)
+
     EventHandlers.RESET_INTERSPHINX_MAPPING = reset_intersphinx_mapping
+
     if reset_intersphinx_mapping:
         log.error("Forcing --no-prebuild")
         prebuild = False
+
+    if sphinx_compatibility:
+        """
+        Monkeypatching `sphinx.application.Sphinx.add_stylesheet` -> `sphinx.application.Sphinx.add_stylesheet`
+        to add compatibility for versions using older sphinx
+        """
+        log.info("Monkeypatching older sphinx app.add_stylesheet -> app.add_css_file")
+        application.Sphinx.add_stylesheet = application.Sphinx.add_css_file
 
     log.remove()
     log.add(sys.stderr, format=logger_format, level=loglevel.upper())

@@ -1,0 +1,2 @@
+Added `sphinx_compatibility` kwarg to help generate documentations for versions using deprecated function.
+Currently, monkey patching `app.add_stylesheet` -> `app.add_css_file`.
