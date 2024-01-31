@@ -17,12 +17,12 @@ and dirty you can do the following:
 
 .. code-block:: bash
 
+    sphinx-quickstart docs -p projectname -a author -v version --makefile --no-sep -r version -l en -q
     git checkout -b feature_branch main  # Create new branch from main.
-    mkdir docs  # All documentation will go here (optional, can be anywhere).
-    echo "master_doc = 'index'" > docs/conf.py  # Create Sphinx config file.
     echo -e "Test\n====\n\nSample Documentation" > docs/index.rst  # Create one doc.
-    git add docs
-    git commit
+    git add .
+    git commit -m "initial"
+    sphinx-versioned
 
 
 Building versioned docs
@@ -46,8 +46,8 @@ After the build has succeded, your docs should be available in `docs/_build/<bra
 
 .. note::
 
-    To get output from the sphinx builder, ``--no-quite`` option is required.
+    By default, ``sphinx-versioned-docs`` pre-builds the branches to see which of them fails; but this behaviour can be mitigated using the ``--no-prebuild`` argument.
 
 .. note::
 
-    By default, ``sphinx-versioned-docs`` pre-builds the branches to see which of them fails; but this behaviour can be mitigated using the ``--no-prebuild`` argument.
+    Use ``--no-quite`` option to get output from the sphinx builder, adjust verbosity using ``-v``
