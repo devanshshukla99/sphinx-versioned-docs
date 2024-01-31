@@ -4,8 +4,8 @@ import os
 import sys
 
 from loguru import logger as log
-from sphinx.builders.html import StandaloneHTMLBuilder
 from sphinx.jinja2glue import SphinxFileSystemLoader
+from sphinx.builders.html import StandaloneHTMLBuilder
 
 from sphinx_versioned._version import __version__
 from sphinx.util.fileutil import copy_asset_file
@@ -15,25 +15,25 @@ STATIC_DIR = os.path.join(os.path.dirname(__file__), "_static")
 
 
 class EventHandlers(object):
-    """Hold Sphinx event handlers as static or class methods.
+    """
+    Holds Sphinx event handlers as static or class methods.
 
-    :ivar multiprocessing.queues.Queue ABORT_AFTER_READ: Communication channel to parent process.
-    :ivar bool BANNER_GREATEST_TAG: Banner URLs point to greatest/highest (semver) tag.
-    :ivar str BANNER_MAIN_VERSION: Banner URLs point to this remote name (from Versions.__getitem__()).
-    :ivar bool BANNER_RECENT_TAG: Banner URLs point to most recently committed tag.
-    :ivar str CURRENT_VERSION: Current version being built.
-    :ivar bool IS_ROOT: Value for context['scv_is_root'].
-    :ivar bool SHOW_BANNER: Display the banner.
-    :ivar sphinxcontrib.versioning.versions.Versions VERSIONS: Versions class instance.
+    Parameters
+    ----------
+    ABORT_AFTER_READ : `bool` or `~multiprocessing.queues.Queue`
+        Communication channel to parent process
+    CURRENT_VERSION : `str`
+        Current version being built.
+    VERSIONS : `~sphinx_versioned.versions.BuiltVersions`
+        Pass through versions for them to be linked to be linked in the badge.
+    ASSETS_TO_COPY : `list`
+        Assest to copy to output directory.
+    RESET_INTERSPHINX_MAPPING : `bool`
+        Reset intersphinx mapping after each build.
     """
 
     ABORT_AFTER_READ = None
-    BANNER_GREATEST_TAG = False
-    BANNER_MAIN_VERSION = None
-    BANNER_RECENT_TAG = False
     CURRENT_VERSION = None
-    IS_ROOT = False
-    SHOW_BANNER = False
     VERSIONS = None
     ASSETS_TO_COPY = []
     RESET_INTERSPHINX_MAPPING = False
@@ -88,13 +88,18 @@ class EventHandlers(object):
 
     @classmethod
     def env_updated(cls, app, env):
-        """Abort Sphinx after initializing config and discovering all pages to build.
+        """
+        Abort Sphinx after initializing config and discovering all pages to build.
 
-        :param sphinx.application.Sphinx app: Sphinx application object.
-        :param sphinx.environment.BuildEnvironment env: Sphinx build environment.
+        Parameters
+        ----------
+        app : `sphinx.application.Sphinx`
+            Sphinx application object.
+        env : `sphinx.environment.BuildEnvironment`
+            Sphinx build environment
         """
         if cls.ABORT_AFTER_READ:
-            config = {n: getattr(app.config, n) for n in (a for a in dir(app.config) if a.startswith("scv_"))}
+            config = {n: getattr(app.config, n) for n in (a for a in dir(app.config) if a.startswith("sv_"))}
             config["found_docs"] = tuple(str(d) for d in env.found_docs)
             config["master_doc"] = str(app.config.master_doc)
             cls.ABORT_AFTER_READ.put(config)
@@ -102,23 +107,29 @@ class EventHandlers(object):
 
     @classmethod
     def html_page_context(cls, app, pagename, templatename, context, doctree):
-        """Update the Jinja2 HTML context, exposes the Versions class instance to it.
+        """
+        Update the Jinja2 HTML context, exposes the Versions class instance to it.
 
-        :param sphinx.application.Sphinx app: Sphinx application object.
-        :param str pagename: Name of the page being rendered (without .html or any file extension).
-        :param str templatename: Page name with .html.
-        :param dict context: Jinja2 HTML context.
-        :param docutils.nodes.document doctree: Tree of docutils nodes.
+        Parameters
+        ----------
+        app : `sphinx.application.Sphinx`
+            Sphinx application object.
+        pagename : `str`
+            Name of the page being rendered (without .html or any file extension).
+        templatename : `str`
+            Page name with .html.
+        context : `dict`
+            Jinja2 HTML context.
+        doctree : `docutils.nodes.document`
+            Tree of docutils nodes.
         """
         assert templatename or doctree  # Unused, for linting.
         this_remote = "main"
-        banner_main_remote = "main"
+
         # Update Jinja2 context.
-        context["bitbucket_version"] = cls.CURRENT_VERSION
-        context["current_version"] = cls.CURRENT_VERSION
         context["github_version"] = cls.CURRENT_VERSION
+        context["current_version"] = cls.CURRENT_VERSION
         context["html_theme"] = app.config.html_theme
-        context["scv_is_root"] = cls.IS_ROOT
         context["versions"] = cls.VERSIONS
 
         # Relative path to master_doc
@@ -128,12 +139,17 @@ class EventHandlers(object):
 
 
 def setup(app):
-    """Called by Sphinx during phase 0 (initialization).
+    """
+    Called by Sphinx during phase 0 (initialization).
 
-    :param sphinx.application.Sphinx app: Sphinx application object.
+    Parameters
+    ----------
+    app : `sphinx.application.Sphinx`
+        Sphinx application object.
 
-    :returns: Extension version.
-    :rtype: dict
+    Returns
+    -------
+    Extension version : `dict`
     """
     # Used internally. For rebuilding all pages when one or versions fail.
     # app.add_config_value("sphinx_versioned_versions", SC_VERSIONING_VERSIONS, "html")
@@ -144,7 +160,7 @@ def setup(app):
 
     # Tell Sphinx which config values can be set by the user.
     # for name, default in Config():
-    #     app.add_config_value("scv_{}".format(name), default, "html")
+    #     app.add_config_value("sv_{}".format(name), default, "html")
 
     # Event handlers.
     app.connect("builder-inited", EventHandlers.builder_inited)

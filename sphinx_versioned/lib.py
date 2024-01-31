@@ -1,12 +1,13 @@
 """Common objects used throughout the project."""
 
-import atexit
-import functools
-import logging
 import os
+import atexit
 import shutil
-import tempfile
 import weakref
+import tempfile
+import functools
+
+from loguru import logger as log
 
 
 class HandledError(Exception):
@@ -18,7 +19,7 @@ class HandledError(Exception):
 
     def show(self, **_):
         """Error messages should be logged before raising this exception."""
-        logging.critical("Failure.")
+        log.critical("Failure.")
 
 
 class TempDir(object):

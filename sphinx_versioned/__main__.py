@@ -30,6 +30,13 @@ class ConfigInject(SphinxConfig):
 
 class VersionedDocs:
     def __init__(self, config) -> None:
+        """
+        Class to handle main workflow.
+
+        Parameters
+        ----------
+        config : `dict`
+        """
         self.config = config
         self._parse_config(config)
         self._handle_paths()
@@ -43,10 +50,6 @@ class VersionedDocs:
 
         self._additional_args += ("-Q",) if self.quite else ()
         self._additional_args += ("-vv",) if self.verbose else ()
-
-        if self.list_branches:
-            self._get_all_versions()
-            return
 
         # selectively build branches / build all branches
         self._versions_to_pre_build = (
@@ -63,9 +66,9 @@ class VersionedDocs:
         self._generate_top_level_index()
 
         print(f"\n\033[92m Successfully built {', '.join([x.name for x in self._built_version])} \033[0m")
-        pass
+        return
 
-    def _parse_config(self, config):
+    def _parse_config(self, config) -> bool:
         for varname, value in config.items():
             setattr(self, varname, value)
         return True
@@ -75,11 +78,26 @@ class VersionedDocs:
         versions,
         msg="found version",
     ) -> bool:
+        """
+        Log versions to `stdout`
+
+        Parameters
+        ----------
+        versions : `~sphinx_versioned.versions.GitVersions`
+        mas : `str`
+
+        Return
+        ------
+        `bool`
+        """
         for tag in versions:
             log.info(f"{msg}: {tag.name}")
         return True
 
-    def _handle_paths(self):
+    def _handle_paths(self) -> None:
+        """
+        Method to handle cwd and path for local config
+        """
         self.chdir = self.chdir if self.chdir else os.getcwd()
         log.debug(f"Working directory {self.chdir}")
 
@@ -93,7 +111,7 @@ class VersionedDocs:
         log.success(f"located conf.py")
         return
 
-    def _get_all_versions(self) -> bool:
+    def _get_all_versions(self) -> list:
         _all_versions = []
         _all_versions.extend(self.versions.repo.tags)
         _all_versions.extend(self.versions.repo.branches)
@@ -110,26 +128,39 @@ class VersionedDocs:
                 _select_specific_branches.append(tag)
         return _select_specific_branches
 
-    def _generate_top_level_index(self):
+    def _generate_top_level_index(self) -> None:
         if self.main_branch not in [x.name for x in self._built_version]:
-            log.error(f"main branch {self.main_branch} not found!!")
-            exit(-1)
+            log.critical(f"main branch {self.main_branch} not found!!")
 
         with open(self.output_dir / "index.html", "w") as findex:
             findex.write(
                 f"""
-            <!DOCTYPE html>
-            <html>
-            <head>
+                <!DOCTYPE html>
+                <html>
+                <head>
                 <meta http-equiv="refresh" content="0; url =
                 {self.main_branch}/index.html" />
-            </head>
+                </head>
             """
             )
         log.debug(f"main branch '{self.main_branch}' found")
         return
 
-    def _build(self, tag, _prebuild=False):
+    def _build(self, tag, _prebuild=False) -> bool:
+        """
+        Internal build method.
+
+        Parameters
+        ----------
+        tag : `~git.Branch` or `~git.Tag`
+            Branch/tag to build
+        _prebuild : `bool`
+            Variable to allow/skip pre-building verions
+        
+        Returns
+        -------
+        `bool`
+        """
         # Checkout tag/branch
         self.versions.checkout(tag)
         EventHandlers.CURRENT_VERSION = tag
@@ -156,7 +187,7 @@ class VersionedDocs:
             log.success(f"build succeded for {tag} ;)")
             return True
 
-    def _pre_build(self):
+    def _pre_build(self) -> None:
         if not self.prebuild:
             log.info("No pre-builing...")
             self._versions_to_build = self._versions_to_pre_build
@@ -173,7 +204,7 @@ class VersionedDocs:
                 self._build(tag, _prebuild=True)
                 self._versions_to_build.append(tag)
             except SphinxError:
-                log.error(f"Pre-build failed for {tag}")
+                log.critical(f"Pre-build failed for {tag}")
             finally:
                 # restore to active branch
                 self.versions.checkout(self._active_branch.name)
@@ -181,7 +212,7 @@ class VersionedDocs:
         log.success(f"Prebuilding successful for {', '.join([x.name for x in self._versions_to_build])}")
         return
 
-    def build(self):
+    def build(self) -> None:
         # get active branch
         self._active_branch = self.versions.active_branch
 
@@ -199,6 +230,7 @@ class VersionedDocs:
             finally:
                 # restore to active branch
                 self.versions.checkout(self._active_branch)
+        return
 
 
 @app.command()
@@ -238,12 +270,6 @@ def main(
         "-b",
         "--branches",
         help="Build docs for specific branches and tags",
-    ),
-    list_branches: bool = typer.Option(
-        False,
-        "--list-branches",
-        "-l",
-        help="List all branches/tags detected via GitPython",
     ),
     main_branch: str = typer.Option(
         "main",
