@@ -21,7 +21,7 @@ app = typer.Typer(add_completion=False)
 
 
 class ConfigInject(SphinxConfig):
-    """Inject this extension info self.extensions. Append after user's extensions."""
+    """Inject this extension info `self.extensions`. Append after user's extensions."""
 
     def __init__(self, *args):
         super(ConfigInject, self).__init__(*args)
