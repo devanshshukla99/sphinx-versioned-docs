@@ -10,9 +10,7 @@ os.environ["GIT_PYTHON_REFRESH"] = "quiet"
 
 
 class _BranchTag(ABC):
-    """
-    Abstract Base class for getting branches and tags
-    """
+    """Abstract Base class for getting branches and tags"""
 
     @property
     def branches(self) -> dict:
@@ -31,9 +29,7 @@ class _BranchTag(ABC):
 
 
 class GitVersions(_BranchTag):
-    """
-    Class to handle git branches and tags. Builds upon the abstract base class `~sphinx_versioned.versions._BranchTag`.
-    """
+    """Handles git branches and tags. Builds upon the abstract base class `~sphinx_versioned.versions._BranchTag`."""
 
     def __init__(self, git_root, build_directory) -> None:
         """
@@ -67,8 +63,7 @@ class GitVersions(_BranchTag):
         return
 
     def _parse_branches(self) -> bool:
-        """
-        Parse branches and tags into seperate variables.
+        """Parse branches and tags into seperate variables.
 
         Returns
         -------
@@ -81,8 +76,7 @@ class GitVersions(_BranchTag):
         return True
 
     def checkout(self, name, *args, **kwargs) -> bool:
-        """
-        git checkout a branch/tag with `name`.
+        """git checkout a branch/tag with `name`.
 
         Parameters
         ----------
@@ -94,9 +88,7 @@ class GitVersions(_BranchTag):
 
     @property
     def active_branch(self, *args, **kwargs):
-        """
-        Property to get active_branch.
-        """
+        """Property to get active_branch."""
         if self._active_branch:
             return self._active_branch
         return self.repo.active_branch
@@ -105,9 +97,7 @@ class GitVersions(_BranchTag):
 
 
 class BuiltVersions(_BranchTag):
-    """
-    Class to handle versions to build. Builds upon the abstract base class `~sphinx_versioned.versions._BranchTag`.
-    """
+    """Handles versions to build. Builds upon the abstract base class `~sphinx_versioned.versions._BranchTag`."""
 
     def __init__(self, versions, build_directory) -> None:
         self._versions = versions
@@ -120,9 +110,7 @@ class BuiltVersions(_BranchTag):
         return
 
     def _parse(self) -> bool:
-        """
-        Parse raw branches/tags in `_versions` into separate variables.
-        """
+        """Parse raw branches/tags in `_versions` into separate variables."""
         self._raw_tags = []
         self._raw_branches = []
 

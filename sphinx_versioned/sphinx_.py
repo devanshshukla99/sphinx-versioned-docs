@@ -15,8 +15,7 @@ STATIC_DIR = os.path.join(os.path.dirname(__file__), "_static")
 
 
 class EventHandlers(object):
-    """
-    Holds Sphinx event handlers as static or class methods.
+    """Holds Sphinx event handlers as static or class methods.
 
     Parameters
     ----------
@@ -42,7 +41,10 @@ class EventHandlers(object):
     def builder_inited(app):
         """Update the Sphinx builder.
 
-        :param sphinx.application.Sphinx app: Sphinx application object.
+        Parameters
+        ----------
+        app : `~param sphinx.application.Sphinx`
+            Sphinx application object.
         """
         # Add this extension's _templates directory to Sphinx.
         templates_dir = os.path.join(os.path.dirname(__file__), "_templates")
@@ -88,14 +90,13 @@ class EventHandlers(object):
 
     @classmethod
     def env_updated(cls, app, env):
-        """
-        Abort Sphinx after initializing config and discovering all pages to build.
+        """Abort Sphinx after initializing config and discovering all pages to build.
 
         Parameters
         ----------
-        app : `sphinx.application.Sphinx`
+        app : `~sphinx.application.Sphinx`
             Sphinx application object.
-        env : `sphinx.environment.BuildEnvironment`
+        env : `~sphinx.environment.BuildEnvironment`
             Sphinx build environment
         """
         if cls.ABORT_AFTER_READ:
@@ -107,12 +108,11 @@ class EventHandlers(object):
 
     @classmethod
     def html_page_context(cls, app, pagename, templatename, context, doctree):
-        """
-        Update the Jinja2 HTML context, exposes the Versions class instance to it.
+        """Update the Jinja2 HTML context, exposes the Versions class instance to it.
 
         Parameters
         ----------
-        app : `sphinx.application.Sphinx`
+        app : `~sphinx.application.Sphinx`
             Sphinx application object.
         pagename : `str`
             Name of the page being rendered (without .html or any file extension).
@@ -120,7 +120,7 @@ class EventHandlers(object):
             Page name with .html.
         context : `dict`
             Jinja2 HTML context.
-        doctree : `docutils.nodes.document`
+        doctree : `~docutils.nodes.document`
             Tree of docutils nodes.
         """
         assert templatename or doctree  # Unused, for linting.
@@ -139,17 +139,16 @@ class EventHandlers(object):
 
 
 def setup(app):
-    """
-    Called by Sphinx during phase 0 (initialization).
+    """Called by Sphinx during phase 0 (initialization).
 
     Parameters
     ----------
-    app : `sphinx.application.Sphinx`
+    app : `~sphinx.application.Sphinx`
         Sphinx application object.
 
     Returns
     -------
-    Extension version : `dict`
+    extension version : `dict`
     """
     # Used internally. For rebuilding all pages when one or versions fail.
     # app.add_config_value("sphinx_versioned_versions", SC_VERSIONING_VERSIONS, "html")

@@ -30,8 +30,7 @@ class ConfigInject(SphinxConfig):
 
 class VersionedDocs:
     def __init__(self, config) -> None:
-        """
-        Class to handle main workflow.
+        """Handles main workflow.
 
         Parameters
         ----------
@@ -78,8 +77,7 @@ class VersionedDocs:
         versions,
         msg="found version",
     ) -> bool:
-        """
-        Log versions to `stdout`
+        """Logs versions to `stdout`
 
         Parameters
         ----------
@@ -95,9 +93,7 @@ class VersionedDocs:
         return True
 
     def _handle_paths(self) -> None:
-        """
-        Method to handle cwd and path for local config
-        """
+        """Method to handle cwd and path for local config."""
         self.chdir = self.chdir if self.chdir else os.getcwd()
         log.debug(f"Working directory {self.chdir}")
 
@@ -129,6 +125,7 @@ class VersionedDocs:
         return _select_specific_branches
 
     def _generate_top_level_index(self) -> None:
+        """Generate a top-level ``index.html`` with redirect to the main-branch version."""
         if self.main_branch not in [x.name for x in self._built_version]:
             log.critical(f"main branch {self.main_branch} not found!!")
 
@@ -147,8 +144,7 @@ class VersionedDocs:
         return
 
     def _build(self, tag, _prebuild=False) -> bool:
-        """
-        Internal build method.
+        """Internal build method.
 
         Parameters
         ----------
@@ -213,6 +209,7 @@ class VersionedDocs:
         return
 
     def build(self) -> None:
+        """Build workflow."""
         # get active branch
         self._active_branch = self.versions.active_branch
 
