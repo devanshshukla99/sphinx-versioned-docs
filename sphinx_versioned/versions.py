@@ -13,6 +13,7 @@ class _BranchTag(ABC):
     """
     Abstract Base class for getting branches and tags
     """
+
     @property
     def branches(self) -> dict:
         return {
@@ -25,6 +26,7 @@ class _BranchTag(ABC):
         return {
             x: "../" + str(y.relative_to(self.build_directory) / "index.html") for x, y in self._tags.items()
         }
+
     pass
 
 
@@ -32,6 +34,7 @@ class GitVersions(_BranchTag):
     """
     Class to handle git branches and tags. Builds upon the abstract base class `~sphinx_versioned.versions._BranchTag`.
     """
+
     def __init__(self, git_root, build_directory) -> None:
         """
         Initlizes and latches into the git repo.
@@ -69,7 +72,7 @@ class GitVersions(_BranchTag):
 
         Returns
         -------
-        `bool` 
+        `bool`
         """
         self._raw_branches = self.repo.branches
         self._raw_tags = self.repo.tags
@@ -84,7 +87,7 @@ class GitVersions(_BranchTag):
         Parameters
         ----------
         name : `str`
-            Name of branch/tag. 
+            Name of branch/tag.
         """
         self._active_branch = name
         return self.repo.git.checkout(name, *args, **kwargs)
@@ -97,6 +100,7 @@ class GitVersions(_BranchTag):
         if self._active_branch:
             return self._active_branch
         return self.repo.active_branch
+
     pass
 
 
@@ -104,6 +108,7 @@ class BuiltVersions(_BranchTag):
     """
     Class to handle versions to build. Builds upon the abstract base class `~sphinx_versioned.versions._BranchTag`.
     """
+
     def __init__(self, versions, build_directory) -> None:
         self._versions = versions
         self.build_directory = pathlib.Path(build_directory)
@@ -130,4 +135,5 @@ class BuiltVersions(_BranchTag):
         self._branches = {x.name: self.build_directory / x.name for x in self._raw_branches}
         self._tags = {x.name: self.build_directory / x.name for x in self._raw_tags}
         return True
+
     pass

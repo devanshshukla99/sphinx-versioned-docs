@@ -156,7 +156,7 @@ class VersionedDocs:
             Branch/tag to build
         _prebuild : `bool`
             Variable to allow/skip pre-building verions
-        
+
         Returns
         -------
         `bool`
