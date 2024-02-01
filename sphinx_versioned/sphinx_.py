@@ -1,7 +1,6 @@
 """Interface with Sphinx."""
 
 import os
-import sys
 
 from loguru import logger as log
 from sphinx.jinja2glue import SphinxFileSystemLoader
@@ -19,8 +18,6 @@ class EventHandlers(object):
 
     Parameters
     ----------
-    ABORT_AFTER_READ : `bool` or `~multiprocessing.queues.Queue`
-        Communication channel to parent process
     CURRENT_VERSION : `str`
         Current version being built.
     VERSIONS : `~sphinx_versioned.versions.BuiltVersions`
@@ -31,7 +28,6 @@ class EventHandlers(object):
         Reset intersphinx mapping after each build.
     """
 
-    ABORT_AFTER_READ = None
     CURRENT_VERSION = None
     VERSIONS = None
     ASSETS_TO_COPY = []
@@ -66,6 +62,11 @@ class EventHandlers(object):
             app.config.html_sidebars["**"].append("versions.html")
 
         log.info(f"Theme: {app.config.html_theme}")
+
+        # Add css properties to bold currently-active branch/tag
+        app.add_css_file("_rst_properties.css")
+        EventHandlers.ASSETS_TO_COPY.append("_rst_properties.css")
+
         # Insert flyout script
         if app.config.html_theme == "bootstrap-astropy":
             app.add_js_file("_rtd_versions.js")
@@ -87,24 +88,6 @@ class EventHandlers(object):
             for asset in cls.ASSETS_TO_COPY:
                 copy_asset_file(f"{STATIC_DIR}/{asset}", staticdir)
                 log.debug(f"copying {STATIC_DIR}/{asset} to {staticdir}")
-
-    @classmethod
-    def env_updated(cls, app, env):
-        """Abort Sphinx after initializing config and discovering all pages to build.
-
-        Parameters
-        ----------
-        app : `~sphinx.application.Sphinx`
-            Sphinx application object.
-        env : `~sphinx.environment.BuildEnvironment`
-            Sphinx build environment
-        """
-        if cls.ABORT_AFTER_READ:
-            config = {n: getattr(app.config, n) for n in (a for a in dir(app.config) if a.startswith("sv_"))}
-            config["found_docs"] = tuple(str(d) for d in env.found_docs)
-            config["master_doc"] = str(app.config.master_doc)
-            cls.ABORT_AFTER_READ.put(config)
-            sys.exit(0)
 
     @classmethod
     def html_page_context(cls, app, pagename, templatename, context, doctree):
@@ -163,7 +146,6 @@ def setup(app):
 
     # Event handlers.
     app.connect("builder-inited", EventHandlers.builder_inited)
-    app.connect("env-updated", EventHandlers.env_updated)
     app.connect("html-page-context", EventHandlers.html_page_context)
     app.connect("build-finished", EventHandlers.builder_finished_tasks)
     return dict(version=__version__)
