@@ -1,1 +1,0 @@
-Fixed version menu flyout script in `sphinx_rtd_theme`. Not entirely sure why but somehow `sphinx_rtd_theme` doesn't require the flyout script anymore.

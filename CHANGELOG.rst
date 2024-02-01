@@ -1,3 +1,29 @@
+1.2 (2024-02-01)
+=========================================
+
+Deprecations and Removals
+-------------------------
+
+- Removed ``--list-branches`` and ``-l`` arg in cli-app. (`#39 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/39>`__)
+
+
+Features
+--------
+
+- Added `sphinx_compatibility` kwarg to help generate documentations for versions using deprecated function.
+  Currently, monkey patching `app.add_stylesheet` -> `app.add_css_file`. (`#33 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/33>`__)
+- Generates a top-level index page which redirect to the index page of the main branch.
+  By default, the main branch is "main" / can be changed using the `--main-branch` kwarg. (`#34 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/34>`__)
+
+
+Bug Fixes
+---------
+
+- Hotfix for #17. It solves by resetting the intersphinx mapping var for the next execution. Forces ``--no-prebuild``. (`#25 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/25>`__)
+- Fixed version menu flyout script in `sphinx_rtd_theme`. Not entirely sure why but somehow `sphinx_rtd_theme` doesn't require the flyout script anymore. (`#27 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/27>`__)
+- Fixed a bug where versions menu was working from the top-level however, it used fail when accessing other versions from deep links. (`#37 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/37>`__)
+
+
 1.1 (2023-05-19)
 ================
 

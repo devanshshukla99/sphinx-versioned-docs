@@ -1,1 +1,0 @@
-Hotfix for #17. It solves by resetting the intersphinx mapping var for the next execution. Forces ``--no-prebuild``.
