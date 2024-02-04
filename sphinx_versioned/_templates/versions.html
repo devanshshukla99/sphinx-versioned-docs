@@ -1,27 +1,33 @@
 {% if html_theme == "sphinx_rtd_theme" %}
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
   <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
+    <span class="fa fa-book"> Other versions</span>
     v: {{ current_version }}
     <span class="fa fa-caret-down"></span>
   </span>
   <div class="rst-other-versions">
-    {%- if versions.tags %}
-    <dl>
-      <dt>Tags</dt>
-      {%- for name, url in versions.tags.items() %}
-      <dd><a href="{{ relpath }}{{ url }}">{{ name }}</a></dd>
-      {%- endfor %}
-    </dl>
-    {%- endif %}
-    {%- if versions.branches %}
-    <dl>
-      <dt>Branches</dt>
-      {%- for name, url in versions.branches.items() %}
-      <dd><a href="{{ relpath }}{{ url }}">{{ name }}</a></dd>
-      {%- endfor %}
-    </dl>
-    {%- endif %}
+    <div class="injected">
+      {%- if versions.tags %}
+      <dl>
+        <dt>Tags</dt>
+        {%- for name, url in versions.tags.items() %}
+        <dd class="{{'rtd-current-item' if name==current_version }}">
+          <a href="{{ relpath }}{{ url }}">{{ name }}</a>
+        </dd>
+        {%- endfor %}
+      </dl>
+      {%- endif %}
+      {%- if versions.branches %}
+      <dl>
+        <dt>Branches</dt>
+        {%- for name, url in versions.branches.items() %}
+        <dd class="{{'rtd-current-item' if name==current_version }}">
+          <a href="{{ relpath }}{{ url }}">{{ name }}</a>
+        </dd>
+        {%- endfor %}
+      </dl>
+      {%- endif %}
+    </div>
   </div>
 </div>
 {% elif html_theme == "alabaster" %}
@@ -35,18 +41,22 @@
     </div>
     <div class="other-versions">
       {%- if versions.tags %}
-      <p>tags</p>
+      <p>Tags</p>
       <div class="dropdown-content">
         {%- for name, url in versions.tags.items() %}
-        <a href="{{ relpath }}{{ url }}">{{ name }}</a>
+        <dd class="{{'rtd-current-item' if name==current_version }}">
+          <a href="{{ relpath }}{{ url }}">{{ name }}</a>
+        </dd>
         {%- endfor %}
       </div>
       {%- endif %}
       {%- if versions.branches %}
-      <p>branches</p>
+      <p>Branches</p>
       <div class="dropdown-content">
         {%- for name, url in versions.branches.items() %}
-        <a href="{{ relpath }}{{ url }}">{{ name }}</a>
+        <dd class="{{'rtd-current-item' if name==current_version }}">
+          <a href="{{ relpath }}{{ url }}">{{ name }}</a>
+        </dd>
         {%- endfor %}
       </div>
       {%- endif %}
@@ -66,7 +76,9 @@
       <dl>
         <dt>Tags</dt>
         {%- for name, url in versions.tags.items() %}
-        <dd><a href="{{ relpath }}{{ url }}">{{ name }}</a></dd>
+        <dd class="{{'rtd-current-item' if name==current_version }}">
+          <a href="{{ relpath }}{{ url }}">{{ name }}</a>
+        </dd>
         {%- endfor %}
       </dl>
       {%- endif %}
@@ -74,7 +86,9 @@
       <dl>
         <dt>Branches</dt>
         {%- for name, url in versions.branches.items() %}
-        <dd><a href="{{ relpath }}{{ url }}">{{ name }}</a></dd>
+        <dd class="{{'rtd-current-item' if name==current_version }}">
+          <a href="{{ relpath }}{{ url }}">{{ name }}</a>
+        </dd>
         {%- endfor %}
       </dl>
       {%- endif %}
@@ -85,18 +99,22 @@
 <h3>{{ _('Versions') }}</h3>
 <ul>
   {%- if versions.tags %}
-  <p>tags</p>
+  <p>Tags</p>
   <div class="dropdown-content">
     {%- for name, url in versions.tags.items() %}
-    <a href="{{ relpath }}{{ url }}">{{ name }}</a>
+    <div class="{{'rtd-current-item' if name==current_version }}">
+      <a href="{{ relpath }}{{ url }}">{{ name }}</a>
+    </div>
     {%- endfor %}
   </div>
   {%- endif %}
   {%- if versions.branches %}
-  <p>branches</p>
+  <p>Branches</p>
   <div class="dropdown-content">
     {%- for name, url in versions.branches.items() %}
-    <a href="{{ relpath }}{{ url }}">{{ name }}</a>
+    <div class="{{'rtd-current-item' if name==current_version }}">
+      <a href="{{ relpath }}{{ url }}">{{ name }}</a>
+    </div>
     {%- endfor %}
   </div>
   {%- endif %}
