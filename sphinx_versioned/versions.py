@@ -31,7 +31,7 @@ class _BranchTag(ABC):
 class GitVersions(_BranchTag):
     """Handles git branches and tags. Builds upon the abstract base class `~sphinx_versioned.versions._BranchTag`."""
 
-    def __init__(self, git_root, build_directory) -> None:
+    def __init__(self, git_root: str, build_directory: str) -> None:
         """
         Initlizes and latches into the git repo.
 
@@ -75,7 +75,7 @@ class GitVersions(_BranchTag):
         self._tags = {x.name: self.build_directory / x.name for x in self._raw_tags}
         return True
 
-    def checkout(self, name, *args, **kwargs) -> bool:
+    def checkout(self, name: str, *args, **kwargs) -> bool:
         """git checkout a branch/tag with `name`.
 
         Parameters
@@ -87,7 +87,7 @@ class GitVersions(_BranchTag):
         return self.repo.git.checkout(name, *args, **kwargs)
 
     @property
-    def active_branch(self, *args, **kwargs):
+    def active_branch(self, *args, **kwargs) -> git.Tag:
         """Property to get active_branch."""
         if self._active_branch:
             return self._active_branch
@@ -99,9 +99,9 @@ class GitVersions(_BranchTag):
 class BuiltVersions(_BranchTag):
     """Handles versions to build. Builds upon the abstract base class `~sphinx_versioned.versions._BranchTag`."""
 
-    def __init__(self, versions, build_directory) -> None:
+    def __init__(self, versions: GitVersions) -> None:
         self._versions = versions
-        self.build_directory = pathlib.Path(build_directory)
+        self.build_directory = versions.build_directory
 
         if not self.build_directory.exists():
             self.build_directory.mkdir(parents=True, exist_ok=True)

@@ -1,5 +1,6 @@
 import re
 import os
+import git
 import sys
 import typer
 import shutil
@@ -29,7 +30,7 @@ class ConfigInject(SphinxConfig):
 
 
 class VersionedDocs:
-    def __init__(self, config) -> None:
+    def __init__(self, config: dict) -> None:
         """Handles main workflow.
 
         Parameters
@@ -67,15 +68,15 @@ class VersionedDocs:
         print(f"\n\033[92m Successfully built {', '.join([x.name for x in self._built_version])} \033[0m")
         return
 
-    def _parse_config(self, config) -> bool:
+    def _parse_config(self, config: dict) -> bool:
         for varname, value in config.items():
             setattr(self, varname, value)
         return True
 
     def _log_versions(
         self,
-        versions,
-        msg="found version",
+        versions: list,
+        msg: str = "found version",
     ) -> bool:
         """Logs versions to `stdout`
 
@@ -143,7 +144,7 @@ class VersionedDocs:
         log.debug(f"main branch '{self.main_branch}' found")
         return
 
-    def _build(self, tag, _prebuild=False) -> bool:
+    def _build(self, tag: git.Tag, _prebuild: bool = False) -> bool:
         """Internal build method.
 
         Parameters
