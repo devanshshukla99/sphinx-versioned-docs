@@ -1,5 +1,3 @@
-"""Collect and sort version strings."""
-
 import os
 import git
 import pathlib
@@ -7,6 +5,19 @@ from abc import ABC
 from loguru import logger as log
 
 os.environ["GIT_PYTHON_REFRESH"] = "quiet"
+
+
+class PseudoBranch:
+    """Class to generate a branchname for git detached situation"""
+
+    def __init__(self, name: str) -> None:
+        self.name = name
+        return
+
+    def __repr__(self) -> str:
+        return self.name
+
+    pass
 
 
 class _BranchTag(ABC):
@@ -91,6 +102,11 @@ class GitVersions(_BranchTag):
         """Property to get active_branch."""
         if self._active_branch:
             return self._active_branch
+
+        if self.repo.head.is_detached:
+            log.warning(f"git head detached: {self.repo.head.is_detached}")
+            return PseudoBranch(self.repo.head.object.hexsha)
+
         return self.repo.active_branch
 
     pass

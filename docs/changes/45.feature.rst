@@ -1,0 +1,2 @@
+Adds the capability to build detached heads if either the head is already detached or that particular commit is
+specified via `--branches` arg, both of these will work if and only if `--force` is supplied too. 
