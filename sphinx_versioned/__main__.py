@@ -112,7 +112,7 @@ class VersionedDocs:
         _all_versions.extend(self.versions.repo.tags)
         _all_versions.extend(self.versions.repo.branches)
 
-        # check if the current git status is detached, if yes, append if `--force` is supplied
+        # check if `--force` is supplied, if yes, and if the current git status is detached, append:
         if self.force_branches:
             if self.versions.repo.head.is_detached:
                 log.warning(f"git detached {self.versions.repo.head.is_detached}")

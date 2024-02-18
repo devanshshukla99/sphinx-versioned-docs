@@ -98,25 +98,27 @@
 {% else %}
 <h3>{{ _('Versions') }}</h3>
 <ul>
-  {%- if versions.tags %}
-  <p>Tags</p>
-  <div class="dropdown-content">
-    {%- for name, url in versions.tags.items() %}
-    <div class="{{'rtd-current-item' if name==current_version }}">
-      <a href="{{ relpath }}{{ url }}">{{ name }}</a>
+  <div class="injected">
+    {%- if versions.tags %}
+    <p>Tags</p>
+    <div class="dropdown-content">
+      {%- for name, url in versions.tags.items() %}
+      <div class="{{'rtd-current-item' if name==current_version }}">
+        <a href="{{ relpath }}{{ url }}">{{ name }}</a>
+      </div>
+      {%- endfor %}
     </div>
-    {%- endfor %}
-  </div>
-  {%- endif %}
-  {%- if versions.branches %}
-  <p>Branches</p>
-  <div class="dropdown-content">
-    {%- for name, url in versions.branches.items() %}
-    <div class="{{'rtd-current-item' if name==current_version }}">
-      <a href="{{ relpath }}{{ url }}">{{ name }}</a>
+    {%- endif %}
+    {%- if versions.branches %}
+    <p>Branches</p>
+    <div class="dropdown-content">
+      {%- for name, url in versions.branches.items() %}
+      <div class="{{'rtd-current-item' if name==current_version }}">
+        <a href="{{ relpath }}{{ url }}">{{ name }}</a>
+      </div>
+      {%- endfor %}
     </div>
-    {%- endfor %}
+    {%- endif %}
   </div>
-  {%- endif %}
 </ul>
 {% endif %}

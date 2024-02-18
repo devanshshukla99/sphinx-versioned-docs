@@ -95,6 +95,7 @@ class GitVersions(_BranchTag):
             Name of branch/tag.
         """
         self._active_branch = name
+        log.debug(f"git checkout branch/tag: `{name}`")
         return self.repo.git.checkout(name, *args, **kwargs)
 
     @property
