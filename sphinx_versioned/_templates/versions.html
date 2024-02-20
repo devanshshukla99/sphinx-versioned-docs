@@ -27,6 +27,14 @@
         {%- endfor %}
       </dl>
       {%- endif %}
+      {%- if project_url %}
+      <dl>
+        <dt>Project home</dt>
+        <dd>
+          <a href="{{ project_url }}">View</a>
+        </dd>
+      </dl>
+      {%- endif %}
     </div>
   </div>
 </div>
