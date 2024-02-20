@@ -35,10 +35,11 @@ How to use
     │ --sphinx-compatibility  -Sc                          Adds compatibility for older sphinx versions by monkey patching certain functions.                   │
     │ --prebuild                    --no-prebuild          Disables the pre-builds; halves the runtime [default: prebuild]                                      │
     │ --branches              -b                     TEXT  Build docs for specific branches and tags [default: None]                                            │
-    │ --main-branch           -m                     TEXT  Main branch to which the top-level `index.html` redirects to. [default: main]                        │
+    │ --main-branch           -m                     TEXT  Main branch to which the top-level `index.html` redirects to. Defaults to `main`. [default: None]    │
     │ --quite                       --no-quite             No output from `sphinx` [default: quite]                                                             │
     │ --verbose               -v                           Passed directly to sphinx. Specify more than once for more logging in sphinx.                        │
     │ --log                   -log                   TEXT  Provide logging level. Example --log debug, default=info [default: info]                             │
+    │ --force                                              Force branch selection. Use this option to build detached head/commits. [Default: False]             │
     │ --help                                               Show this message and exit.                                                                          │
     ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
