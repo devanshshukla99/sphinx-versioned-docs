@@ -1,0 +1,4 @@
+Adds the capability to build detached heads if either the head is already detached or that particular commit is
+specified via `--branches` arg, provided that `--force` is supplied. Additionally, if the main-branch is not
+specified via `--main-branch` then the currently checkout out branch/tag will be considered as the main branch
+for generating the top-level `index.html`.
