@@ -51,3 +51,17 @@ After the build has succeded, your docs should be available in `docs/_build/<bra
 .. note::
 
     Use ``--no-quite`` option to get output from the sphinx builder, adjust verbosity using ``-v``
+
+---------------------------
+
+Deploy to github pages via github actions
+=========================================
+
+A sample github action to build and deploy versioned documentation to github-pages is given:
+
+.. literalinclude:: ../.github/workflows/static.yml
+    :language: yaml
+
+.. note::
+
+    Note the use of ``fetch-depth: 0`` with ``actions/checkout`` to ensure all branches are available to build during runtime.
