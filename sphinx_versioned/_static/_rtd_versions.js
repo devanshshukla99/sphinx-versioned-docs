@@ -1,8 +1,12 @@
 window.addEventListener("DOMContentLoaded", (event) => {
-    let versionsElement = document.getElementsByClassName("rst-versions")
-    Array.from(versionsElement).forEach(element => {
+    let VersionsElement = document.getElementsByClassName("rst-versions")
+    let CurrentVersionsElement = document.getElementsByClassName("rst-current-version")
+
+    Array.from(CurrentVersionsElement).forEach(element => {
         element.addEventListener("click", (e) => {
-            e.currentTarget.classList.toggle("shift-up")
+            Array.from(VersionsElement).forEach(versionselement => {
+                versionselement.classList.toggle("shift-up")
+            })
         })
-    });
+    })
 });
