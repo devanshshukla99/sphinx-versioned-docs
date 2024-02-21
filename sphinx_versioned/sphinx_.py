@@ -5,7 +5,6 @@ import os
 from loguru import logger as log
 from sphinx.util.fileutil import copy_asset_file
 from sphinx.jinja2glue import SphinxFileSystemLoader
-from sphinx.builders.html import StandaloneHTMLBuilder
 
 from sphinx_versioned._version import __version__
 
@@ -31,6 +30,8 @@ class EventHandlers(object):
     VERSIONS = None
     ASSETS_TO_COPY: set = set()
     RESET_INTERSPHINX_MAPPING: bool = False
+    _FLYOUT_IN_SIDEBARS_THEMES: list = ["bootstrap-astropy", "sphinxdoc", "alabaster"]
+    _FLYOUT_SCRIPT_THEMES: list = ["bootstrap-astropy", "pydata_sphinx_theme", "sphinxdoc"]
 
     @classmethod
     def builder_inited(cls, app) -> None:
@@ -49,17 +50,6 @@ class EventHandlers(object):
             app.builder.templates.loaders.insert(0, SphinxFileSystemLoader(templates_dir))
             app.builder.templates.templatepathlen += 1
 
-        # Add versions.html to sidebar.
-        if "**" not in app.config.html_sidebars:
-            # default_sidebars was deprecated in Sphinx 1.6+, so only use it if possible (to maintain
-            # backwards compatibility), else don't use it.
-            try:
-                app.config.html_sidebars["**"] = StandaloneHTMLBuilder.default_sidebars + ["versions.html"]
-            except AttributeError:
-                app.config.html_sidebars["**"] = ["versions.html"]
-        elif "versions.html" not in app.config.html_sidebars["**"]:
-            app.config.html_sidebars["**"].append("versions.html")
-
         log.info(f"Theme: {app.config.html_theme}")
 
         # Add css properties to bold currently-active branch/tag
@@ -67,7 +57,7 @@ class EventHandlers(object):
         cls.ASSETS_TO_COPY.add("_rst_properties.css")
 
         # Insert flyout script
-        if app.config.html_theme == "bootstrap-astropy":
+        if app.config.html_theme in EventHandlers._FLYOUT_SCRIPT_THEMES:
             app.add_js_file("_rtd_versions.js")
             app.add_css_file("badge_only.css")
             cls.ASSETS_TO_COPY.add("_rtd_versions.js")
@@ -120,15 +110,16 @@ class EventHandlers(object):
         doctree : :class:`docutils.nodes.document`
             Tree of docutils nodes.
         """
-        assert templatename or doctree  # Unused, for linting.
-        this_remote = "main"
+        if app.config.html_theme in EventHandlers._FLYOUT_IN_SIDEBARS_THEMES:
+            context["sidebars"].append("versions.html")
+        else:
+            context["theme_footer_start"] = "versions"
 
         # Update Jinja2 context.
-        context["github_version"] = cls.CURRENT_VERSION
         context["current_version"] = cls.CURRENT_VERSION
-        context["html_theme"] = app.config.html_theme
         context["project_url"] = app.config.sv_project_url
         context["versions"] = cls.VERSIONS
+        context["floating_badge"] = False
 
         # Relative path to master_doc
         relpath = (pagename.count("/")) * "../"
@@ -148,9 +139,6 @@ def setup(app) -> dict:
     -------
     extension version : :class:`dict`
     """
-    # Used internally. For rebuilding all pages when one or versions fail.
-    # app.add_config_value("sphinx_versioned_versions", SC_VERSIONING_VERSIONS, "html")
-
     # Needed for banner.
     if not app.config.html_static_path:
         app.config.html_static_path.append(STATIC_DIR)
