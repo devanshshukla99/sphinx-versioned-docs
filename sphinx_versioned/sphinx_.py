@@ -113,6 +113,7 @@ class EventHandlers(object):
         context["github_version"] = cls.CURRENT_VERSION
         context["current_version"] = cls.CURRENT_VERSION
         context["html_theme"] = app.config.html_theme
+        context["project_url"] = app.config.sv_project_url
         context["versions"] = cls.VERSIONS
 
         # Relative path to master_doc
@@ -141,8 +142,7 @@ def setup(app):
         app.config.html_static_path.append(STATIC_DIR)
 
     # Tell Sphinx which config values can be set by the user.
-    # for name, default in Config():
-    #     app.add_config_value("sv_{}".format(name), default, "html")
+    app.add_config_value("sv_project_url", None, "html")
 
     # Event handlers.
     app.connect("builder-inited", EventHandlers.builder_inited)
