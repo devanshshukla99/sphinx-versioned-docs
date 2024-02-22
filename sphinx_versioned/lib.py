@@ -8,6 +8,15 @@ import tempfile
 import functools
 
 from loguru import logger as log
+from sphinx.config import Config as SphinxConfig
+
+
+class ConfigInject(SphinxConfig):
+    """Inject this extension into `self.extensions`. Append after user's extensions."""
+
+    def __init__(self, *args):
+        super(ConfigInject, self).__init__(*args)
+        self.extensions.append("sphinx_versioned.sphinx_")
 
 
 class HandledError(Exception):
