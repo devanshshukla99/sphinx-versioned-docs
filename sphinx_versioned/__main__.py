@@ -78,7 +78,7 @@ def main(
     EventHandlers.RESET_INTERSPHINX_MAPPING = reset_intersphinx_mapping
 
     if reset_intersphinx_mapping:
-        log.error("Forcing --no-prebuild")
+        log.warning("Forcing --no-prebuild")
         prebuild = False
 
     if sphinx_compatibility:
