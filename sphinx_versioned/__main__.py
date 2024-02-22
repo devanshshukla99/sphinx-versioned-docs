@@ -1,12 +1,12 @@
 import re
 import sys
 import typer
-from sphinx import application
 
 from loguru import logger as log
 
 from sphinx_versioned.build import VersionedDocs
 from sphinx_versioned.sphinx_ import EventHandlers
+from sphinx_versioned.lib import mp_sphinx_compatibility
 
 app = typer.Typer(add_completion=False)
 
@@ -82,12 +82,7 @@ def main(
         prebuild = False
 
     if sphinx_compatibility:
-        """
-        Monkeypatching `sphinx.application.Sphinx.add_stylesheet` -> `sphinx.application.Sphinx.add_stylesheet`
-        to add compatibility for versions using older sphinx
-        """
-        log.info("Monkeypatching older sphinx app.add_stylesheet -> app.add_css_file")
-        application.Sphinx.add_stylesheet = application.Sphinx.add_css_file
+        mp_sphinx_compatibility()
 
     logger_format = "| <level>{level: <8}</level> | - <level>{message}</level>"
 

@@ -8,6 +8,8 @@ import tempfile
 import functools
 
 from loguru import logger as log
+
+from sphinx import application
 from sphinx.config import Config as SphinxConfig
 
 
@@ -17,6 +19,8 @@ class ConfigInject(SphinxConfig):
     def __init__(self, *args):
         super(ConfigInject, self).__init__(*args)
         self.extensions.append("sphinx_versioned.sphinx_")
+
+    pass
 
 
 class HandledError(Exception):
@@ -29,6 +33,8 @@ class HandledError(Exception):
     def show(self, **_):
         """Error messages should be logged before raising this exception."""
         log.critical("Failure.")
+
+    pass
 
 
 class TempDir(object):
@@ -65,3 +71,16 @@ class TempDir(object):
         )
         if os.path.exists(self.name):
             raise IOError(17, "File exists: '{}'".format(self.name))
+
+    pass
+
+
+def mp_sphinx_compatibility() -> bool:
+    """
+    Monkeypatching `sphinx.application.Sphinx.add_stylesheet` -> `sphinx.application.Sphinx.add_stylesheet`
+    to add compatibility for versions using older sphinx
+    """
+    log.info("Monkeypatching older sphinx app.add_stylesheet -> app.add_css_file")
+    application.Sphinx.add_stylesheet = application.Sphinx.add_css_file
+
+    return True
