@@ -32,6 +32,7 @@ class EventHandlers(object):
     RESET_INTERSPHINX_MAPPING: bool = False
     _FLYOUT_IN_SIDEBARS_THEMES: list = ["bootstrap-astropy", "sphinxdoc", "alabaster"]
     _FLYOUT_SCRIPT_THEMES: list = ["bootstrap-astropy", "pydata_sphinx_theme", "sphinxdoc"]
+    FLYOUT_BADGE = False
 
     @classmethod
     def builder_inited(cls, app) -> None:
@@ -110,7 +111,7 @@ class EventHandlers(object):
         doctree : :class:`docutils.nodes.document`
             Tree of docutils nodes.
         """
-        if app.config.html_theme in EventHandlers._FLYOUT_IN_SIDEBARS_THEMES:
+        if app.config.html_theme in cls._FLYOUT_IN_SIDEBARS_THEMES:
             context["sidebars"].append("versions.html")
         else:
             context["theme_footer_start"] = "versions"
@@ -119,7 +120,7 @@ class EventHandlers(object):
         context["current_version"] = cls.CURRENT_VERSION
         context["project_url"] = app.config.sv_project_url
         context["versions"] = cls.VERSIONS
-        context["floating_badge"] = False
+        context["floating_badge"] = cls.FLYOUT_BADGE
 
         # Relative path to master_doc
         relpath = (pagename.count("/")) * "../"
