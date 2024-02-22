@@ -51,35 +51,37 @@
   </div>
 </div>
 {% elif html_theme == "alabaster" %}
-<div class="versions">
-  <p class="caption">Versions</p>
-  <div class="versions-content">
-    <div>
-      <span class="current-version">
-        viewing: {{ current_version }}
-      </span>
-    </div>
-    <div class="other-versions">
-      {%- if versions.tags %}
-      <p>Tags</p>
-      <div class="dropdown-content">
-        {%- for name, url in versions.tags.items() %}
-        <dd class="{{'rtd-current-item' if name==current_version }}">
-          <a href="{{ relpath }}{{ url }}">{{ name }}</a>
-        </dd>
-        {%- endfor %}
+<div class="injected">
+  <div class="versions">
+    <p class="caption">Versions</p>
+    <div class="versions-content">
+      <div>
+        <span class="current-version">
+          viewing: {{ current_version }}
+        </span>
       </div>
-      {%- endif %}
-      {%- if versions.branches %}
-      <p>Branches</p>
-      <div class="dropdown-content">
-        {%- for name, url in versions.branches.items() %}
-        <dd class="{{'rtd-current-item' if name==current_version }}">
-          <a href="{{ relpath }}{{ url }}">{{ name }}</a>
-        </dd>
-        {%- endfor %}
+      <div class="other-versions">
+        {%- if versions.tags %}
+        <p>Tags</p>
+        <div class="dropdown-content">
+          {%- for name, url in versions.tags.items() %}
+          <dd class="{{'rtd-current-item' if name==current_version }}">
+            <a href="{{ relpath }}{{ url }}">{{ name }}</a>
+          </dd>
+          {%- endfor %}
+        </div>
+        {%- endif %}
+        {%- if versions.branches %}
+        <p>Branches</p>
+        <div class="dropdown-content">
+          {%- for name, url in versions.branches.items() %}
+          <dd class="{{'rtd-current-item' if name==current_version }}">
+            <a href="{{ relpath }}{{ url }}">{{ name }}</a>
+          </dd>
+          {%- endfor %}
+        </div>
+        {%- endif %}
       </div>
-      {%- endif %}
     </div>
   </div>
 </div>
