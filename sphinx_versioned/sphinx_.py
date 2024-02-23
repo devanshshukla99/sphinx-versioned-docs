@@ -3,13 +3,12 @@
 import os
 
 from loguru import logger as log
+from sphinx.util.fileutil import copy_asset_file
 from sphinx.jinja2glue import SphinxFileSystemLoader
 from sphinx.builders.html import StandaloneHTMLBuilder
 
 from sphinx_versioned._version import __version__
-from sphinx.util.fileutil import copy_asset_file
 
-SC_VERSIONING_VERSIONS = list()  # Updated after forking.
 STATIC_DIR = os.path.join(os.path.dirname(__file__), "_static")
 
 
