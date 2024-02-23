@@ -7,8 +7,8 @@ VERSIONS_SUPPOSED = {
     "v1.0": [
         "index.html",
     ],
-    "v2.0": ["index.html", "example.html"],
-    "main": ["index.html", "example.html"],
+    "v2.0": ["index.html", "example.html", "code_ref/api_ref/example2.html"],
+    "main": ["index.html", "example.html", "code_ref/api_ref/example2.html"],
 }
 BASEPATH = pathlib.Path(os.getcwd()) / "docs"
 OUTPATH = BASEPATH / "_build"
@@ -39,6 +39,7 @@ def test_existence_of_files_secondary(ver, files):
     assert (OUTPATH / ver).exists()
     for check in check_files:
         check_expected_result = check in files
+        print(f"{ver}|{check}: {(OUTPATH / ver / check).exists()} vs {check_expected_result}")
         assert (OUTPATH / ver / check).exists() is check_expected_result
     return
 
@@ -93,7 +94,7 @@ def test_injected_hyperlinks(ver, file):
         # Test hyperlinks
         for link in hyperlinks:
             url = pathlib.Path(link.attrs.get("href"))
-            file_path = OUTPATH / url.relative_to("../")
-            assert file_path.is_file()
+            filepath = (OUTPATH / ver / file).parent / url
+            assert filepath.is_file()
 
     return

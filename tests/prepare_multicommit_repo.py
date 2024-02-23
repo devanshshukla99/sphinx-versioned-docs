@@ -10,6 +10,14 @@ def prepare_ex_file(path):
         f.write("=======\n")
         f.write("Hello there.\n General Kenobi!\n")
         f.flush()
+
+    npath = path / "code_ref" / "api_ref"
+    if not npath.exists(): npath.mkdir(parents=True)
+    with open(npath / "example2.rst", "w") as f:
+        f.write("Obi-Wan\n")
+        f.write("=======\n")
+        f.write("Hello there.\n General Kenobi!\n")
+        f.flush()
     return True
 
 
@@ -21,13 +29,20 @@ def add_ex_file_to_index(path):
     if "example.rst" in data:
         return True
 
-    data = data.replace(":caption: Contents:", ":caption: Contents:\n\n   example.rst\n")
+    data = data.replace(
+        ":caption: Contents:", ":caption: Contents:\n\n   example.rst\n   code_ref/api_ref/example2.rst\n"
+    )
     with open(path / "index.rst", "w") as f:
         f.write(data)
     return True
 
 
 def prepare_repo(path):
+    if (path / ".git").exists():
+        print("Repo already exists...")
+        print("Exiting...")
+        exit(-1)
+
     print("No existing repo; making...")
     repo = git.Repo.init(path)
 
@@ -66,8 +81,9 @@ def main(path):
     assert prepare_ex_file(basepath)
     assert add_ex_file_to_index(basepath)
 
-    # Commit example file
+    # Commit example files
     repo.git.add(basepath / "example.rst")
+    repo.git.add(basepath / "code_ref/api_ref/example2.rst")
     repo.git.add(basepath / "index.rst")
     repo.index.commit("Added `example.rst`")
 
