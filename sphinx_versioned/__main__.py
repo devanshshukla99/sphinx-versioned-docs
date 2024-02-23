@@ -61,6 +61,9 @@ def main(
     quite: bool = typer.Option(
         True, help="Silent `sphinx`. Use `--no-quite` to get build output from `sphinx`."
     ),
+    floating_badge: bool = typer.Option(
+        False, "--float-badge", help="Use floating badge for the flyout versions menu."
+    ),
     verbose: bool = typer.Option(
         False,
         "--verbose",
@@ -116,6 +119,7 @@ def main(
         select_branches = re.split(",|\ ", select_branches)
 
     EventHandlers.RESET_INTERSPHINX_MAPPING = reset_intersphinx_mapping
+    EventHandlers.FLYOUT_FLOATING_BADGE = floating_badge
 
     if reset_intersphinx_mapping:
         log.warning("Forcing --no-prebuild")

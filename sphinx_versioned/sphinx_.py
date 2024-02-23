@@ -32,7 +32,7 @@ class EventHandlers(object):
     RESET_INTERSPHINX_MAPPING: bool = False
     _FLYOUT_IN_SIDEBARS_THEMES: list = ["bootstrap-astropy", "sphinxdoc", "alabaster"]
     _FLYOUT_SCRIPT_THEMES: list = ["bootstrap-astropy", "pydata_sphinx_theme", "sphinxdoc"]
-    FLYOUT_BADGE = False
+    FLYOUT_FLOATING_BADGE: bool = False
 
     @classmethod
     def builder_inited(cls, app) -> None:
@@ -58,7 +58,7 @@ class EventHandlers(object):
         cls.ASSETS_TO_COPY.add("_rst_properties.css")
 
         # Insert flyout script
-        if app.config.html_theme in EventHandlers._FLYOUT_SCRIPT_THEMES:
+        if app.config.html_theme in cls._FLYOUT_SCRIPT_THEMES:
             app.add_js_file("_rtd_versions.js")
             app.add_css_file("badge_only.css")
             cls.ASSETS_TO_COPY.add("_rtd_versions.js")
@@ -120,7 +120,7 @@ class EventHandlers(object):
         context["current_version"] = cls.CURRENT_VERSION
         context["project_url"] = app.config.sv_project_url
         context["versions"] = cls.VERSIONS
-        context["floating_badge"] = cls.FLYOUT_BADGE
+        context["floating_badge"] = cls.FLYOUT_FLOATING_BADGE
 
         # Relative path to master_doc
         relpath = (pagename.count("/")) * "../"
