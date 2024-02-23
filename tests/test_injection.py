@@ -66,8 +66,8 @@ def test_injected_hyperlinks(ver, file):
         # Test hyperlinks
         for link in hyperlinks:
             url = pathlib.Path(link.attrs.get("href"))
-            file_path = OUTPATH / url.relative_to("../")
-            assert file_path.is_file()
+            filepath = (OUTPATH / ver / file).parent / url
+            assert filepath.is_file()
 
     return
 

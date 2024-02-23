@@ -39,9 +39,9 @@
         <dt>Search</dt>
         <dd>
           <div style="padding: 6px;">
-            <form id="flyout-search-form" class="wy-form" target="_blank" action="{{ relpath }}
-              {{ versions.branches.get(current_version) if versions.branches.get(current_version)
-              else versions.tags.get(current_version) }}/../search.html" method="get">
+            <form id="flyout-search-form" class="wy-form" target="_blank"
+              action="{{ relpath }}{{ versions.branches.get(current_version) if versions.branches.get(current_version) else versions.tags.get(current_version) }}/../search.html"
+              method="get">
               <input type="text" name="q" aria-label="Search docs" placeholder="Search docs">
             </form>
           </div>

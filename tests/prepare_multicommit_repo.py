@@ -12,7 +12,9 @@ def prepare_ex_file(path):
         f.flush()
 
     npath = path / "code_ref" / "api_ref"
-    if not npath.exists(): npath.mkdir(parents=True)
+    if not npath.exists():
+        npath.mkdir(parents=True)
+
     with open(npath / "example2.rst", "w") as f:
         f.write("Obi-Wan\n")
         f.write("=======\n")
