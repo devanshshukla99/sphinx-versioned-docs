@@ -2,7 +2,6 @@ import os
 import pytest
 import pathlib
 from bs4 import BeautifulSoup as bs
-from .test_multicommit_injection import test_top_level_index
 
 VERSIONS_SUPPOSED = {
     "main": [
@@ -11,6 +10,12 @@ VERSIONS_SUPPOSED = {
 }
 BASEPATH = pathlib.Path(os.getcwd()) / "docs"
 OUTPATH = BASEPATH / "_build"
+
+
+def test_top_level_index():
+    assert OUTPATH.exists()
+    assert (OUTPATH / "index.html").is_file()
+    return
 
 
 @pytest.mark.parametrize("ver, files", VERSIONS_SUPPOSED.items())
@@ -58,9 +63,9 @@ def test_injected_hyperlinks(ver, file):
         assert set(VERSIONS_SUPPOSED.keys()) == hyperlinks_text
         print(f"Versions found in soup: {hyperlinks_text}")
 
+        # Test hyperlinks
         for link in hyperlinks:
             url = pathlib.Path(link.attrs.get("href"))
-            # file_path = outpath.relative_to(url)
             file_path = OUTPATH / url.relative_to("../")
             assert file_path.is_file()
 
