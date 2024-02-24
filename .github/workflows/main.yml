@@ -28,7 +28,7 @@ jobs:
           pip install tox
       - name: run tests
         run: |
-          tox -e py39
+          tox -e legacy_build
 
   py-build:
     runs-on: ${{ matrix.os }}
@@ -59,7 +59,7 @@ jobs:
           pip install tox
       - name: run tests
         run: |
-          tox -e multicommit
+          tox -e ${{ matrix.toxenv }}
 
   codestyle:
     runs-on: ubuntu-latest
@@ -91,8 +91,10 @@ jobs:
         include:
           - os: ubuntu-latest
             python-version: "3.10"
+            toxenv: py310
           - os: macos-latest
             python-version: "3.10"
+            toxenv: py310
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
@@ -108,7 +110,7 @@ jobs:
           pip install tox
       - name: run tests
         run: |
-          tox -e multicommit
+          tox -e ${{ matrix.toxenv }}
 
   theme-build:
     runs-on: ${{ matrix.os }}
