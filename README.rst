@@ -4,7 +4,7 @@ sphinx-versioned-docs
 
 |versions| |license|
 
-|build| |CI themes| |docs| |status| |codestyle|
+|Build| |docs| |status| |codestyle|
 
 Sphinx extension that allows building versioned docs for self-hosting.
 Supported on Linux and macOS.
@@ -65,7 +65,4 @@ How to use
     :target: https://sphinx-versioned-docs.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-.. |CI themes| image:: https://github.com/devanshshukla99/sphinx-versioned-docs/actions/workflows/CI-themes.yml/badge.svg
-    :alt: CI themes
- 
 .. _documentation: https://sphinx-versioned-docs.readthedocs.io/en/latest/
