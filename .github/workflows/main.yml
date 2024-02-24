@@ -1,4 +1,4 @@
-name: build
+name: Build
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  legacy-build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -30,11 +30,20 @@ jobs:
         run: |
           tox -e py39
 
-  repo-build:
-    runs-on: ubuntu-latest
+  py-build:
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: ["3.10"]
+        include:
+          - os: ubuntu-latest
+            python-version: "3.8"
+            toxenv: py38
+          - os: ubuntu-latest
+            python-version: "3.9"
+            toxenv: py39
+          - os: ubuntu-latest
+            python-version: "3.10"
+            toxenv: py310
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
@@ -56,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9"]
+        python-version: ["3.10"]
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
@@ -74,18 +83,48 @@ jobs:
         run: |
           tox -e codestyle
 
-  CI:
+  os-build:
     runs-on: ${{ matrix.os }}
-    needs: build
+    needs: py-build
     strategy:
       matrix:
         include:
           - os: ubuntu-latest
             python-version: "3.10"
-            toxenv: py310
           - os: macos-latest
             python-version: "3.10"
-            toxenv: py310
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: Check out that no sensitive environment variable is shared
+        run: env
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install tox
+      - name: run tests
+        run: |
+          tox -e multicommit
+
+  theme-build:
+    runs-on: ${{ matrix.os }}
+    needs: py-build
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python-version: "3.10"
+            toxenv: sphinx_rtd_theme
+          - os: ubuntu-latest
+            python-version: "3.10"
+            toxenv: astropy_sphinx_theme
+          - os: ubuntu-latest
+            python-version: "3.10"
+            toxenv: alabaster
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
