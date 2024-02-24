@@ -40,4 +40,4 @@ Upload your package to nexus
 
    twine upload dist/*
 
-After this command, your package is available on  https://pypi.org. Anyone can install it using `pip install sphinx-versioned-docs`.
+After this command, your package is available on  https://pypi.org. Anyone can install it using ``pip install sphinx-versioned-docs``.
