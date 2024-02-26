@@ -1,6 +1,6 @@
-===================
-⚙API documentation
-===================
+=================
+API documentation
+=================
 
 Entry application
 -----------------
