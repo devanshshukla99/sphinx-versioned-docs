@@ -5,6 +5,12 @@
     height: auto;
 }
 
+.rst-versions.shift-up {
+    height: auto;
+    max-height: 100%;
+    overflow-y: auto;
+}
+
 .rst-other-versions {
     text-align: left;
 }
