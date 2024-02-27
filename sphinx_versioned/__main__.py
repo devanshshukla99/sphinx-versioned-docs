@@ -11,7 +11,7 @@ from sphinx_versioned.lib import mp_sphinx_compatibility
 app = typer.Typer(add_completion=False)
 
 
-@app.command()
+@app.command(help="Create the sphinx documentation with a version selector menu.")
 def main(
     chdir: str = typer.Option(
         None,
@@ -42,7 +42,9 @@ def main(
         "-Sc",
         help="Adds compatibility for older sphinx versions by monkey patching certain functions.",
     ),
-    prebuild: bool = typer.Option(True, help="Disables the pre-builds; halves the runtime"),
+    prebuild: bool = typer.Option(
+        True, help="Pre-builds the documentations; Use `--no-prebuild` to half the runtime."
+    ),
     select_branches: str = typer.Option(
         None,
         "-b",
@@ -92,7 +94,7 @@ def main(
     sphinx_compatibility : :class:`bool`
         Adds compatibility for older sphinx versions by monkey patching certain functions.
     prebuild : :class:`bool`
-        Pre-build strategy; Use `--no-prebuild` to half the runtime. [Default = `True`]
+        Pre-builds the documentations; Use `--no-prebuild` to half the runtime. [Default = `True`]
     select_branches : :class:`str`
         Build docs for specific branches and tags. [Default=`None`]
     main_branch : :class:`str`
