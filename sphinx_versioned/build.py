@@ -13,13 +13,20 @@ from sphinx_versioned.versions import GitVersions, BuiltVersions, PseudoBranch
 
 
 class VersionedDocs:
-    def __init__(self, config: dict) -> None:
-        """Handles main workflow.
+    """Handles main build workflow.
 
-        Parameters
-        ----------
-        config : `dict`
-        """
+    Chronologically, the :meth:`~sphinx_versioned.__init__` first parses the config
+    (input parameters via a :class:`dict`) and then handles various paths, like current
+    workding directory, source directory and output directory.
+    Further, it selects the branches to pre-build/build then finally generates the
+    top-level ``index.html`` file.
+
+    Parameters
+    ----------
+    config : :class:`dict`
+    """
+
+    def __init__(self, config: dict) -> None:
         self.config = config
         self._parse_config(config)
         self._handle_paths()
@@ -40,7 +47,7 @@ class VersionedDocs:
             else:
                 self.main_branch = "main"
 
-        self._pre_build()
+        self.prebuild()
 
         # Adds our extension to the sphinx-config
         application.Config = ConfigInject
@@ -63,7 +70,9 @@ class VersionedDocs:
         return True
 
     def _handle_paths(self) -> None:
-        """Method to handle cwd and path for local config."""
+        """Method to handle cwd and path for local config, as well as, configure
+        :class:`~sphinx_versioned.versions.GitVersions` and the output directory.
+        """
         self.chdir = self.chdir if self.chdir else os.getcwd()
         log.debug(f"Working directory {self.chdir}")
 
@@ -115,7 +124,9 @@ class VersionedDocs:
         return _select_specific_branches
 
     def _generate_top_level_index(self) -> None:
-        """Generate a top-level ``index.html`` with redirect to the main-branch version."""
+        """Generate a top-level ``index.html`` which redirects to the main-branch version specified
+        via ``main_branch``.
+        """
         if self.main_branch not in [x.name for x in self._built_version]:
             log.critical(
                 f"main branch `{self.main_branch}` not found!! / not building `{self.main_branch}`; "
@@ -138,18 +149,20 @@ class VersionedDocs:
         return
 
     def _build(self, tag, _prebuild: bool = False) -> bool:
-        """Internal build method.
+        """Internal build method which actually carries out the pre-build/build transctions
+        inside a temporary directory then copy the asset files to the output directory
+        if it's not a pre-build.
 
         Parameters
         ----------
-        tag : `~git.Branch` or `~git.Tag`
-            Branch/tag to build
-        _prebuild : `bool`
-            Variable to allow/skip pre-building verions
+        tag : :class:`git.Branch` or :class:`git.Tag`
+            Branch/tag to build.
+        _prebuild : :class:`bool`
+            Variable to perform/skip pre-builds for selected/all versions.
 
         Returns
         -------
-        `bool`
+        :class:`bool`
         """
         # Checkout tag/branch
         self.versions.checkout(tag)
@@ -177,8 +190,17 @@ class VersionedDocs:
             log.success(f"build succeded for {tag} ;)")
             return True
 
-    def _pre_build(self) -> None:
-        if not self.prebuild:
+    def prebuild(self) -> None:
+        """Pre-build workflow.
+
+        Method to pre-build the selected/all branches in a temporary environment. Essentially, it builds
+        the various selected/all branches with the vanilla sphinx-build method and pass-on the branches
+        which ends up successful in vanilla sphinx-build.
+
+        The method carries out the transaction via the internal build method
+        :meth:`~sphinx_versioned.build.VersionedDocs._build`.
+        """
+        if not self.prebuild_branches:
             log.info("No pre-builing...")
             self._versions_to_build = self._versions_to_pre_build
             return
@@ -203,7 +225,15 @@ class VersionedDocs:
         return
 
     def build(self) -> None:
-        """Build workflow."""
+        """Build workflow.
+
+        Method to build the branch in a temporary directory with the modified
+        :class:`sphinx_versioned.lib.ConfigInject` and injectes the versions flyout menu to the
+        footer or the sidebars.
+
+        The method carries out the transaction via the internal build method
+        :meth:`~sphinx_versioned.build.VersionedDocs._build`.
+        """
         # get active branch
         self._active_branch = self.versions.active_branch
 

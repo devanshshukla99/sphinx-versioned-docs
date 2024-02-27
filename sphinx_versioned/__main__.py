@@ -18,7 +18,7 @@ def main(
         "--chdir",
         help="Make this the current working directory before running.",
     ),
-    output_dir: str = typer.Option("docs/_build", "--output", "-O", help="Output directory"),
+    output_dir: str = typer.Option("docs/_build", "--output", "-O", help="Output directory."),
     git_root: str = typer.Option(
         None,
         "--git-root",
@@ -47,7 +47,7 @@ def main(
         None,
         "-b",
         "--branches",
-        help="Build docs for specific branches and tags",
+        help="Build docs for specific branches and tags.",
     ),
     main_branch: str = typer.Option(
         None,
@@ -56,7 +56,9 @@ def main(
         help="Main branch to which the top-level `index.html` redirects to. Defaults to `main`.",
         show_default=False,
     ),
-    quite: bool = typer.Option(True, help="No output from `sphinx`"),
+    quite: bool = typer.Option(
+        True, help="Silent `sphinx`. Use `--no-quite` to get build output from `sphinx`."
+    ),
     verbose: bool = typer.Option(
         False,
         "--verbose",
@@ -72,6 +74,42 @@ def main(
         help="Force branch selection. Use this option to build detached head/commits. [Default: False]",
     ),
 ) -> None:
+    """
+    Typer application for initializing the ``sphinx-versioned`` build.
+
+    Parameters
+    ----------
+    chdir : :class:`str`
+        Make this the current working directory before running. [Default = `None`]
+    output_dir : :class:`str`
+        Output directory. [Default = 'docs/_build']
+    git_root : :class:`str`
+        Path to directory in the local repo. Default is CWD.
+    local_conf : :class:`str`
+        Path to conf.py for sphinx-versions to read config from.
+    reset_intersphinx_mapping : :class:`bool`
+        Reset intersphinx mapping; acts as a patch for issue #17
+    sphinx_compatibility : :class:`bool`
+        Adds compatibility for older sphinx versions by monkey patching certain functions.
+    prebuild : :class:`bool`
+        Pre-build strategy; Use `--no-prebuild` to half the runtime. [Default = `True`]
+    select_branches : :class:`str`
+        Build docs for specific branches and tags. [Default=`None`]
+    main_branch : :class:`str`
+        Main branch to which the top-level `index.html` redirects to. [Default = 'main']
+    quite : :class:`bool`
+        Quite output from `sphinx`. Use `--no-quite` to get output from `sphinx`. [Default = `True`]
+    verbose : :class:`bool`
+        Passed directly to sphinx. Specify more than once for more logging in sphinx. [Default = `False`]
+    loglevel : :class:`str`
+        Provide logging level. Example `--log` debug, [Default='info']
+    force_branches : :class:`str`
+        Force branch selection. Use this option to build detached head/commits. [Default = `False`]
+
+    Returns
+    -------
+    :class:`sphinx_versioned.build.VersionedDocs`
+    """
     if select_branches:
         select_branches = re.split(",|\ ", select_branches)
 
@@ -96,7 +134,7 @@ def main(
             "local_conf": local_conf,
             "reset_intersphinx_mapping": reset_intersphinx_mapping,
             "sphinx_compatibility": sphinx_compatibility,
-            "prebuild": prebuild,
+            "prebuild_branches": prebuild,
             "select_branches": select_branches,
             "main_branch": main_branch,
             "quite": quite,

@@ -8,7 +8,13 @@ os.environ["GIT_PYTHON_REFRESH"] = "quiet"
 
 
 class PseudoBranch:
-    """Class to generate a branchname for git detached situation"""
+    """Class to generate a branch/pseudo-branch for git detached head/commit.
+
+    Parameters
+    ----------
+    name : :class:`str`
+        Branch/pseudo-branch name.
+    """
 
     def __init__(self, name: str) -> None:
         self.name = name
@@ -21,10 +27,16 @@ class PseudoBranch:
 
 
 class _BranchTag(ABC):
-    """Abstract Base class for getting branches and tags"""
+    """Abstract base class for getting relative paths of branches and tags as properties."""
 
     @property
     def branches(self) -> dict:
+        """Get the branches and its ``index.html`` location.
+
+        Returns
+        -------
+        :class:`dict`
+        """
         return {
             x: "../" + str(y.relative_to(self.build_directory) / "index.html")
             for x, y in self._branches.items()
@@ -32,6 +44,12 @@ class _BranchTag(ABC):
 
     @property
     def tags(self) -> dict:
+        """Get the tags and its ``index.html`` location.
+
+        Returns
+        -------
+        :class:`dict`
+        """
         return {
             x: "../" + str(y.relative_to(self.build_directory) / "index.html") for x, y in self._tags.items()
         }
@@ -40,19 +58,19 @@ class _BranchTag(ABC):
 
 
 class GitVersions(_BranchTag):
-    """Handles git branches and tags. Builds upon the abstract base class `~sphinx_versioned.versions._BranchTag`."""
+    """Handles git branches and tags. Builds upon the abstract base class `~sphinx_versioned.versions._BranchTag`.
 
-    def __init__(self, git_root, build_directory) -> None:
-        """
-        Initlizes and latches into the git repo.
+    Initlizes and latches into the git repo.
 
-        Parameters
-        ----------
-        git_root : `str`
-            Git repository root
-        build_directory : `str`
-            Path of build directory
-        """
+    Parameters
+    ----------
+    git_root : :class:`str`
+        Git repository root directory.
+    build_directory : :class:`str`
+        Path of build directory.
+    """
+
+    def __init__(self, git_root: str, build_directory: str) -> None:
         self.git_root = git_root
         self.build_directory = pathlib.Path(build_directory)
 
@@ -66,7 +84,7 @@ class GitVersions(_BranchTag):
         if self.repo.bare:
             self.repo = git.Repo(os.getcwd())
             if self.repo.bare:
-                log.error("Bare repo")
+                log.error("The git repository is bare. Add some commits then try again!")
                 exit(-1)
         log.success("latched into the git repo")
 
@@ -74,11 +92,11 @@ class GitVersions(_BranchTag):
         return
 
     def _parse_branches(self) -> bool:
-        """Parse branches and tags into seperate variables.
+        """Parse branches and tags into separate variables.
 
         Returns
         -------
-        `bool`
+        :class:`bool`
         """
         self._raw_branches = self.repo.branches
         self._raw_tags = self.repo.tags
@@ -87,12 +105,12 @@ class GitVersions(_BranchTag):
         return True
 
     def checkout(self, name, *args, **kwargs) -> bool:
-        """git checkout a branch/tag with `name`.
+        """git checkout the branch/tag with its ``name``.
 
         Parameters
         ----------
-        name : `str`
-            Name of branch/tag.
+        name : :class:`str`
+            Name of the branch/tag.
         """
         self._active_branch = name
         log.debug(f"git checkout branch/tag: `{name}`")
@@ -100,7 +118,7 @@ class GitVersions(_BranchTag):
 
     @property
     def active_branch(self, *args, **kwargs):
-        """Property to get active_branch."""
+        """Property to get the currently active branch."""
         if self._active_branch:
             return self._active_branch
 
@@ -114,9 +132,17 @@ class GitVersions(_BranchTag):
 
 
 class BuiltVersions(_BranchTag):
-    """Handles versions to build. Builds upon the abstract base class `~sphinx_versioned.versions._BranchTag`."""
+    """Handles versions to build. Builds upon the abstract base class `~sphinx_versioned.versions._BranchTag`.
 
-    def __init__(self, versions, build_directory) -> None:
+    Parameters
+    ----------
+    versions : :class:`~sphinx_versioned.versions.GitVersions`
+        Git repository root
+    build_directory : :class:`str`
+        Path of build directory
+    """
+
+    def __init__(self, versions: GitVersions, build_directory: str) -> None:
         self._versions = versions
         self.build_directory = pathlib.Path(build_directory)
 
@@ -127,7 +153,7 @@ class BuiltVersions(_BranchTag):
         return
 
     def _parse(self) -> bool:
-        """Parse raw branches/tags in `_versions` into separate variables."""
+        """Parse raw branches/tags in :class:`~sphinx_versioned.versions.GitVersions` instance into separate variables."""
         self._raw_tags = []
         self._raw_branches = []
 

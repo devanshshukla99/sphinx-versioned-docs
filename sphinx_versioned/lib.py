@@ -38,7 +38,13 @@ class HandledError(Exception):
 
 
 class TempDir(object):
-    """Similar to TemporaryDirectory in Python 3.x but with tuned weakref implementation."""
+    """Similar to TemporaryDirectory in Python 3.x but with tuned weakref implementation.
+
+    Parameters
+    ----------
+    defer_atexit: :class:`bool`
+        cleanup() to atexit instead of after garbage collection.
+    """
 
     def __init__(self, defer_atexit=False):
         """Constructor.
@@ -77,7 +83,7 @@ class TempDir(object):
 
 def mp_sphinx_compatibility() -> bool:
     """
-    Monkeypatching `sphinx.application.Sphinx.add_stylesheet` -> `sphinx.application.Sphinx.add_stylesheet`
+    Monkeypatching :meth:`sphinx.application.Sphinx.add_stylesheet` -> :meth:`sphinx.application.Sphinx.add_css_file`
     to add compatibility for versions using older sphinx
     """
     log.info("Monkeypatching older sphinx app.add_stylesheet -> app.add_css_file")

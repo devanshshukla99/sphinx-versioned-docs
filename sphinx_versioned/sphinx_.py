@@ -17,28 +17,28 @@ class EventHandlers(object):
 
     Parameters
     ----------
-    CURRENT_VERSION : `str`
+    CURRENT_VERSION : :class:`str`
         Current version being built.
-    VERSIONS : `~sphinx_versioned.versions.BuiltVersions`
+    VERSIONS : :class:`sphinx_versioned.versions.BuiltVersions`
         Pass through versions for them to be linked to be linked in the badge.
-    ASSETS_TO_COPY : `list`
+    ASSETS_TO_COPY : :class:`list`
         Assest to copy to output directory.
-    RESET_INTERSPHINX_MAPPING : `bool`
+    RESET_INTERSPHINX_MAPPING : :class:`bool`
         Reset intersphinx mapping after each build.
     """
 
-    CURRENT_VERSION = None
+    CURRENT_VERSION: str = None
     VERSIONS = None
-    ASSETS_TO_COPY = []
-    RESET_INTERSPHINX_MAPPING = False
+    ASSETS_TO_COPY: list = []
+    RESET_INTERSPHINX_MAPPING: bool = False
 
     @staticmethod
-    def builder_inited(app):
+    def builder_inited(app) -> None:
         """Update the Sphinx builder.
 
         Parameters
         ----------
-        app : `~param sphinx.application.Sphinx`
+        app : :class:`sphinx.application.Sphinx`
             Sphinx application object.
         """
         # Add this extension's _templates directory to Sphinx.
@@ -75,7 +75,16 @@ class EventHandlers(object):
             EventHandlers.ASSETS_TO_COPY.append("fontawesome-webfont.woff")
 
     @classmethod
-    def builder_finished_tasks(cls, app, exc):
+    def builder_finished_tasks(cls, app, exc) -> None:
+        """Method to execute tasks after the sphinx builder is finished.
+
+        Parameters
+        ----------
+        app : :class:`sphinx.application.Sphinx`
+            Sphinx application object.
+        exc : :class:`Exception`
+            Exception.
+        """
         if cls.RESET_INTERSPHINX_MAPPING:
             log.debug("Reset intersphinx mappings")
             for key, value in app.config.intersphinx_mapping.values():
@@ -89,20 +98,20 @@ class EventHandlers(object):
                 log.debug(f"copying {STATIC_DIR}/{asset} to {staticdir}")
 
     @classmethod
-    def html_page_context(cls, app, pagename, templatename, context, doctree):
+    def html_page_context(cls, app, pagename, templatename, context, doctree) -> None:
         """Update the Jinja2 HTML context, exposes the Versions class instance to it.
 
         Parameters
         ----------
-        app : `~sphinx.application.Sphinx`
+        app : :class:`sphinx.application.Sphinx`
             Sphinx application object.
-        pagename : `str`
+        pagename : :class:`str`
             Name of the page being rendered (without .html or any file extension).
-        templatename : `str`
+        templatename : :class:`str`
             Page name with .html.
-        context : `dict`
+        context : :class:`dict`
             Jinja2 HTML context.
-        doctree : `~docutils.nodes.document`
+        doctree : :class:`docutils.nodes.document`
             Tree of docutils nodes.
         """
         assert templatename or doctree  # Unused, for linting.
@@ -121,17 +130,17 @@ class EventHandlers(object):
         return
 
 
-def setup(app):
+def setup(app) -> dict:
     """Called by Sphinx during phase 0 (initialization).
 
     Parameters
     ----------
-    app : `~sphinx.application.Sphinx`
+    app : :class:`sphinx.application.Sphinx`
         Sphinx application object.
 
     Returns
     -------
-    extension version : `dict`
+    extension version : :class:`dict`
     """
     # Used internally. For rebuilding all pages when one or versions fail.
     # app.add_config_value("sphinx_versioned_versions", SC_VERSIONING_VERSIONS, "html")

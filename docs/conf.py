@@ -247,11 +247,10 @@ htmlhelp_basename = "responsedoc"
 # texinfo_no_detailmenu = False
 
 # Example configuration for intersphinx: refer to the Python standard library.
-# intersphinx_mapping = {
-#     "python": ("http://docs.python.org/", None),
-#     "pytest": ("https://docs.pytest.org/en/stable/", None),
-#     "urllib3": ("https://urllib3.readthedocs.io/en/stable/", None),
-#     "requests": ("https://docs.python-requests.org/en/master/", None),
-#     "aiohttp": ("https://docs.aiohttp.org/en/stable/", None),
-#     "sqlite3": ("https://docs.python.org/3/library/sqlite3.html", None),
-# }
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3/", None),
+    "pytest": ("https://docs.pytest.org/en/stable/", None),
+    "aiohttp": ("https://docs.aiohttp.org/en/stable/", None),
+    "sphinx": ("https://www.sphinx-doc.org/", None),
+    "gitpython": ("https://gitpython.readthedocs.io/en/stable/", None),
+}
