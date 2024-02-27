@@ -2,9 +2,17 @@
 sphinx-versioned-docs
 =====================
 
-|versions| |license|
-
-|Build| |docs| |status| |codestyle|
++-------------------------+-----------------------+
+| |python-versions|       | |pypi-status|         |
++-------------------------+-----------------------+
+| |build|                 | |docs|                |
++-------------------------+-----------------------+
+| |license|               | |codestyle|           |
++-------------------------+-----------------------+
+| |pypi-version|          | |pypi-downloads|      |
++-------------------------+-----------------------+
+| |conda-version|         | |conda-downloads|     |
++-------------------------+-----------------------+
 
 Sphinx extension that allows building versioned docs for self-hosting.
 Supported on Linux and macOS.
@@ -30,7 +38,7 @@ How to use
 
     sphinx-versioned --help
 
-.. code::
+.. code:: console
 
     Usage: sphinx-versioned [OPTIONS]
 
@@ -51,11 +59,11 @@ How to use
     │ --help                                               Show this message and exit.                                                                          │
     ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
-.. |versions| image:: https://img.shields.io/pypi/pyversions/sphinx-versioned-docs.svg?logo=python&logoColor=FBE072
+.. |python-versions| image:: https://img.shields.io/pypi/pyversions/sphinx-versioned-docs.svg?logo=python&logoColor=FBE072
     :target: https://pypi.org/project/sphinx-versioned-docs/
     :alt: Python versions supported
 
-.. |status| image:: https://img.shields.io/pypi/status/sphinx-versioned-docs.svg
+.. |pypi-status| image:: https://img.shields.io/pypi/status/sphinx-versioned-docs.svg
     :target: https://pypi.org/project/sphinx-versioned-docs/
     :alt: Package stability
 
@@ -72,5 +80,21 @@ How to use
 .. |docs| image:: https://readthedocs.org/projects/sphinx-versioned-docs/badge/?version=latest
     :target: https://sphinx-versioned-docs.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
+
+.. |pypi-version| image:: https://img.shields.io/pypi/v/sphinx-versioned-docs
+    :target: https://pypi.org/project/sphinx-versioned-docs/
+    :alt: PyPI - Version
+
+.. |conda-version| image:: https://anaconda.org/conda-forge/sphinx-versioned-docs/badges/version.svg
+    :target: https://anaconda.org/conda-forge/sphinx-versioned-docs/
+    :alt: Conda - Version
+
+.. |pypi-downloads| image:: https://img.shields.io/pypi/dm/sphinx-versioned-docs
+   :target: https://pypi.org/project/sphinx-versioned-docs/
+   :alt: PyPI - Downloads
+
+.. |conda-downloads| image:: https://anaconda.org/conda-forge/sphinx-versioned-docs/badges/downloads.svg
+   :target: https://anaconda.org/conda-forge/sphinx-versioned-docs/
+   :alt: Anaconda - Downloads
 
 .. _documentation: https://sphinx-versioned-docs.readthedocs.io/en/latest/
