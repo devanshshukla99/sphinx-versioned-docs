@@ -32,8 +32,8 @@ class EventHandlers(object):
     ASSETS_TO_COPY: set = set()
     RESET_INTERSPHINX_MAPPING: bool = False
 
-    @staticmethod
-    def builder_inited(app) -> None:
+    @classmethod
+    def builder_inited(cls, app) -> None:
         """Update the Sphinx builder.
 
         Parameters
@@ -64,15 +64,15 @@ class EventHandlers(object):
 
         # Add css properties to bold currently-active branch/tag
         app.add_css_file("_rst_properties.css")
-        EventHandlers.ASSETS_TO_COPY.add("_rst_properties.css")
+        cls.ASSETS_TO_COPY.add("_rst_properties.css")
 
         # Insert flyout script
         if app.config.html_theme == "bootstrap-astropy":
             app.add_js_file("_rtd_versions.js")
             app.add_css_file("badge_only.css")
-            EventHandlers.ASSETS_TO_COPY.add("_rtd_versions.js")
-            EventHandlers.ASSETS_TO_COPY.add("badge_only.css")
-            EventHandlers.ASSETS_TO_COPY.add("fontawesome-webfont.woff")
+            cls.ASSETS_TO_COPY.add("_rtd_versions.js")
+            cls.ASSETS_TO_COPY.add("badge_only.css")
+            cls.ASSETS_TO_COPY.add("fontawesome-webfont.woff")
         return
 
     @classmethod
@@ -97,10 +97,10 @@ class EventHandlers(object):
 
             for asset in cls.ASSETS_TO_COPY:
                 copy_asset_file(f"{STATIC_DIR}/{asset}", staticdir)
-                log.debug(f"copying {STATIC_DIR}/{asset} to {staticdir}")
+                log.debug(f"copying `{asset}`: {STATIC_DIR}/{asset} to {staticdir}")
 
             # Reset Assets to copy
-            EventHandlers.ASSETS_TO_COPY.clear()
+            cls.ASSETS_TO_COPY.clear()
         return
 
     @classmethod
