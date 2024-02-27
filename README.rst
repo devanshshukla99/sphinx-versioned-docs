@@ -15,6 +15,14 @@ This project is a fork of `Smile-SA/sphinx-versions <https://github.com/Smile-SA
 
 Get started using the `documentation`_
 
+sphinx-versioned-docs in action!
+--------------------------------
+
+.. image:: docs/_static/sample_sphinx_rtd_theme.png
+  :width: 800
+  :alt: sphinx-rtd-theme with a version selector menu
+
+
 How to use
 ==========
 
