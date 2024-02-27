@@ -29,7 +29,7 @@ class EventHandlers(object):
 
     CURRENT_VERSION: str = None
     VERSIONS = None
-    ASSETS_TO_COPY: list = []
+    ASSETS_TO_COPY: set = set()
     RESET_INTERSPHINX_MAPPING: bool = False
 
     @staticmethod
@@ -64,15 +64,16 @@ class EventHandlers(object):
 
         # Add css properties to bold currently-active branch/tag
         app.add_css_file("_rst_properties.css")
-        EventHandlers.ASSETS_TO_COPY.append("_rst_properties.css")
+        EventHandlers.ASSETS_TO_COPY.add("_rst_properties.css")
 
         # Insert flyout script
         if app.config.html_theme == "bootstrap-astropy":
             app.add_js_file("_rtd_versions.js")
-            EventHandlers.ASSETS_TO_COPY.append("_rtd_versions.js")
             app.add_css_file("badge_only.css")
-            EventHandlers.ASSETS_TO_COPY.append("badge_only.css")
-            EventHandlers.ASSETS_TO_COPY.append("fontawesome-webfont.woff")
+            EventHandlers.ASSETS_TO_COPY.add("_rtd_versions.js")
+            EventHandlers.ASSETS_TO_COPY.add("badge_only.css")
+            EventHandlers.ASSETS_TO_COPY.add("fontawesome-webfont.woff")
+        return
 
     @classmethod
     def builder_finished_tasks(cls, app, exc) -> None:
@@ -93,9 +94,15 @@ class EventHandlers(object):
 
         if app.builder.format == "html" and not exc:
             staticdir = os.path.join(app.builder.outdir, "_static")
+
+            log.critical(cls.ASSETS_TO_COPY)
             for asset in cls.ASSETS_TO_COPY:
                 copy_asset_file(f"{STATIC_DIR}/{asset}", staticdir)
                 log.debug(f"copying {STATIC_DIR}/{asset} to {staticdir}")
+
+            # Reset Assests to copy
+            EventHandlers.ASSETS_TO_COPY.clear()
+        return
 
     @classmethod
     def html_page_context(cls, app, pagename, templatename, context, doctree) -> None:
