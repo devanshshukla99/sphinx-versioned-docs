@@ -58,7 +58,7 @@ class _BranchTag(ABC):
 
 
 class GitVersions(_BranchTag):
-    """Handles git branches and tags. Builds upon the abstract base class `~sphinx_versioned.versions._BranchTag`.
+    """Handles git branches and tags. Builds upon the abstract base class :class:`sphinx_versioned.versions._BranchTag`.
 
     Initlizes and latches into the git repo.
 
@@ -132,7 +132,7 @@ class GitVersions(_BranchTag):
 
 
 class BuiltVersions(_BranchTag):
-    """Handles versions to build. Builds upon the abstract base class `~sphinx_versioned.versions._BranchTag`.
+    """Handles versions to build. Builds upon the abstract base class :class:`sphinx_versioned.versions._BranchTag`.
 
     Parameters
     ----------
