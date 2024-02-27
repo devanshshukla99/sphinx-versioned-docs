@@ -1,1 +1,0 @@
-Added a sample github-action to showcase the process of building and deploying versioned docs to github-pages/other-locations.

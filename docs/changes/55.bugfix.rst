@@ -1,1 +1,0 @@
-Fixed a bug where the versions selector menu shows a scoll-bar in `sphinx-rtd-theme`.

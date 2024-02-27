@@ -1,2 +1,0 @@
-Added a searchbar and project url field for `sphinx-rtd-theme` and `bootstrap-astropy`. The project url can
-be set using `sv_project_url` option in `conf.py`.

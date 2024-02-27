@@ -1,3 +1,33 @@
+1.3 (2024-02-28)
+================
+
+Features
+--------
+
+- Adds the capability to build detached heads if either the head is already detached or that particular commit is
+  specified via `--branches` arg, provided that `--force` is supplied. Additionally, if the main-branch is not
+  specified via `--main-branch` then the currently checkout out branch/tag will be considered as the main branch
+  for generating the top-level `index.html`. (`#45 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/45>`__)
+- Added a searchbar and project url field for `sphinx-rtd-theme` and `bootstrap-astropy`. The project url can
+  be set using `sv_project_url` option in `conf.py`. (`#48 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/48>`__)
+
+
+Bug Fixes
+---------
+
+- Fixed a bug in flyout's eventlistener where it erroneously used to trigger on the outer flyout element. (`#48 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/48>`__)
+- Fixed a bug where the versions selector menu shows a scoll-bar in `sphinx-rtd-theme`. (`#55 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/55>`__)
+- Fixed a bug in which the static assets were being copied to the same location multiple times. (`#60 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/60>`__)
+
+
+Added/Improved Documentation
+----------------------------
+
+- Added documentation strings. (`#39 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/39>`__)
+- Added a sample github-action to showcase the process of building and deploying versioned docs to github-pages/other-locations. (`#46 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/46>`__)
+- Improved package-wide documentation. Added doc-strings and improved tutorial and installation instructions for fresh users. (`#53 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/53>`__)
+
+
 1.2 (2024-02-01)
 =========================================
 
