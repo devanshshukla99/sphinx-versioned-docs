@@ -43,7 +43,7 @@ In this method, please make sure that anaconda/conda is properly installed:
 
     $ conda install sphinx-versioned-docs
 
-In order to create a separate environment in conda, follow the below instructions:
+In order to create a separate environment in conda, follow these instructions:
 
 .. code-block:: console
 

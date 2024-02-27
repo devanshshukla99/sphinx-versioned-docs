@@ -1,0 +1,1 @@
+Improved package-wide documentation. Added doc-strings and improved tutorial and installation instructions for fresh users.

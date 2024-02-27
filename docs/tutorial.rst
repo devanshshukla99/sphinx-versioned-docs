@@ -35,7 +35,7 @@ you can run the following command to generate the versioned documentation:
 
 -----------------
 
-If you have problems initializing sphinx and git, then follow the below instructions: 
+If you have problems initializing sphinx and git, then follow these instructions: 
 
 Before we begin make sure you have some Sphinx docs already in your project. If not, read `First Steps with Sphinx <http://www.sphinx-doc.org/en/stable/tutorial.html>`_ first. If you just want something quick
 and dirty you can do the following:
