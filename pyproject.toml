@@ -44,7 +44,7 @@ line-length = 110
       showcontent = true
 
     [[tool.towncrier.type]]
-      directory = "docs"
+      directory = "doc"
       name = "Added/Improved Documentation"
       showcontent = true
 
