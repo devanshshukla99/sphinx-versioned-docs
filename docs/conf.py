@@ -252,5 +252,5 @@ intersphinx_mapping = {
     "pytest": ("https://docs.pytest.org/en/stable/", None),
     "aiohttp": ("https://docs.aiohttp.org/en/stable/", None),
     "sphinx": ("https://www.sphinx-doc.org/", None),
-    "git": ("https://gitpython.readthedocs.io/en/stable/", None),
+    "gitpython": ("https://gitpython.readthedocs.io/en/stable/", None),
 }

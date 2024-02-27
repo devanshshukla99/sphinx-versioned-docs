@@ -25,7 +25,8 @@ Building workflow
 Sphinx extension
 ----------------
 
-The sphinx-extension is added by default by running ``sphinx`` via ``sphinx-versioned`` to inject the versions flyout menu directly to the html files.
+The sphinx-extension is added by default on running ``sphinx-versioned`` to inject the versions flyout
+menu directly to the html files.
 
 .. automodule:: sphinx_versioned.sphinx_
     :members:
