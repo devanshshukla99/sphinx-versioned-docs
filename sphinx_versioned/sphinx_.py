@@ -95,12 +95,11 @@ class EventHandlers(object):
         if app.builder.format == "html" and not exc:
             staticdir = os.path.join(app.builder.outdir, "_static")
 
-            log.critical(cls.ASSETS_TO_COPY)
             for asset in cls.ASSETS_TO_COPY:
                 copy_asset_file(f"{STATIC_DIR}/{asset}", staticdir)
                 log.debug(f"copying {STATIC_DIR}/{asset} to {staticdir}")
 
-            # Reset Assests to copy
+            # Reset Assets to copy
             EventHandlers.ASSETS_TO_COPY.clear()
         return
 
