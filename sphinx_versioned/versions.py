@@ -1,10 +1,11 @@
 import os
+
+os.environ["GIT_PYTHON_REFRESH"] = "quiet"
+
 import git
 import pathlib
 from abc import ABC
 from loguru import logger as log
-
-os.environ["GIT_PYTHON_REFRESH"] = "quiet"
 
 
 class PseudoBranch:
