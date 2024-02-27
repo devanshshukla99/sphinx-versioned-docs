@@ -1,0 +1,1 @@
+Fixed a bug in which the static assets were being copied to the same location multiple times.
