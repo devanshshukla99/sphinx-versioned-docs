@@ -24,15 +24,19 @@ class EventHandlers(object):
         Assest to copy to output directory.
     RESET_INTERSPHINX_MAPPING : :class:`bool`
         Reset intersphinx mapping after each build.
+    FLYOUT_FLOATING_BADGE : :class:`bool`
+        Turns the versions selector menu into a floating badge.
     """
 
     CURRENT_VERSION: str = None
     VERSIONS = None
     ASSETS_TO_COPY: set = set()
     RESET_INTERSPHINX_MAPPING: bool = False
-    _FLYOUT_IN_SIDEBARS_THEMES: list = ["bootstrap-astropy", "sphinxdoc", "alabaster"]
-    _FLYOUT_SCRIPT_THEMES: list = ["bootstrap-astropy", "pydata_sphinx_theme", "sphinxdoc"]
     FLYOUT_FLOATING_BADGE: bool = False
+    # Themes which do not require the additional `_rtd_versions.js` script file.
+    _FLYOUT_NOSCRIPT_THEMES: list = [
+        "sphinx_rtd_theme",
+    ]
 
     @classmethod
     def builder_inited(cls, app) -> None:
@@ -58,7 +62,7 @@ class EventHandlers(object):
         cls.ASSETS_TO_COPY.add("_rst_properties.css")
 
         # Insert flyout script
-        if app.config.html_theme in cls._FLYOUT_SCRIPT_THEMES:
+        if app.config.html_theme not in cls._FLYOUT_NOSCRIPT_THEMES:
             app.add_js_file("_rtd_versions.js")
             app.add_css_file("badge_only.css")
             cls.ASSETS_TO_COPY.add("_rtd_versions.js")
@@ -111,10 +115,12 @@ class EventHandlers(object):
         doctree : :class:`docutils.nodes.document`
             Tree of docutils nodes.
         """
-        if app.config.html_theme in cls._FLYOUT_IN_SIDEBARS_THEMES:
-            context["sidebars"].append("versions.html")
+        # If there's a footer element within the theme, then use it for the injected versions selector menu,
+        if context.get('theme_footer_start'):
+            context["theme_footer_start"] += ", versions"
+        # otherwise append it to the sidebars.
         else:
-            context["theme_footer_start"] = "versions"
+            context["sidebars"].append("versions.html")
 
         # Update Jinja2 context.
         context["current_version"] = cls.CURRENT_VERSION
