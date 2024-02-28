@@ -1,0 +1,1 @@
+Fixed conda-forge builds by setting ``git_python_refresh`` environ to ``quite``.
