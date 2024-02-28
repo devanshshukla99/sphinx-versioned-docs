@@ -58,11 +58,11 @@ def main(
         help="Main branch to which the top-level `index.html` redirects to. Defaults to `main`.",
         show_default=False,
     ),
+    floating_badge: bool = typer.Option(
+        False, "--float-badge", help="Turns the versions selector menu into a floating badge."
+    ),
     quite: bool = typer.Option(
         True, help="Silent `sphinx`. Use `--no-quite` to get build output from `sphinx`."
-    ),
-    floating_badge: bool = typer.Option(
-        False, "--float-badge", help="Use floating badge for the flyout versions menu."
     ),
     verbose: bool = typer.Option(
         False,
@@ -99,9 +99,11 @@ def main(
     prebuild : :class:`bool`
         Pre-builds the documentations; Use `--no-prebuild` to half the runtime. [Default = `True`]
     select_branches : :class:`str`
-        Build docs for specific branches and tags. [Default=`None`]
+        Build docs for specific branches and tags. [Default = `None`]
     main_branch : :class:`str`
         Main branch to which the top-level `index.html` redirects to. [Default = 'main']
+    floating_badge : :class:`bool`
+        Turns the versions selector menu into a floating badge. [Default = `False`]
     quite : :class:`bool`
         Quite output from `sphinx`. Use `--no-quite` to get output from `sphinx`. [Default = `True`]
     verbose : :class:`bool`
