@@ -116,7 +116,7 @@ class EventHandlers(object):
             Tree of docutils nodes.
         """
         # If there's a footer element within the theme, then use it for the injected versions selector menu,
-        if context.get('theme_footer_start'):
+        if context.get("theme_footer_start"):
             context["theme_footer_start"] += ", versions"
         # otherwise append it to the sidebars.
         else:
