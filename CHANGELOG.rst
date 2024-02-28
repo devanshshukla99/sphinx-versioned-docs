@@ -1,3 +1,12 @@
+1.3.1 (2024-02-28)
+==================
+
+Bug Fixes
+---------
+
+- Fixed conda-forge builds by setting ``git_python_refresh`` environ to ``quite``. (`#62 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/62>`__)
+
+
 1.3 (2024-02-28)
 ================
 
