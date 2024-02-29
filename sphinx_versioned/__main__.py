@@ -59,7 +59,7 @@ def main(
         show_default=False,
     ),
     floating_badge: bool = typer.Option(
-        False, "--float-badge", help="Turns the versions selector menu into a floating badge."
+        False, "--floating-badge", "--badge", help="Turns the versions selector menu into a floating badge."
     ),
     quite: bool = typer.Option(
         True, help="Silent `sphinx`. Use `--no-quite` to get build output from `sphinx`."
