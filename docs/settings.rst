@@ -63,6 +63,10 @@ These command line options must be specified when executing the ``sphinx-version
 
     Specify the main-branch to which the top-level ``index.html`` redirects to. Default is ``main``.
 
+.. option:: --floating-badge, --badge
+
+    Turns the version selector menu into a floating badge. Default is `False`.
+
 .. option:: --quite, --no-quite
 
     Silents the output from `sphinx`. Use `--no-quite` to get complete-output from `sphinx`. Default is `True`.

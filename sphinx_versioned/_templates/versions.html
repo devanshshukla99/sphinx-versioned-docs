@@ -1,95 +1,8 @@
-{% if html_theme == "sphinx_rtd_theme" %}
-<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other versions</span>
-    v: {{ current_version }}
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <div class="injected">
-      {%- if versions.tags %}
-      <dl>
-        <dt>Tags</dt>
-        {%- for name, url in versions.tags.items() %}
-        <dd class="{{'rtd-current-item' if name==current_version }}">
-          <a href="{{ relpath }}{{ url }}">{{ name }}</a>
-        </dd>
-        {%- endfor %}
-      </dl>
-      {%- endif %}
-      {%- if versions.branches %}
-      <dl>
-        <dt>Branches</dt>
-        {%- for name, url in versions.branches.items() %}
-        <dd class="{{'rtd-current-item' if name==current_version }}">
-          <a href="{{ relpath }}{{ url }}">{{ name }}</a>
-        </dd>
-        {%- endfor %}
-      </dl>
-      {%- endif %}
-      {%- if project_url %}
-      <dl>
-        <dt>Project home</dt>
-        <dd>
-          <a href="{{ project_url }}">View</a>
-        </dd>
-      </dl>
-      {%- endif %}
-      <dl>
-        <dt>Search</dt>
-        <dd>
-          <div style="padding: 6px;">
-            <form id="flyout-search-form" class="wy-form" target="_blank"
-              action="{{ relpath }}{{ versions.branches.get(current_version) if versions.branches.get(current_version) else versions.tags.get(current_version) }}/../search.html"
-              method="get">
-              <input type="text" name="q" aria-label="Search docs" placeholder="Search docs">
-            </form>
-          </div>
-        </dd>
-      </dl>
-    </div>
-  </div>
-</div>
-{% elif html_theme == "alabaster" %}
 <div class="injected">
-  <div class="versions">
-    <p class="caption">Versions</p>
-    <div class="versions-content">
-      <div>
-        <span class="current-version">
-          viewing: {{ current_version }}
-        </span>
-      </div>
-      <div class="other-versions">
-        {%- if versions.tags %}
-        <p>Tags</p>
-        <div class="dropdown-content">
-          {%- for name, url in versions.tags.items() %}
-          <dd class="{{'rtd-current-item' if name==current_version }}">
-            <a href="{{ relpath }}{{ url }}">{{ name }}</a>
-          </dd>
-          {%- endfor %}
-        </div>
-        {%- endif %}
-        {%- if versions.branches %}
-        <p>Branches</p>
-        <div class="dropdown-content">
-          {%- for name, url in versions.branches.items() %}
-          <dd class="{{'rtd-current-item' if name==current_version }}">
-            <a href="{{ relpath }}{{ url }}">{{ name }}</a>
-          </dd>
-          {%- endfor %}
-        </div>
-        {%- endif %}
-      </div>
-    </div>
-  </div>
-</div>
-{% elif html_theme == "bootstrap-astropy" %}
-<div class="injected">
-  <div class="rst-versions rst-badge" data-toggle="rst-versions">
+  <div class="rst-versions {{ 'rst-badge' if floating_badge }}" data-toggle="rst-versions" role="note"
+    aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
-      <span class="fa fa-book">&nbsp;</span>
+      <span class="fa fa-book">&nbsp;&nbsp;Other versions&nbsp;&nbsp;</span>
       v: {{ current_version }}
       <span class="fa fa-caret-down"></span>
     </span>
@@ -137,30 +50,3 @@
     </div>
   </div>
 </div>
-{% else %}
-<h3>{{ _('Versions') }}</h3>
-<ul>
-  <div class="injected">
-    {%- if versions.tags %}
-    <p>Tags</p>
-    <div class="dropdown-content">
-      {%- for name, url in versions.tags.items() %}
-      <div class="{{'rtd-current-item' if name==current_version }}">
-        <a href="{{ relpath }}{{ url }}">{{ name }}</a>
-      </div>
-      {%- endfor %}
-    </div>
-    {%- endif %}
-    {%- if versions.branches %}
-    <p>Branches</p>
-    <div class="dropdown-content">
-      {%- for name, url in versions.branches.items() %}
-      <div class="{{'rtd-current-item' if name==current_version }}">
-        <a href="{{ relpath }}{{ url }}">{{ name }}</a>
-      </div>
-      {%- endfor %}
-    </div>
-    {%- endif %}
-  </div>
-</ul>
-{% endif %}

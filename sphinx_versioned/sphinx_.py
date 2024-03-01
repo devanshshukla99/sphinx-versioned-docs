@@ -5,7 +5,6 @@ import os
 from loguru import logger as log
 from sphinx.util.fileutil import copy_asset_file
 from sphinx.jinja2glue import SphinxFileSystemLoader
-from sphinx.builders.html import StandaloneHTMLBuilder
 
 from sphinx_versioned._version import __version__
 
@@ -25,12 +24,19 @@ class EventHandlers(object):
         Assest to copy to output directory.
     RESET_INTERSPHINX_MAPPING : :class:`bool`
         Reset intersphinx mapping after each build.
+    FLYOUT_FLOATING_BADGE : :class:`bool`
+        Turns the version selector menu into a floating badge.
     """
 
     CURRENT_VERSION: str = None
     VERSIONS = None
     ASSETS_TO_COPY: set = set()
     RESET_INTERSPHINX_MAPPING: bool = False
+    FLYOUT_FLOATING_BADGE: bool = False
+    # Themes which do not require the additional `_rtd_versions.js` script file.
+    _FLYOUT_NOSCRIPT_THEMES: list = [
+        "sphinx_rtd_theme",
+    ]
 
     @classmethod
     def builder_inited(cls, app) -> None:
@@ -49,17 +55,6 @@ class EventHandlers(object):
             app.builder.templates.loaders.insert(0, SphinxFileSystemLoader(templates_dir))
             app.builder.templates.templatepathlen += 1
 
-        # Add versions.html to sidebar.
-        if "**" not in app.config.html_sidebars:
-            # default_sidebars was deprecated in Sphinx 1.6+, so only use it if possible (to maintain
-            # backwards compatibility), else don't use it.
-            try:
-                app.config.html_sidebars["**"] = StandaloneHTMLBuilder.default_sidebars + ["versions.html"]
-            except AttributeError:
-                app.config.html_sidebars["**"] = ["versions.html"]
-        elif "versions.html" not in app.config.html_sidebars["**"]:
-            app.config.html_sidebars["**"].append("versions.html")
-
         log.info(f"Theme: {app.config.html_theme}")
 
         # Add css properties to bold currently-active branch/tag
@@ -67,7 +62,7 @@ class EventHandlers(object):
         cls.ASSETS_TO_COPY.add("_rst_properties.css")
 
         # Insert flyout script
-        if app.config.html_theme == "bootstrap-astropy":
+        if app.config.html_theme not in cls._FLYOUT_NOSCRIPT_THEMES:
             app.add_js_file("_rtd_versions.js")
             app.add_css_file("badge_only.css")
             cls.ASSETS_TO_COPY.add("_rtd_versions.js")
@@ -120,15 +115,18 @@ class EventHandlers(object):
         doctree : :class:`docutils.nodes.document`
             Tree of docutils nodes.
         """
-        assert templatename or doctree  # Unused, for linting.
-        this_remote = "main"
+        # If there's a footer element within the theme, then use it for the injected version selector menu,
+        if context.get("theme_footer_start"):
+            context["theme_footer_start"] += ", versions"
+        # otherwise append it to the sidebars.
+        else:
+            context["sidebars"].append("versions.html")
 
         # Update Jinja2 context.
-        context["github_version"] = cls.CURRENT_VERSION
         context["current_version"] = cls.CURRENT_VERSION
-        context["html_theme"] = app.config.html_theme
         context["project_url"] = app.config.sv_project_url
         context["versions"] = cls.VERSIONS
+        context["floating_badge"] = cls.FLYOUT_FLOATING_BADGE
 
         # Relative path to master_doc
         relpath = (pagename.count("/")) * "../"
@@ -148,9 +146,6 @@ def setup(app) -> dict:
     -------
     extension version : :class:`dict`
     """
-    # Used internally. For rebuilding all pages when one or versions fail.
-    # app.add_config_value("sphinx_versioned_versions", SC_VERSIONING_VERSIONS, "html")
-
     # Needed for banner.
     if not app.config.html_static_path:
         app.config.html_static_path.append(STATIC_DIR)
