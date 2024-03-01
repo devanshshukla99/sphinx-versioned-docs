@@ -66,7 +66,6 @@ class EventHandlers(object):
             app.add_js_file("_rtd_versions.js")
             cls.ASSETS_TO_COPY.add("_rtd_versions.js")
             cls.ASSETS_TO_COPY.add("fontawesome-webfont.woff")
-        if cls.FLYOUT_FLOATING_BADGE:
             app.add_css_file("badge_only.css")
             cls.ASSETS_TO_COPY.add("badge_only.css")
         return
