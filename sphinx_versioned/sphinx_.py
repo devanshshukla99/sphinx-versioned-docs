@@ -64,10 +64,10 @@ class EventHandlers(object):
         # Insert flyout script
         if app.config.html_theme not in cls._FLYOUT_NOSCRIPT_THEMES:
             app.add_js_file("_rtd_versions.js")
-            cls.ASSETS_TO_COPY.add("_rtd_versions.js")
-            cls.ASSETS_TO_COPY.add("fontawesome-webfont.woff")
             app.add_css_file("badge_only.css")
+            cls.ASSETS_TO_COPY.add("_rtd_versions.js")
             cls.ASSETS_TO_COPY.add("badge_only.css")
+            cls.ASSETS_TO_COPY.add("fontawesome-webfont.woff")
         return
 
     @classmethod
