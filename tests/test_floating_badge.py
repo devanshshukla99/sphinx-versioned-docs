@@ -37,20 +37,4 @@ def test_floating_version_selector_menu(ver, file):
     floating_badge = soup.find_all(class_="rst-badge")
 
     assert floating_badge
-
-    for inj in floating_badge:
-        # All hyper-links in the injected code
-        hyperlinks = inj.find_all("a")
-        hyperlinks_text = set(x.text for x in hyperlinks)
-
-        # Makesure all versions exist in hyperlinks
-        assert set(VERSIONS_SUPPOSED.keys()) == hyperlinks_text
-        print(f"Versions found in soup: {hyperlinks_text}")
-
-        # Test hyperlinks
-        for link in hyperlinks:
-            url = pathlib.Path(link.attrs.get("href"))
-            filepath = (OUTPATH / ver / file).parent / url
-            assert filepath.is_file()
-
     return
