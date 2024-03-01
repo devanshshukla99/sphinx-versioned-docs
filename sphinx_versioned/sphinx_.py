@@ -25,7 +25,7 @@ class EventHandlers(object):
     RESET_INTERSPHINX_MAPPING : :class:`bool`
         Reset intersphinx mapping after each build.
     FLYOUT_FLOATING_BADGE : :class:`bool`
-        Turns the versions selector menu into a floating badge.
+        Turns the version selector menu into a floating badge.
     """
 
     CURRENT_VERSION: str = None
@@ -115,7 +115,7 @@ class EventHandlers(object):
         doctree : :class:`docutils.nodes.document`
             Tree of docutils nodes.
         """
-        # If there's a footer element within the theme, then use it for the injected versions selector menu,
+        # If there's a footer element within the theme, then use it for the injected version selector menu,
         if context.get("theme_footer_start"):
             context["theme_footer_start"] += ", versions"
         # otherwise append it to the sidebars.

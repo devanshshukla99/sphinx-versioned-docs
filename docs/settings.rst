@@ -65,7 +65,7 @@ These command line options must be specified when executing the ``sphinx-version
 
 .. option:: --floating-badge, --badge
 
-    Turns the versions selector menu into a floating badge. Default is `False`.
+    Turns the version selector menu into a floating badge. Default is `False`.
 
 .. option:: --quite, --no-quite
 

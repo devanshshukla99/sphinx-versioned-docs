@@ -59,7 +59,7 @@ def main(
         show_default=False,
     ),
     floating_badge: bool = typer.Option(
-        False, "--floating-badge", "--badge", help="Turns the versions selector menu into a floating badge."
+        False, "--floating-badge", "--badge", help="Turns the version selector menu into a floating badge."
     ),
     quite: bool = typer.Option(
         True, help="Silent `sphinx`. Use `--no-quite` to get build output from `sphinx`."
@@ -103,7 +103,7 @@ def main(
     main_branch : :class:`str`
         Main branch to which the top-level `index.html` redirects to. [Default = 'main']
     floating_badge : :class:`bool`
-        Turns the versions selector menu into a floating badge. [Default = `False`]
+        Turns the version selector menu into a floating badge. [Default = `False`]
     quite : :class:`bool`
         Quite output from `sphinx`. Use `--no-quite` to get output from `sphinx`. [Default = `True`]
     verbose : :class:`bool`
@@ -118,7 +118,7 @@ def main(
     :class:`sphinx_versioned.build.VersionedDocs`
     """
     if select_branches:
-        select_branches = re.split(",|\ ", select_branches)
+        select_branches = re.split("[,|\ ]+", select_branches)
 
     EventHandlers.RESET_INTERSPHINX_MAPPING = reset_intersphinx_mapping
     EventHandlers.FLYOUT_FLOATING_BADGE = floating_badge

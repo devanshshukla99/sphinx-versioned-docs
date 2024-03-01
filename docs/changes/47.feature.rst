@@ -1,2 +1,2 @@
 Added a feature to either have the vanilla versions selector menu or have it as a floating badge via
-using ``--float-badge`` option available through command-line.
+using either ``--floating-badge`` or ``--badge`` option available through command-line.
