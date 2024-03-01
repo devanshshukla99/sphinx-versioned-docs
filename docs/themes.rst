@@ -4,12 +4,18 @@
 Supported themes
 ================
 
-This project supports multiple themes such as:
+This project generates a consistent version selector menu irrespective of the sphinx theme,
+hence, it should natively support all themes in which sphinx supports either sidebars or footers.
+
+Some of the tested themes are:
 
 |Build|
 
 - sphinx_rtd_theme
 - astropy_sphinx_theme
+- sphinx_book_theme
+- pydata_sphinx_theme
+- furo
 - alabaster
 - sphinxdoc
 - pyramid
