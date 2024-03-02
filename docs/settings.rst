@@ -55,9 +55,12 @@ These command line options must be specified when executing the ``sphinx-version
 
     Pre-build all versions to make sure ``sphinx-build`` has no issues and pass-on the successful builds to ``sphinx-versioned-docs``. Default is `True`.
 
-.. option:: -b <branch names separated by `,` or `|`>, --branches <branch names separated by `,` or `|`>
+.. option:: -b <branch names>, --branch <branch names>
 
     Build docs and the version selector menu only for certain tags and branches.
+    The branch names can be separated by ``,`` or ``|``.
+
+    Example: ``sphinx-versioned --branch="main, v1.0, v2.0"``
 
 .. option:: -m <branch name>, --main-branch <branch name>
 
