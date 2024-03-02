@@ -48,8 +48,8 @@ def main(
     select_branches: str = typer.Option(
         None,
         "-b",
-        "--branches",
-        help="Build docs for specific branches and tags.",
+        "--branch",
+        help="Build documentation for specific branches and tags.",
     ),
     main_branch: str = typer.Option(
         None,
