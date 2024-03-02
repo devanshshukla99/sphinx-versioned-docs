@@ -1,0 +1,1 @@
+The CLI option ``--branches`` is removed in favour of ``--branch`` and ``-b``.
