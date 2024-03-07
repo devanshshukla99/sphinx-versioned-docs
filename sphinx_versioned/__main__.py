@@ -113,7 +113,7 @@ def main(
     :class:`sphinx_versioned.build.VersionedDocs`
     """
     if select_branches:
-        select_branches = re.split(",|\ ", select_branches)
+        select_branches = re.split("[,|\ ]+", select_branches)
 
     EventHandlers.RESET_INTERSPHINX_MAPPING = reset_intersphinx_mapping
 
