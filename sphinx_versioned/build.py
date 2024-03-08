@@ -87,6 +87,13 @@ class VersionedDocs:
             log.error(f"conf.py does not exist at {self.local_conf}")
             raise FileNotFoundError(f"conf.py not found at {self.local_conf.parent}")
 
+        if self.menu_template:
+            self.menu_template = self.local_conf.parent.absolute() / '_templates' / self.menu_template
+            log.debug(f"Template path = {self.menu_template}")
+            assert self.menu_template.is_file()
+
+            EventHandlers.MENU_TEMPLATE = str(self.menu_template)
+
         log.success(f"located conf.py")
         return
 

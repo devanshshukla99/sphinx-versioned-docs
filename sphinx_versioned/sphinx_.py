@@ -33,6 +33,7 @@ class EventHandlers(object):
     ASSETS_TO_COPY: set = set()
     RESET_INTERSPHINX_MAPPING: bool = False
     FLYOUT_FLOATING_BADGE: bool = False
+    MENU_TEMPLATE: str = None
     # Themes which do not require the additional `_rtd_versions.js` script file.
     _FLYOUT_NOSCRIPT_THEMES: list = [
         "sphinx_rtd_theme",
@@ -127,6 +128,7 @@ class EventHandlers(object):
         context["project_url"] = app.config.sv_project_url
         context["versions"] = cls.VERSIONS
         context["floating_badge"] = cls.FLYOUT_FLOATING_BADGE
+        context["menu_template"] = cls.MENU_TEMPLATE
 
         # Relative path to master_doc
         relpath = (pagename.count("/")) * "../"
