@@ -253,7 +253,9 @@ class VersionedDocs:
                 self._built_version.append(tag)
             except SphinxError:
                 log.error(f"build failed for {tag}")
-                exit(-1)
+                log.warning(f"Re-running build without branch/tag: {tag.name}")
+                self._versions_to_build.remove(tag)
+                self.build()
             finally:
                 # restore to active branch
                 self.versions.checkout(self._active_branch)
