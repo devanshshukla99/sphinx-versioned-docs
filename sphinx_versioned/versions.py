@@ -155,7 +155,7 @@ class BuiltVersions(_BranchTag):
 
     Parameters
     ----------
-    versions : :class:`list:
+    versions : :class:`list`
         Versions to be build.
     build_directory : :class:`str`
         Path of the build directory.

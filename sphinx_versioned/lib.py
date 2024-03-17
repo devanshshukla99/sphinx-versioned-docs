@@ -84,7 +84,7 @@ class TempDir(object):
 
 def mp_sphinx_compatibility() -> bool:
     """
-    Monkeypatching :meth:`sphinx.application.Sphinx.add_stylesheet` -> :meth:`sphinx.application.Sphinx.add_css_file`
+    Monkeypatches :meth:`sphinx.application.Sphinx.add_stylesheet` -> :meth:`sphinx.application.Sphinx.add_css_file`
     to add compatibility for versions using older sphinx
     """
     log.info("Monkeypatching older sphinx app.add_stylesheet -> app.add_css_file")
@@ -94,6 +94,20 @@ def mp_sphinx_compatibility() -> bool:
 
 
 def parse_branch_selection(branches) -> tuple:
+    """
+    Parse the CLI-argument string to either select the branch/tag or exclude it.
+
+    Returns (:class:`None`, :class:`None`), if the input is None.
+
+    Parameters
+    ----------
+    branches : :class:`str`
+        Input CLI-argument.
+    
+    Returns
+    -------
+    select_branches, exclude_branches : :class:`list`, :class:`list`
+    """
     if not branches:
         return (None, None)
 
