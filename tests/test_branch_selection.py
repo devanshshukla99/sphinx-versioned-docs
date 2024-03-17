@@ -2,6 +2,7 @@ import os
 import pytest
 import pathlib
 from bs4 import BeautifulSoup as bs
+from sphinx_versioned.lib import parse_branch_selection
 
 VERSIONS_SUPPOSED = {
     "v1.0": [
@@ -11,6 +12,21 @@ VERSIONS_SUPPOSED = {
 }
 BASEPATH = pathlib.Path(os.getcwd()) / "docs"
 OUTPATH = BASEPATH / "_build"
+
+
+@pytest.mark.parametrize(
+    "branches, select, exclude",
+    [
+        ("main,v1.0", ["main", "v1.0"], []),
+        ("-v2.0", [], ["v2.0"]),
+        ("main,-v1.0, v2.0", ["main", "v2.0"], ["v1.0"]),
+        ("-main,+v1.0, -v2.0", ["v1.0"], ["main", "v2.0"]),
+    ],
+)
+def test_parse_branch_selection(branches, select, exclude):
+    parsed_select, parsed_exclude = parse_branch_selection(branches)
+    assert parsed_select == select
+    assert parsed_exclude == exclude
 
 
 def test_top_level_index():

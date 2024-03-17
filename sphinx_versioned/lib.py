@@ -1,6 +1,7 @@
 """Common objects used throughout the project."""
 
 import os
+import re
 import atexit
 import shutil
 import weakref
@@ -90,3 +91,24 @@ def mp_sphinx_compatibility() -> bool:
     application.Sphinx.add_stylesheet = application.Sphinx.add_css_file
 
     return True
+
+
+def parse_branch_selection(branches) -> tuple:
+    if not branches:
+        return (None, None)
+
+    select_branches = []
+    exclude_branches = []
+    for x in re.split(r"\s|,|\|", branches):
+        if not x:
+            continue
+        elif x[0] == "-":
+            exclude_branches.append(x[1:])
+        elif x[0] == "+":
+            select_branches.append(x[1:])
+        else:
+            select_branches.append(x)
+
+    log.info(f"select branch: {select_branches}")
+    log.info(f"exclude branch: {exclude_branches}")
+    return (select_branches, exclude_branches)
