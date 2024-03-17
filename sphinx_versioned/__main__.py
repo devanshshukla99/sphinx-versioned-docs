@@ -128,9 +128,9 @@ def main(
         for x in re.split(r"\s|,|\|", branches):
             if not x:
                 continue
-            elif x[0]=="-":
+            elif x[0] == "-":
                 exclude_branches.append(x[1:])
-            elif x[0]=="+":
+            elif x[0] == "+":
                 select_branches.append(x[1:])
             else:
                 select_branches.append(x)
