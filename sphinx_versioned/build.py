@@ -36,7 +36,7 @@ class VersionedDocs:
         self._failed_build = []
 
         # Get all versions and make a lookup table
-        self._all_branches = self._get_all_versions()
+        self._all_branches = self.versions.all_versions
         self._lookup_branch = {x.name: x for x in self._all_branches}
 
         self._select_exclude_branches()
@@ -77,7 +77,7 @@ class VersionedDocs:
         self.chdir = self.chdir if self.chdir else os.getcwd()
         log.debug(f"Working directory {self.chdir}")
 
-        self.versions = GitVersions(self.git_root, self.output_dir)
+        self.versions = GitVersions(self.git_root, self.output_dir, self.force_branches)
         self.output_dir = pathlib.Path(self.output_dir)
         self.local_conf = pathlib.Path(self.local_conf)
 
@@ -90,20 +90,6 @@ class VersionedDocs:
 
         log.success(f"located conf.py")
         return
-
-    def _get_all_versions(self) -> list:
-        _all_versions = []
-        _all_versions.extend(self.versions.repo.tags)
-        _all_versions.extend(self.versions.repo.branches)
-
-        # check if `--force` is supplied, if yes, and if the current git status is detached, append:
-        if self.force_branches:
-            if self.versions.repo.head.is_detached:
-                log.warning(f"git detached {self.versions.repo.head.is_detached}")
-                _all_versions.append(PseudoBranch(self.versions.repo.head.object.hexsha))
-
-        log.debug(f"Found versions: {[x.name for x in _all_versions]}")
-        return _all_versions
 
     def _select_branches(self) -> None:
         if not self.select_branches:
