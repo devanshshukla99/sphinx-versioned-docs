@@ -1,4 +1,4 @@
 Modified the ``--branch``/ ``-b`` to accomodate branch selection/exclusion. Now, any branch can be selected
 by mentioning it in ``--branch``/``--b`` and any can be excluded by adding a ``-`` infront of the branch/tag
 name in the cli argument.
-Like ``--branch main,-v1.0,v2.0`` will select ``main``, ``v2.0`` and exclude ``v1.0``.
+Like ``--branch main,-v1.0,v2.0`` will select ``main``, ``v2.0`` and will exclude ``v1.0``.

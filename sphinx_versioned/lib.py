@@ -93,7 +93,7 @@ def mp_sphinx_compatibility() -> bool:
     return True
 
 
-def parse_branch_selection(branches) -> tuple:
+def parse_branch_selection(branches: str) -> tuple:
     """
     Parse the CLI-argument string to either select the branch/tag or exclude it.
 

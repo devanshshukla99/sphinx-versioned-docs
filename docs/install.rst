@@ -9,7 +9,7 @@ Installation
 .. _requirements-to-use:
 
 Requirements
-============
+------------
 
     .. code-block:: markdown
 
@@ -18,9 +18,6 @@ Requirements
         setuptools>=66.0.0
         sphinx>=4.6.0
         typer>=0.9.0
-
-Installing
-==========
 
     Now, it can be installed via the following methods:
 

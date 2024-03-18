@@ -14,8 +14,8 @@ Building versioned docs
 
 .. _initializing_sphinx:
 
-Initializing Project
---------------------
+Initializing project with sphinx and git
+----------------------------------------
 
 If you have problems initializing sphinx and git, then follow these instructions, otherwise you can skip directly to :ref:`initializing sphinx-versioned-docs <initializing_versioned_docs>` 
 
@@ -64,7 +64,7 @@ If you have problems initializing project and running sphinx, then follow at :re
 
 ------------------------------
 
-Generated Output
+Generated output
 ----------------
 
 After the build has succeded, your docs should be available in ``<output directory>/<branch>/index.html`` with a version selector menu/badge present.
