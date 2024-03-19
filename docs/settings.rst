@@ -4,9 +4,9 @@
 Settings
 ========
 
-.. code-block::
+.. code-block:: console
 
-    sphinx-versioned [OPTIONS]
+    $ sphinx-versioned [OPTIONS]
 
 The ``sphinx-versioned-docs`` reads options from two sources:
 

@@ -35,10 +35,11 @@ class VersionedDocs:
         self._versions_to_build = []
         self._failed_build = []
 
-        # selectively build branches / build all branches
-        self._versions_to_pre_build = (
-            self._select_specific_branches() if self.select_branches else self._get_all_versions()
-        )
+        # Get all versions and make a lookup table
+        self._all_branches = self.versions.all_versions
+        self._lookup_branch = {x.name: x for x in self._all_branches}
+
+        self._select_exclude_branches()
 
         # if `--force` is supplied with no `--main-branch`, make the `_active_branch` as the `main_branch`
         if not self.main_branch:
@@ -76,7 +77,7 @@ class VersionedDocs:
         self.chdir = self.chdir if self.chdir else os.getcwd()
         log.debug(f"Working directory {self.chdir}")
 
-        self.versions = GitVersions(self.git_root, self.output_dir)
+        self.versions = GitVersions(self.git_root, self.output_dir, self.force_branches)
         self.output_dir = pathlib.Path(self.output_dir)
         self.local_conf = pathlib.Path(self.local_conf)
 
@@ -90,38 +91,43 @@ class VersionedDocs:
         log.success(f"located conf.py")
         return
 
-    def _get_all_versions(self) -> list:
-        _all_versions = []
-        _all_versions.extend(self.versions.repo.tags)
-        _all_versions.extend(self.versions.repo.branches)
-
-        # check if `--force` is supplied, if yes, and if the current git status is detached, append:
-        if self.force_branches:
-            if self.versions.repo.head.is_detached:
-                log.warning(f"git detached {self.versions.repo.head.is_detached}")
-                _all_versions.append(PseudoBranch(self.versions.repo.head.object.hexsha))
-
-        # self._log_versions(_all_versions)
-        log.debug(f"Found versions: {[x.name for x in _all_versions]}")
-        return _all_versions
-
-    def _select_specific_branches(self) -> list:
-        log.debug(f"Instructions to select: `{self.select_branches}`")
-
-        _all_versions = {x.name: x for x in self._get_all_versions()}
-        _select_specific_branches = []
+    def _select_branches(self) -> None:
+        if not self.select_branches:
+            self._versions_to_pre_build = self._all_branches
+            return
 
         for tag in self.select_branches:
-            if tag in _all_versions.keys():
-                log.info(f"Selecting tag for further processing: {tag}")
-                _select_specific_branches.append(_all_versions[tag])
+            if tag in self._lookup_branch.keys():
+                self._versions_to_pre_build.append(self._lookup_branch.get(tag))
             elif self.force_branches:
                 log.warning(f"Forcing build for branch `{tag}`, be careful, it may or may not exist!")
-                _select_specific_branches.append(PseudoBranch(tag))
+                self._versions_to_pre_build.append(PseudoBranch(tag))
             else:
-                log.critical(f"Branch not found: `{tag}`, use `--force` to force the build")
+                log.critical(f"Branch not found/selected: `{tag}`, use `--force` to force the build")
 
-        return _select_specific_branches
+        return
+
+    def _exclude_branches(self) -> None:
+        if not self.exclude_branches:
+            return
+
+        _names_versions_to_pre_build = [x.name for x in self._versions_to_pre_build]
+        for tag in self.exclude_branches:
+            if tag in _names_versions_to_pre_build:
+                self._versions_to_pre_build.remove(self._lookup_branch.get(tag))
+
+        return
+
+    def _select_exclude_branches(self) -> list:
+        log.debug(f"Instructions to select: `{self.select_branches}`")
+        log.debug(f"Instructions to exclude: `{self.exclude_branches}`")
+        self._versions_to_pre_build = []
+
+        self._select_branches()
+        self._exclude_branches()
+
+        log.info(f"selected branches: `{[x.name for x in self._versions_to_pre_build]}`")
+        return
 
     def _generate_top_level_index(self) -> None:
         """Generate a top-level ``index.html`` which redirects to the main-branch version specified

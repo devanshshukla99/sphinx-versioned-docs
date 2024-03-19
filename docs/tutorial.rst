@@ -12,6 +12,33 @@ Make sure that you've already :ref:`installed <install>` it.
 Building versioned docs
 =======================
 
+.. _initializing_sphinx:
+
+Initializing project with sphinx and git
+----------------------------------------
+
+If you have problems initializing sphinx and git, then follow these instructions, otherwise you can skip directly to :ref:`initializing sphinx-versioned-docs <initializing_versioned_docs>` 
+
+Before we begin make sure you have `sphinx <https://pypi.org/project/Sphinx/>`__ install and some git history already in your project.
+If not, read `first steps with sphinx <http://www.sphinx-doc.org/en/stable/tutorial.html>`_ first.
+If you just want something quick and dirty you can do the following:
+
+.. code-block:: console
+
+    $ sphinx-quickstart docs -p projectname -a author -v version --makefile --no-sep -r version -l en -q
+    $ git checkout -b feature_branch main  # Create new branch from main.
+
+    $ echo -e "Test\n====\n\nSample Documentation" > docs/index.rst  # Create one doc.
+    $ git add .
+    $ git commit -m "initial"
+
+    $ sphinx-versioned
+
+.. _initializing_versioned_docs:
+
+Initializing sphinx-versioned-docs
+----------------------------------
+
 Before using the ``sphinx-versioned-docs`` to build a versioned documentation. Make sure you have following things done:
 
 - [x] Project initialized.
@@ -33,37 +60,12 @@ you can run the following command to generate the versioned documentation:
 
     $ sphinx-versioned
 
------------------
-
-If you have problems initializing sphinx and git, then follow these instructions: 
-
-Before we begin make sure you have some Sphinx docs already in your project. If not, read `First Steps with Sphinx <http://www.sphinx-doc.org/en/stable/tutorial.html>`_ first. If you just want something quick
-and dirty you can do the following:
-
-.. code-block:: console
-
-    $ sphinx-quickstart docs -p projectname -a author -v version --makefile --no-sep -r version -l en -q
-    $ git checkout -b feature_branch main  # Create new branch from main.
-
-    $ echo -e "Test\n====\n\nSample Documentation" > docs/index.rst  # Create one doc.
-    $ git add .
-    $ git commit -m "initial"
-
-    $ sphinx-versioned
+If you have problems initializing project and running sphinx, then follow at :ref:`initializing sphinx and git <initializing_sphinx>`.
 
 ------------------------------
 
-By default, ``sphinx-versioned-docs`` will try to build all tags and branches present in the git repo.
-However, to build some particular branch(s) and tag(s), they can be specified in the ``--branches`` argument as:
-
-.. code-block:: console
-
-    $ sphinx-versioned --branches "main, docs"
-
-This command will build the ``main`` and ``docs`` branches.
-More such options are available at :ref:`options <settings>`.
-
-
+Generated output
+----------------
 
 After the build has succeded, your docs should be available in ``<output directory>/<branch>/index.html`` with a version selector menu/badge present.
 
@@ -76,6 +78,42 @@ After the build has succeded, your docs should be available in ``<output directo
     Use ``--no-quite`` option to get output from the sphinx builder, adjust verbosity using ``-v``
 
 ---------------------------
+
+Selecting/ Excluding branches and tags
+--------------------------------------
+
+By default, ``sphinx-versioned-docs`` will try to build all tags and branches present in the git repo.
+However, this behaviour can be augmented using the ``--branch`` command-line-argument, to build/exclude
+some particular branch(s) and tag(s), they can be specified in the ``--branch`` argument as:
+
+#. **For selecting a branch:** mention the branch/tag name in the CLI arugment like:
+
+    .. code-block:: console
+
+        $ sphinx-versioned --branch "main,v2.0"
+        $ sphinx-versioned --branch "+main,+v2.0"
+
+    Either of the two options above will select ``main``, ``v2.0`` and will only build these.
+
+#. **For excluding a branch:** mention the branch/tag name with ``-`` in the CLI argument like:
+
+    .. code-block:: console
+
+        $ sphinx-versioned --branch "-main,-v2.0"
+
+    The above command will build all available branches and tags except ``main``, ``v2.0``
+
+#. **For selecting and excluding simultaneously:** mention the branch/tag name with ``-`` in the CLI argument like:
+
+    .. code-block:: console
+
+        $ sphinx-versioned --branch "main,-v2.0"
+
+    The above command will only build ``main`` and will exclude ``-v2.0`` (untouched because the package was only building ``main``).
+
+More such options are available at :ref:`options <settings>`.
+
+------------------------------
 
 Deploy to github pages via github actions
 =========================================

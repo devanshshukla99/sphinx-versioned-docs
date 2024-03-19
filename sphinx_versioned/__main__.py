@@ -6,12 +6,12 @@ from loguru import logger as log
 
 from sphinx_versioned.build import VersionedDocs
 from sphinx_versioned.sphinx_ import EventHandlers
-from sphinx_versioned.lib import mp_sphinx_compatibility
+from sphinx_versioned.lib import mp_sphinx_compatibility, parse_branch_selection
 
 app = typer.Typer(add_completion=False)
 
 
-@app.command(help="Create the sphinx documentation with a version selector menu.")
+@app.command(help="Create sphinx documentation with a version selector menu.")
 def main(
     chdir: str = typer.Option(
         None,
@@ -45,7 +45,7 @@ def main(
     prebuild: bool = typer.Option(
         True, help="Pre-builds the documentations; Use `--no-prebuild` to half the runtime."
     ),
-    select_branches: str = typer.Option(
+    branches: str = typer.Option(
         None,
         "-b",
         "--branch",
@@ -56,7 +56,7 @@ def main(
         "-m",
         "--main-branch",
         help="Main branch to which the top-level `index.html` redirects to. Defaults to `main`.",
-        show_default=False,
+        show_default="main",
     ),
     floating_badge: bool = typer.Option(
         False, "--floating-badge", "--badge", help="Turns the version selector menu into a floating badge."
@@ -98,7 +98,7 @@ def main(
         Adds compatibility for older sphinx versions by monkey patching certain functions.
     prebuild : :class:`bool`
         Pre-builds the documentations; Use `--no-prebuild` to half the runtime. [Default = `True`]
-    select_branches : :class:`str`
+    branches : :class:`str`
         Build docs for specific branches and tags. [Default = `None`]
     main_branch : :class:`str`
         Main branch to which the top-level `index.html` redirects to. [Default = 'main']
@@ -117,8 +117,12 @@ def main(
     -------
     :class:`sphinx_versioned.build.VersionedDocs`
     """
-    if select_branches:
-        select_branches = re.split("[,|\ ]+", select_branches)
+    logger_format = "| <level>{level: <8}</level> | - <level>{message}</level>"
+
+    log.remove()
+    log.add(sys.stderr, format=logger_format, level=loglevel.upper())
+
+    select_branches, exclude_branches = parse_branch_selection(branches)
 
     EventHandlers.RESET_INTERSPHINX_MAPPING = reset_intersphinx_mapping
     EventHandlers.FLYOUT_FLOATING_BADGE = floating_badge
@@ -130,24 +134,18 @@ def main(
     if sphinx_compatibility:
         mp_sphinx_compatibility()
 
-    logger_format = "| <level>{level: <8}</level> | - <level>{message}</level>"
-
-    log.remove()
-    log.add(sys.stderr, format=logger_format, level=loglevel.upper())
     return VersionedDocs(
         {
             "chdir": chdir,
             "output_dir": output_dir,
             "git_root": git_root,
             "local_conf": local_conf,
-            "reset_intersphinx_mapping": reset_intersphinx_mapping,
-            "sphinx_compatibility": sphinx_compatibility,
             "prebuild_branches": prebuild,
             "select_branches": select_branches,
+            "exclude_branches": exclude_branches,
             "main_branch": main_branch,
             "quite": quite,
             "verbose": verbose,
-            "loglevel": loglevel,
             "force_branches": force_branches,
         }
     )
