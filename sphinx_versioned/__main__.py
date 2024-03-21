@@ -61,6 +61,9 @@ def main(
     floating_badge: bool = typer.Option(
         False, "--floating-badge", "--badge", help="Turns the version selector menu into a floating badge."
     ),
+    menu_template: str = typer.Option(
+        None, "--template", help="Use version selector menu from template at the path."
+    ),
     quite: bool = typer.Option(
         True, help="Silent `sphinx`. Use `--no-quite` to get build output from `sphinx`."
     ),
@@ -126,6 +129,7 @@ def main(
 
     EventHandlers.RESET_INTERSPHINX_MAPPING = reset_intersphinx_mapping
     EventHandlers.FLYOUT_FLOATING_BADGE = floating_badge
+    log.info(f"template: {menu_template}")
 
     if reset_intersphinx_mapping:
         log.warning("Forcing --no-prebuild")
@@ -147,6 +151,7 @@ def main(
             "quite": quite,
             "verbose": verbose,
             "force_branches": force_branches,
+            "menu_template": menu_template,
         }
     )
 

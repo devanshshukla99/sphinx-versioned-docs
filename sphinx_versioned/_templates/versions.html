@@ -1,12 +1,19 @@
+{% if menu_template %}
+{% extends menu_template %}
+{% endif %}
+{% block injected_code %}
 <div class="injected">
   <div class="rst-versions {{ 'rst-badge' if floating_badge }}" data-toggle="rst-versions" role="note"
     aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
+      {% block current_version %}
       <span class="fa fa-book">&nbsp;&nbsp;Other versions&nbsp;&nbsp;</span>
       v: {{ current_version }}
       <span class="fa fa-caret-down"></span>
+      {% endblock %}
     </span>
     <div class="rst-other-versions">
+      {% block tags %}
       {%- if versions.tags %}
       <dl>
         <dt>Tags</dt>
@@ -17,6 +24,8 @@
         {%- endfor %}
       </dl>
       {%- endif %}
+      {% endblock %}
+      {% block branches %}
       {%- if versions.branches %}
       <dl>
         <dt>Branches</dt>
@@ -27,6 +36,8 @@
         {%- endfor %}
       </dl>
       {%- endif %}
+      {% endblock %}
+      {% block project_info %}
       {%- if project_url %}
       <dl>
         <dt>Project home</dt>
@@ -35,6 +46,8 @@
         </dd>
       </dl>
       {%- endif %}
+      {% endblock %}
+      {% block searchbar %}
       <dl>
         <dt>Search</dt>
         <dd>
@@ -47,6 +60,8 @@
           </div>
         </dd>
       </dl>
+      {% endblock %}
     </div>
   </div>
 </div>
+{% endblock %}
