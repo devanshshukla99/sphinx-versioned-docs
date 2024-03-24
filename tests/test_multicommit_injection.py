@@ -61,7 +61,7 @@ def test_file_content(ver, expected):
 
     # Verify the contents of `example.html`, if expected
     data = None
-    with open(OUTPATH / ver / file) as f:
+    with open(OUTPATH / ver / file, encoding="utf8") as f:
         data = f.read()
     for content in content_to_verify.split():
         assert content in data
@@ -74,7 +74,7 @@ def test_injected_hyperlinks(ver, file):
     assert (OUTPATH / ver / file).is_file()
 
     data = None
-    with open(OUTPATH / ver / file) as f:
+    with open(OUTPATH / ver / file, encoding="utf8") as f:
         data = f.read()
     soup = bs(data, features="html.parser")
     injected_code = soup.find_all(class_="injected")
