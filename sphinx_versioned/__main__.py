@@ -1,4 +1,3 @@
-import re
 import sys
 import typer
 
@@ -122,7 +121,7 @@ def main(
     log.remove()
     log.add(sys.stderr, format=logger_format, level=loglevel.upper())
 
-    select_branches, exclude_branches = parse_branch_selection(branches)
+    select_branch, exclude_branch = parse_branch_selection(branches)
 
     EventHandlers.RESET_INTERSPHINX_MAPPING = reset_intersphinx_mapping
     EventHandlers.FLYOUT_FLOATING_BADGE = floating_badge
@@ -135,19 +134,19 @@ def main(
         mp_sphinx_compatibility()
 
     return VersionedDocs(
-        {
-            "chdir": chdir,
-            "output_dir": output_dir,
-            "git_root": git_root,
-            "local_conf": local_conf,
+        chdir=chdir,
+        local_conf=local_conf,
+        output_dir=output_dir,
+        git_root=git_root,
+        config={
             "prebuild_branches": prebuild,
-            "select_branches": select_branches,
-            "exclude_branches": exclude_branches,
+            "select_branch": select_branch,
+            "exclude_branch": exclude_branch,
             "main_branch": main_branch,
             "quite": quite,
             "verbose": verbose,
             "force_branches": force_branches,
-        }
+        },
     )
 
 
