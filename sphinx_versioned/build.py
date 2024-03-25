@@ -54,7 +54,7 @@ class VersionedDocs:
         self.config = config
 
         # Read sphinx-conf.py variables
-        self.read_conf(config)
+        self.read_conf()
 
         self._versions_to_pre_build = []
         self._versions_to_build = []
@@ -87,7 +87,7 @@ class VersionedDocs:
         return
 
     def read_conf(self) -> bool:
-        """Read and parse `conf.py`, CLI arugments to make a master config."""
+        """Read and parse `conf.py`, CLI arugments to make a combined master config."""
         if self.local_conf.name != "conf.py":
             self.local_conf = self.local_conf / "conf.py"
 
@@ -111,7 +111,6 @@ class VersionedDocs:
             if y or x not in sv_conf_values:
                 continue
             master_config[x] = sv_conf_values.get(x)
-        log.error(master_config)
 
         for varname, value in master_config.items():
             setattr(self, varname, value)
