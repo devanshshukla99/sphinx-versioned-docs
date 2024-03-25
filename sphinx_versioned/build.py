@@ -96,13 +96,13 @@ class VersionedDocs:
         log.debug(f"Configuration file arugments: {sv_conf_values}")
 
         # Make a master config variable
-        master_config = self.config.copy()
-        for x, y in master_config.items():
+        self.config = self._raw_cli_config.copy()
+        for x, y in self.config.items():
             if y or x not in sv_conf_values:
                 continue
-            master_config[x] = sv_conf_values.get(x)
+            self.config[x] = sv_conf_values.get(x)
 
-        for varname, value in master_config.items():
+        for varname, value in self.config.items():
             setattr(self, varname, value)
 
         # Set additional config for sphinx
