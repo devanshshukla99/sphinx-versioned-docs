@@ -3,6 +3,7 @@ import fnmatch
 import shutil
 import pathlib
 from sphinx import application
+from sphinx.config import Config
 from sphinx.errors import SphinxError
 from sphinx.cmd.build import build_main
 
@@ -29,8 +30,9 @@ class VersionedDocs:
 
     def __init__(self, config: dict, debug: bool = False) -> None:
         self.config = config
-        self._parse_config(config)
-        self._handle_paths()
+
+        # Read sphinx-conf.py variables
+        self.read_conf(config)
 
         self._versions_to_pre_build = []
         self._versions_to_build = []
@@ -65,39 +67,48 @@ class VersionedDocs:
         print(f"\n\033[92m Successfully built {', '.join([x.name for x in self._built_version])} \033[0m")
         return
 
-    def _parse_config(self, config: dict) -> bool:
-        for varname, value in config.items():
-            setattr(self, varname, value)
-
-        self._additional_args = ()
-        self._additional_args += ("-Q",) if self.quite else ()
-        self._additional_args += ("-vv",) if self.verbose else ()
-        return True
-
-    def _handle_paths(self) -> None:
-        """Method to handle cwd and path for local config, as well as, configure
-        :class:`~sphinx_versioned.versions.GitVersions` and the output directory.
-        """
-        self.chdir = self.chdir if self.chdir else os.getcwd()
-        log.debug(f"Working directory {self.chdir}")
-
-        self.versions = GitVersions(self.git_root, self.output_dir, self.force_branches)
-        self.output_dir = pathlib.Path(self.output_dir)
-        self.local_conf = pathlib.Path(self.local_conf)
-
+    def read_conf(self, config) -> bool:
         if self.local_conf.name != "conf.py":
             self.local_conf = self.local_conf / "conf.py"
 
+        # If default conf.py location fails
         if not self.local_conf.exists():
             log.error(f"conf.py does not exist at {self.local_conf}")
             raise FileNotFoundError(f"conf.py not found at {self.local_conf.parent}")
 
         log.success(f"located conf.py")
+
+        # Parse sphinx config file i.e. conf.py
+        self._sphinx_conf = Config.read(self.local_conf.parent.absolute())
+        sv_conf_values = {
+            x.replace("sv_", ""): y for x, y in self._sphinx_conf._raw_config.items() if x.startswith("sv_")
+        }
+        log.error(sv_conf_values)
+        log.critical(config)
+
+        master_config = config.copy()
+        for x, y in master_config.items():
+            if y or x not in sv_conf_values:
+                continue
+            master_config[x] = sv_conf_values.get(x)
+        log.error(master_config)
+
+        for varname, value in master_config.items():
+            setattr(self, varname, value)
+
+        # Set additional config for sphinx
+        self._additional_args = ()
+        self._additional_args += ("-Q",) if self.quite else ()
+        self._additional_args += ("-vv",) if self.verbose else ()
+
+        # Initialize GitVersions instance
+        self.versions = GitVersions(self.git_root, self.output_dir, self.force_branches)
         return
 
-    def _select_branches(self) -> None:
-        if not self.select_branches:
+    def _select_branch(self) -> None:
+        if not self.select_branch:
             self._versions_to_pre_build = self._all_branches
+            self._exclude_branch()
             return
 
         for tag in self.select_branches:
@@ -112,8 +123,8 @@ class VersionedDocs:
 
         return
 
-    def _exclude_branches(self) -> None:
-        if not self.exclude_branches:
+    def _exclude_branch(self) -> None:
+        if not self.exclude_branch:
             return
 
         _names_versions_to_pre_build = [x.name for x in self._versions_to_pre_build]
@@ -125,12 +136,11 @@ class VersionedDocs:
         return
 
     def _select_exclude_branches(self) -> list:
-        log.debug(f"Instructions to select: `{self.select_branches}`")
-        log.debug(f"Instructions to exclude: `{self.exclude_branches}`")
+        log.debug(f"Instructions to select: `{self.select_branch}`")
+        log.debug(f"Instructions to exclude: `{self.exclude_branch}`")
         self._versions_to_pre_build = []
 
-        self._select_branches()
-        self._exclude_branches()
+        self._select_branch()
 
         log.info(f"selected branches: `{[x.name for x in self._versions_to_pre_build]}`")
         return
