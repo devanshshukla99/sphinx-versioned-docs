@@ -1,0 +1,1 @@
+Selecting a branch will take precedence over excluding one.

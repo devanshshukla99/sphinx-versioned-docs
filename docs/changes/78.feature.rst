@@ -1,0 +1,1 @@
+Added support for configuration file arguments, given in sphinx `conf.py`
