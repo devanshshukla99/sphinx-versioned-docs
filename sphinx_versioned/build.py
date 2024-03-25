@@ -25,7 +25,16 @@ class VersionedDocs:
 
     Parameters
     ----------
+    chdir : :class:`str`
+        chdir location
+    local_conf : :class:`str`
+        Location for sphinx `conf.py`.
+    output_dir : :class:`str`
+        Documentation output directory.
+    git_root : :class:`str`
+        If git root differs from chdir/CWD, that location can be supplied via this variable.
     config : :class:`dict`
+        CLI configuration arguments.
     """
 
     def __init__(self, config: dict, debug: bool = False) -> None:
@@ -67,7 +76,8 @@ class VersionedDocs:
         print(f"\n\033[92m Successfully built {', '.join([x.name for x in self._built_version])} \033[0m")
         return
 
-    def read_conf(self, config) -> bool:
+    def read_conf(self) -> bool:
+        """Read and parse `conf.py`, CLI arugments to make a master config."""
         if self.local_conf.name != "conf.py":
             self.local_conf = self.local_conf / "conf.py"
 
@@ -83,10 +93,10 @@ class VersionedDocs:
         sv_conf_values = {
             x.replace("sv_", ""): y for x, y in self._sphinx_conf._raw_config.items() if x.startswith("sv_")
         }
-        log.error(sv_conf_values)
-        log.critical(config)
+        log.debug(f"Configuration file arugments: {sv_conf_values}")
 
-        master_config = config.copy()
+        # Make a master config variable
+        master_config = self.config.copy()
         for x, y in master_config.items():
             if y or x not in sv_conf_values:
                 continue
