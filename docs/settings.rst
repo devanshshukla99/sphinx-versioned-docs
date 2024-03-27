@@ -16,11 +16,50 @@ The ``sphinx-versioned-docs`` reads options from two sources:
 Configuration File Arguments
 ============================
 
-Currently, only the ``sv_project_url`` can be set via the ``conf.py``. More options coming in future releases.
-
 .. option:: sv_project_url: <url>
 
     Setting this variable will make sure that the ``Project home`` is listed on the versions selector badge/menu.
+
+.. option:: sv_prebuild
+
+    Pre-build all versions to make sure ``sphinx-build`` has no issues and pass-on the successful builds to ``sphinx-versioned-docs``. Default is `True`.
+
+.. option:: sv_select_branch
+
+    Select any particular branches/tags to build.
+    The branch/tag names can be separated by ``,`` or ``|``.
+
+    Selecting a branch will always take precedence over excluding one.
+
+    Example: ``sv_select_branch=["main", "v2.0"]``
+    The option above will build ``main``, ``v2.0`` and will skip all others.
+
+.. option:: sv_exclude_branch
+
+    Exclude any particular branches/tags from building workflow.
+    The branch/tag names can be separated by ``,`` or ``|``.
+
+    Selecting a branch will always take precedence over excluding one.
+
+    Example: ``sv_exclude_branch=["v1.0"]``
+    The option above will exclude ``v1.0`` and will build all others.
+
+.. option:: sv_main_branch
+
+    Specify the main-branch to which the top-level ``index.html`` redirects to. Default is ``main``.
+
+.. option:: sv_quite
+
+    Silents the output from `sphinx`. Use `--no-quite` to get complete-output from `sphinx`. Default is `True`.
+
+.. option:: sv_verbose
+
+    Passed directly to sphinx. Specify more than once for more logging in sphinx. Default is `False`.
+
+.. option:: sv_force_branches
+
+    Force branch selection. Use this option to build detached head/commits. Default is `False`.
+
 
 Command Line Arguments
 ======================
