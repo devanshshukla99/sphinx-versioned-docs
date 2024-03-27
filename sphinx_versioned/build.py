@@ -54,11 +54,11 @@ class VersionedDocs:
         self._select_exclude_branches()
 
         # if `--force` is supplied with no `--main-branch`, make the `_active_branch` as the `main_branch`
-        if not self.main_branch:
-            if self.force_branches:
-                self.main_branch = self.versions.active_branch.name
+        if not self.config.get("main_branch"):
+            if self.config.get("force_branches"):
+                self.config["main_branch"] = self.versions.active_branch.name
             else:
-                self.main_branch = "main"
+                self.config["main_branch"] = "main"
 
         if debug:
             return
@@ -102,20 +102,17 @@ class VersionedDocs:
                 continue
             self.config[x] = sv_conf_values.get(x)
 
-        for varname, value in self.config.items():
-            setattr(self, varname, value)
-
         # Set additional config for sphinx
         self._additional_args = ()
-        self._additional_args += ("-Q",) if self.quite else ()
-        self._additional_args += ("-vv",) if self.verbose else ()
+        self._additional_args += ("-Q",) if self.config.get("quite") else ()
+        self._additional_args += ("-vv",) if self.config.get("verbose") else ()
 
         # Initialize GitVersions instance
-        self.versions = GitVersions(self.git_root, self.output_dir, self.force_branches)
+        self.versions = GitVersions(self.git_root, self.output_dir, self.config.get("force_branches"))
         return
 
     def _select_branch(self) -> None:
-        if not self.select_branch:
+        if not self.config.get("select_branch"):
             self._versions_to_pre_build = self._all_branches
             self._exclude_branch()
             return
@@ -133,7 +130,7 @@ class VersionedDocs:
         return
 
     def _exclude_branch(self) -> None:
-        if not self.exclude_branch:
+        if not self.config.get("exclude_branch"):
             return
 
         _names_versions_to_pre_build = [x.name for x in self._versions_to_pre_build]
@@ -145,8 +142,8 @@ class VersionedDocs:
         return
 
     def _select_exclude_branches(self) -> list:
-        log.debug(f"Instructions to select: `{self.select_branch}`")
-        log.debug(f"Instructions to exclude: `{self.exclude_branch}`")
+        log.debug(f"Instructions to select: `{self.config.get('select_branch')}`")
+        log.debug(f"Instructions to exclude: `{self.config.get('exclude_branch')}`")
         self._versions_to_pre_build = []
 
         self._select_branch()
@@ -158,14 +155,14 @@ class VersionedDocs:
         """Generate a top-level ``index.html`` which redirects to the main-branch version specified
         via ``main_branch``.
         """
-        if self.main_branch not in [x.name for x in self._built_version]:
+        if self.config.get("main_branch") not in [x.name for x in self._built_version]:
             log.critical(
-                f"main branch `{self.main_branch}` not found!! / not building `{self.main_branch}`; "
+                f"main branch `{self.config.get('main_branch')}` not found!! / not building `{self.config.get('main_branch')}`; "
                 "top-level `index.html` will not be generated!"
             )
             return
 
-        log.success(f"main branch: `{self.main_branch}`; generating top-level `index.html`")
+        log.success(f"main branch: `{self.config.get('main_branch')}`; generating top-level `index.html`")
         with open(self.output_dir / "index.html", "w") as findex:
             findex.write(
                 f"""
@@ -173,7 +170,7 @@ class VersionedDocs:
                 <html>
                 <head>
                 <meta http-equiv="refresh" content="0; url =
-                {self.main_branch}/index.html" />
+                {self.config.get("main_branch")}/index.html" />
                 </head>
             """
             )
@@ -231,7 +228,7 @@ class VersionedDocs:
         The method carries out the transaction via the internal build method
         :meth:`~sphinx_versioned.build.VersionedDocs._build`.
         """
-        if not self.prebuild_branches:
+        if not self.config.get("prebuild_branches"):
             log.info("No pre-builing...")
             self._versions_to_build = self._versions_to_pre_build
             return
