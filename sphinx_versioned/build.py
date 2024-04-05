@@ -89,6 +89,10 @@ class VersionedDocs:
 
         log.success(f"located conf.py")
 
+        if self.ignore_conf:
+            self.config = self._raw_cli_config
+            return
+
         # Parse sphinx config file i.e. conf.py
         self._sphinx_conf = Config.read(self.local_conf.parent.absolute())
         sv_conf_values = {
@@ -97,12 +101,7 @@ class VersionedDocs:
         log.debug(f"Configuration file arugments: {sv_conf_values}")
 
         # Make a master config variable
-        self.config = self._raw_cli_config.copy()
-        for x, y in self.config.items():
-            if y or x not in sv_conf_values:
-                continue
-            self.config[x] = sv_conf_values.get(x)
-
+        self.config = sv_conf_values | self._raw_cli_config
         log.debug(f"master config: {self.config}")
         return
 
@@ -115,7 +114,7 @@ class VersionedDocs:
 
         if self.config.get("reset_intersphinx_mapping"):
             EventHandlers.RESET_INTERSPHINX_MAPPING = True
-            log.warning("Forcing --no-prebuild")
+            log.warning("forcing --no-prebuild")
             self.config["prebuild"] = False
 
         if self.config.get("sphinx_compatibility"):

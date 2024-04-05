@@ -59,6 +59,9 @@ def main(
     floating_badge: bool = typer.Option(
         False, "--floating-badge", "--badge", help="Turns the version selector menu into a floating badge."
     ),
+    ignore_conf: bool = typer.Option(
+        False, "--ignore-conf", help="Ignores conf.py configuration file arguments for sphinx-versioned-docs. Warning: conf.py will still be used in sphinx!"
+    ),
     quite: bool = typer.Option(
         True, help="Silent `sphinx`. Use `--no-quite` to get build output from `sphinx`."
     ),
@@ -102,6 +105,8 @@ def main(
         Main branch to which the top-level `index.html` redirects to. [Default = 'main']
     floating_badge : :class:`bool`
         Turns the version selector menu into a floating badge. [Default = `False`]
+    ignore_conf : :class:`bool`
+        Ignores conf.py configuration file arguments for sphinx-versioned-docs. Warning: conf.py will still be used in sphinx!
     quite : :class:`bool`
         Quite output from `sphinx`. Use `--no-quite` to get output from `sphinx`. [Default = `True`]
     verbose : :class:`bool`
@@ -121,24 +126,28 @@ def main(
     log.add(sys.stderr, format=logger_format, level=loglevel.upper())
 
     select_branch, exclude_branch = parse_branch_selection(branches)
+    config = {
+        "reset_intersphinx_mapping": reset_intersphinx_mapping,
+        "sphinx_compatibility": sphinx_compatibility,
+        "force_branches": force_branches,
+        "exclude_branch": exclude_branch,
+        "floating_badge": floating_badge,
+        "select_branch": select_branch,
+        "prebuild": prebuild,
+        "main_branch": main_branch,
+        "verbose": verbose,
+        "quite": quite,
+    }
+
+    filtered_config = {x: y for x, y in config.items() if y}
 
     DocsBuilder = VersionedDocs(
         chdir=chdir,
         local_conf=local_conf,
         output_dir=output_dir,
         git_root=git_root,
-        config={
-            "reset_intersphinx_mapping": reset_intersphinx_mapping,
-            "sphinx_compatibility": sphinx_compatibility,
-            "force_branches": force_branches,
-            "exclude_branch": exclude_branch,
-            "floating_badge": floating_badge,
-            "select_branch": select_branch,
-            "prebuild": prebuild,
-            "main_branch": main_branch,
-            "verbose": verbose,
-            "quite": quite,
-        },
+        ignore_conf=ignore_conf,
+        config=filtered_config
     )
 
     return DocsBuilder.run()

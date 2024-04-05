@@ -20,10 +20,6 @@ Configuration File Arguments
 
     Setting this variable will make sure that the ``Project home`` is listed on the versions selector badge/menu.
 
-.. option:: sv_prebuild
-
-    Pre-build all versions to make sure ``sphinx-build`` has no issues and pass-on the successful builds to ``sphinx-versioned-docs``. Default is `True`.
-
 .. option:: sv_select_branch
 
     Select any particular branches/tags to build.
@@ -59,6 +55,18 @@ Configuration File Arguments
 .. option:: sv_force_branches
 
     Force branch selection. Use this option to build detached head/commits. Default is `False`.
+
+.. option:: sv_floating_badge
+
+    Turns the version selector menu into a floating badge. Default is `False`.
+
+.. option:: sv_reset_intersphinx
+
+    Resets intersphinx mapping; acts as a patch for issue `#17 <https://github.com/devanshshukla99/sphinx-versioned-docs/issues/17>`__. Default is `False`.
+
+.. option:: sv_sphinx_compability
+
+    Adds compatibility for older sphinx versions by monkey patching certain functions. Default is `False`.
 
 
 Command Line Arguments
@@ -110,6 +118,13 @@ These command line options must be specified when executing the ``sphinx-version
 .. option:: --floating-badge, --badge
 
     Turns the version selector menu into a floating badge. Default is `False`.
+
+.. option:: --ignore-conf
+ 
+    Ignores conf.py configuration file arguments for sphinx-versioned-docs.
+
+    .. warning::
+        conf.py will still be used in sphinx!
 
 .. option:: --quite, --no-quite
 
