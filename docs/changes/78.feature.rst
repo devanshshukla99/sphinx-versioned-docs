@@ -1,1 +1,4 @@
-Added support for configuration file arguments, given in sphinx `conf.py`
+Added support for configuration file arguments. These arguments can be defined in `conf.py`.
+Arguments can be defined in `conf.py` as long as the argument name is predeced by ``sv_``.
+For example: `select_branch` becomes `sv_select_branch`.
+Specific info about the arguments is available in documentation under settings topic.
