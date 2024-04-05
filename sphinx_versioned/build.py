@@ -10,7 +10,7 @@ from sphinx.cmd.build import build_main
 from loguru import logger as log
 
 from sphinx_versioned.sphinx_ import EventHandlers
-from sphinx_versioned.lib import TempDir, ConfigInject
+from sphinx_versioned.lib import TempDir, ConfigInject, mp_sphinx_compatibility
 from sphinx_versioned.versions import GitVersions, BuiltVersions, PseudoBranch
 
 
@@ -42,6 +42,7 @@ class VersionedDocs:
 
         # Read sphinx-conf.py variables
         self.read_conf()
+        self.configure_conf()
 
         self._versions_to_pre_build = []
         self._versions_to_build = []
@@ -102,13 +103,38 @@ class VersionedDocs:
                 continue
             self.config[x] = sv_conf_values.get(x)
 
+        log.debug(f"master config: {self.config}")
+        return
+
+    def configure_conf(self) -> None:
+        # Initialize GitVersions instance
+        self.versions = GitVersions(self.git_root, self.output_dir, self.config.get("force_branches"))
+
+        if self.config.get("floating_badge"):
+            EventHandlers.FLYOUT_FLOATING_BADGE = True
+
+        if self.config.get("reset_intersphinx_mapping"):
+            EventHandlers.RESET_INTERSPHINX_MAPPING = True
+            log.warning("Forcing --no-prebuild")
+            self.config["prebuild"] = False
+
+        if self.config.get("sphinx_compatibility"):
+            mp_sphinx_compatibility()
+
         # Set additional config for sphinx
         self._additional_args = ()
         self._additional_args += ("-Q",) if self.config.get("quite") else ()
         self._additional_args += ("-vv",) if self.config.get("verbose") else ()
+        return
 
-        # Initialize GitVersions instance
-        self.versions = GitVersions(self.git_root, self.output_dir, self.config.get("force_branches"))
+    def _select_exclude_branches(self) -> list:
+        log.debug(f"Instructions to select: `{self.config.get('select_branch')}`")
+        log.debug(f"Instructions to exclude: `{self.config.get('exclude_branch')}`")
+        self._versions_to_pre_build = []
+
+        self._select_branch()
+
+        log.info(f"selected branches: `{[x.name for x in self._versions_to_pre_build]}`")
         return
 
     def _select_branch(self) -> None:
@@ -139,16 +165,6 @@ class VersionedDocs:
             for x in filtered_tags:
                 self._versions_to_pre_build.remove(self._lookup_branch.get(x))
 
-        return
-
-    def _select_exclude_branches(self) -> list:
-        log.debug(f"Instructions to select: `{self.config.get('select_branch')}`")
-        log.debug(f"Instructions to exclude: `{self.config.get('exclude_branch')}`")
-        self._versions_to_pre_build = []
-
-        self._select_branch()
-
-        log.info(f"selected branches: `{[x.name for x in self._versions_to_pre_build]}`")
         return
 
     def _generate_top_level_index(self) -> None:
@@ -228,7 +244,7 @@ class VersionedDocs:
         The method carries out the transaction via the internal build method
         :meth:`~sphinx_versioned.build.VersionedDocs._build`.
         """
-        if not self.config.get("prebuild_branches"):
+        if not self.config.get("prebuild"):
             log.info("No pre-builing...")
             self._versions_to_build = self._versions_to_pre_build
             return
@@ -252,7 +268,7 @@ class VersionedDocs:
         log.success(f"Prebuilding successful for {', '.join([x.name for x in self._versions_to_build])}")
         return
 
-    def build(self) -> None:
+    def build(self) -> bool:
         """Build workflow.
 
         Method to build the branch in a temporary directory with the modified
@@ -274,11 +290,28 @@ class VersionedDocs:
                 self._build(tag.name)
                 self._built_version.append(tag)
             except SphinxError:
-                log.error(f"build failed for {tag}")
-                exit(-1)
+                log.error(f"Build failed for {tag}")
+                return False
             finally:
                 # restore to active branch
                 self.versions.checkout(self._active_branch)
+        return True
+
+    def run(self) -> bool:
+        # Prebuild, but returns if `self.config["prebuild"]` is `False`
+        self.prebuild()
+
+        # Adds our extension to the sphinx-config
+        application.Config = ConfigInject
+
+        if self.build():
+            # Adds a top-level `index.html` in `output_dir` which redirects to `output_dir`/`main-branch`/index.html
+            self._generate_top_level_index()
+
+            print(f"\n\033[92m Successfully built {', '.join([x.name for x in self._built_version])} \033[0m")
+            return
+
+        log.critical(f"Build failed.")
         return
 
     pass

@@ -4,8 +4,7 @@ import typer
 from loguru import logger as log
 
 from sphinx_versioned.build import VersionedDocs
-from sphinx_versioned.sphinx_ import EventHandlers
-from sphinx_versioned.lib import mp_sphinx_compatibility, parse_branch_selection
+from sphinx_versioned.lib import parse_branch_selection
 
 app = typer.Typer(add_completion=False)
 
@@ -123,31 +122,26 @@ def main(
 
     select_branch, exclude_branch = parse_branch_selection(branches)
 
-    EventHandlers.RESET_INTERSPHINX_MAPPING = reset_intersphinx_mapping
-    EventHandlers.FLYOUT_FLOATING_BADGE = floating_badge
-
-    if reset_intersphinx_mapping:
-        log.warning("Forcing --no-prebuild")
-        prebuild = False
-
-    if sphinx_compatibility:
-        mp_sphinx_compatibility()
-
-    return VersionedDocs(
+    DocsBuilder = VersionedDocs(
         chdir=chdir,
         local_conf=local_conf,
         output_dir=output_dir,
         git_root=git_root,
         config={
-            "prebuild_branches": prebuild,
-            "select_branch": select_branch,
-            "exclude_branch": exclude_branch,
-            "main_branch": main_branch,
-            "quite": quite,
-            "verbose": verbose,
+            "reset_intersphinx_mapping": reset_intersphinx_mapping,
+            "sphinx_compatibility": sphinx_compatibility,
             "force_branches": force_branches,
+            "exclude_branch": exclude_branch,
+            "floating_badge": floating_badge,
+            "select_branch": select_branch,
+            "prebuild": prebuild,
+            "main_branch": main_branch,
+            "verbose": verbose,
+            "quite": quite,
         },
     )
+
+    return DocsBuilder.run()
 
 
 if __name__ == "__main__":
