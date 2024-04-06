@@ -60,7 +60,9 @@ def main(
         False, "--floating-badge", "--badge", help="Turns the version selector menu into a floating badge."
     ),
     ignore_conf: bool = typer.Option(
-        False, "--ignore-conf", help="Ignores conf.py configuration file arguments for sphinx-versioned-docs. Warning: conf.py will still be used in sphinx!"
+        False,
+        "--ignore-conf",
+        help="Ignores conf.py configuration file arguments for sphinx-versioned-docs. Warning: conf.py will still be used in sphinx!",
     ),
     quite: bool = typer.Option(
         True, help="Silent `sphinx`. Use `--no-quite` to get build output from `sphinx`."
@@ -120,12 +122,14 @@ def main(
     -------
     :class:`sphinx_versioned.build.VersionedDocs`
     """
-    logger_format = "| <level>{level: <8}</level> | - <level>{message}</level>"
-
+    # Logger init
     log.remove()
+    logger_format = "| <level>{level: <8}</level> | - <level>{message}</level>"
     log.add(sys.stderr, format=logger_format, level=loglevel.upper())
 
+    # Parse --branch into either select/exclude variables
     select_branch, exclude_branch = parse_branch_selection(branches)
+
     config = {
         "reset_intersphinx_mapping": reset_intersphinx_mapping,
         "sphinx_compatibility": sphinx_compatibility,
@@ -138,18 +142,18 @@ def main(
         "verbose": verbose,
         "quite": quite,
     }
-
+    # Filtered config dict, containing only variables which are `True`
     filtered_config = {x: y for x, y in config.items() if y}
 
+    # VersionedDocs instance
     DocsBuilder = VersionedDocs(
         chdir=chdir,
         local_conf=local_conf,
         output_dir=output_dir,
         git_root=git_root,
         ignore_conf=ignore_conf,
-        config=filtered_config
+        config=filtered_config,
     )
-
     return DocsBuilder.run()
 
 

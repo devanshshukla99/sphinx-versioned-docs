@@ -33,6 +33,8 @@ class VersionedDocs:
         Documentation output directory.
     git_root : :class:`str`
         If git root differs from chdir/CWD, that location can be supplied via this variable.
+    ignore_conf : :class:`bool`
+        Ignores conf.py configuration file arguments for sphinx-versioned-docs.
     config : :class:`dict`
         CLI configuration arguments.
     """
@@ -101,7 +103,7 @@ class VersionedDocs:
         log.debug(f"Configuration file arugments: {sv_conf_values}")
 
         # Make a master config variable
-        self.config = sv_conf_values | self._raw_cli_config
+        self.config = {**sv_conf_values, **self._raw_cli_config}
         log.debug(f"master config: {self.config}")
         return
 
