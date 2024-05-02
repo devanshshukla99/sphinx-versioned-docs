@@ -10,63 +10,8 @@ Settings
 
 The ``sphinx-versioned-docs`` reads options from two sources:
 
-    * From the sphinx ``conf.py`` file.
     * From the provided command-line-arguments.
-
-Configuration File Arguments
-============================
-
-.. option:: sv_project_url: <url>
-
-    Setting this variable will make sure that the ``Project home`` is listed on the versions selector badge/menu.
-
-.. option:: sv_select_branch
-
-    Select any particular branches/tags to build.
-    The branch/tag names can be separated by ``,`` or ``|``.
-
-    Selecting a branch will always take precedence over excluding one.
-
-    Example: ``sv_select_branch=["main", "v2.0"]``
-    The option above will build ``main``, ``v2.0`` and will skip all others.
-
-.. option:: sv_exclude_branch
-
-    Exclude any particular branches/tags from building workflow.
-    The branch/tag names can be separated by ``,`` or ``|``.
-
-    Selecting a branch will always take precedence over excluding one.
-
-    Example: ``sv_exclude_branch=["v1.0"]``
-    The option above will exclude ``v1.0`` and will build all others.
-
-.. option:: sv_main_branch
-
-    Specify the main-branch to which the top-level ``index.html`` redirects to. Default is ``main``.
-
-.. option:: sv_quite
-
-    Silents the output from `sphinx`. Use `--no-quite` to get complete-output from `sphinx`. Default is `True`.
-
-.. option:: sv_verbose
-
-    Passed directly to sphinx. Specify more than once for more logging in sphinx. Default is `False`.
-
-.. option:: sv_force_branches
-
-    Force branch selection. Use this option to build detached head/commits. Default is `False`.
-
-.. option:: sv_floating_badge
-
-    Turns the version selector menu into a floating badge. Default is `False`.
-
-.. option:: sv_reset_intersphinx
-
-    Resets intersphinx mapping; acts as a patch for issue `#17 <https://github.com/devanshshukla99/sphinx-versioned-docs/issues/17>`__. Default is `False`.
-
-.. option:: sv_sphinx_compability
-
-    Adds compatibility for older sphinx versions by monkey patching certain functions. Default is `False`.
+    * From the sphinx ``conf.py`` file.
 
 
 Command Line Arguments
@@ -111,6 +56,10 @@ These command line options must be specified when executing the ``sphinx-version
     
     ``sphinx-versioned --branch="main, -v*"``
 
+    .. note::
+
+        Selecting a branch will always take precedence over excluding one.
+
 .. option:: -m <branch name>, --main-branch <branch name>
 
     Specify the main-branch to which the top-level ``index.html`` redirects to. Default is ``main``.
@@ -121,10 +70,11 @@ These command line options must be specified when executing the ``sphinx-version
 
 .. option:: --ignore-conf
  
-    Ignores conf.py configuration file arguments for sphinx-versioned-docs.
+    Ignores ``conf.py`` configuration file arguments for ``sphinx-versioned-docs``.
 
     .. warning::
-        conf.py will still be used in sphinx!
+
+        ``conf.py`` will still be used in sphinx!
 
 .. option:: --quite, --no-quite
 
@@ -146,3 +96,89 @@ These command line options must be specified when executing the ``sphinx-version
 .. option:: --help
 
     Show the help message in command-line.
+
+
+Configuration File Arguments
+============================
+
+.. warning::
+
+    Unfortunately, due to limitations of the current implementation, all path variables
+    like git-path, output path, local ``conf.py`` path cannot be select
+    via configuration file argument and must be specified in CLI arguments.
+
+.. option:: sv_project_url: <url>
+
+    Setting this variable will make sure that the ``Project home`` is listed on the versions selector badge/menu.
+
+.. option:: sv_select_branch
+
+    Select any particular branches/tags to build.
+
+    The branch/tag names can be specified in an array with names separated by ``,`` or ``|``.
+
+    Example: ``sv_select_branch=["main", "v2.0"]``
+
+    The option above will build ``main``, ``v2.0`` and will skip all others.
+
+    .. note::
+
+        Selecting a branch will always take precedence over excluding one.
+
+.. option:: sv_exclude_branch
+
+    Exclude any particular branches/tags from building workflow.
+    The branch/tag names can be specified in an array with names separated by ``,`` or ``|``.
+
+    Example: ``sv_exclude_branch=["v1.0"]``
+
+    The option above will exclude ``v1.0`` and will build all others.
+
+.. option:: sv_main_branch
+
+    Specify the main-branch to which the top-level ``index.html`` redirects to. Default is ``main``.
+
+.. option:: sv_verbose
+
+    Passed directly to sphinx. Specify more than once for more logging in sphinx. Default is `False`.
+
+.. option:: sv_force_branch
+
+    Force branch selection. Use this option to build detached head/commits. Default is `False`.
+
+.. option:: sv_floating_badge
+
+    Turns the version selector menu into a floating badge. Default is `False`.
+
+.. option:: sv_reset_intersphinx
+
+    Resets intersphinx mapping; acts as a patch for issue `#17 <https://github.com/devanshshukla99/sphinx-versioned-docs/issues/17>`__. Default is `False`.
+
+.. option:: sv_sphinx_compability
+
+    Adds compatibility for older sphinx versions by monkey patching certain functions. Default is `False`.
+
+Template for ``conf.py``
+------------------------
+
+.. code::
+
+    # conf.py
+    # sphinx arguments
+    # ...
+    # ...
+
+    # sphinx-versioned-docs arguments
+    # This template will have a project url for `sphinx-versioned-docs`
+    # will exclude `v1.0` branch
+    # will set `main` as the main branch
+    # other options can be enabled, if and as requried.
+    sv_project_url = "https://www.github.com/devanshshukla99/sphinx-versioned-docs"
+    sv_select_branch = []
+    sv_exclude_branch = ["-v1.0"]
+    sv_main_branch = "main"
+    sv_verbose = ""
+    sv_force_branch = False
+    sv_floating_badge = False
+    sv_reset_intersphinx = False
+    sv_sphinx_compability = False
