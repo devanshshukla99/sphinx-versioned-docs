@@ -76,7 +76,7 @@ def main(
     loglevel: str = typer.Option(
         "info", "-log", "--log", help="Provide logging level. Example --log debug, default=info"
     ),
-    force_branches: bool = typer.Option(
+    force_branch: bool = typer.Option(
         False,
         "--force",
         help="Force branch selection. Use this option to build detached head/commits. [Default: False]",
@@ -115,7 +115,7 @@ def main(
         Passed directly to sphinx. Specify more than once for more logging in sphinx. [Default = `False`]
     loglevel : :class:`str`
         Provide logging level. Example `--log` debug, [Default='info']
-    force_branches : :class:`str`
+    force_branch : :class:`str`
         Force branch selection. Use this option to build detached head/commits. [Default = `False`]
 
     Returns
@@ -133,7 +133,7 @@ def main(
     config = {
         "reset_intersphinx_mapping": reset_intersphinx_mapping,
         "sphinx_compatibility": sphinx_compatibility,
-        "force_branches": force_branches,
+        "force_branch": force_branch,
         "exclude_branch": exclude_branch,
         "floating_badge": floating_badge,
         "select_branch": select_branch,

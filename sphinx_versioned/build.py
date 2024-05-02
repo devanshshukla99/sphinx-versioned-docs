@@ -58,7 +58,7 @@ class VersionedDocs:
 
         # if `--force` is supplied with no `--main-branch`, make the `_active_branch` as the `main_branch`
         if not self.config.get("main_branch"):
-            if self.config.get("force_branches"):
+            if self.config.get("force_branch"):
                 self.config["main_branch"] = self.versions.active_branch.name
             else:
                 self.config["main_branch"] = "main"
@@ -109,7 +109,7 @@ class VersionedDocs:
 
     def configure_conf(self) -> None:
         # Initialize GitVersions instance
-        self.versions = GitVersions(self.git_root, self.output_dir, self.config.get("force_branches"))
+        self.versions = GitVersions(self.git_root, self.output_dir, self.config.get("force_branch"))
 
         if self.config.get("floating_badge"):
             EventHandlers.FLYOUT_FLOATING_BADGE = True
