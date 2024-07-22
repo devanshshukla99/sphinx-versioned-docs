@@ -1,4 +1,5 @@
 import os
+import fnmatch
 import shutil
 import pathlib
 from sphinx import application
@@ -40,6 +41,7 @@ class VersionedDocs:
         self._lookup_branch = {x.name: x for x in self._all_branches}
 
         self._select_exclude_branches()
+        exit(-1)
 
         # if `--force` is supplied with no `--main-branch`, make the `_active_branch` as the `main_branch`
         if not self.main_branch:
@@ -97,8 +99,9 @@ class VersionedDocs:
             return
 
         for tag in self.select_branches:
-            if tag in self._lookup_branch.keys():
-                self._versions_to_pre_build.append(self._lookup_branch.get(tag))
+            filtered_tags = fnmatch.filter(self._lookup_branch.keys(), tag)
+            if filtered_tags:
+                self._versions_to_pre_build.extend([self._lookup_branch.get(x) for x in filtered_tags])
             elif self.force_branches:
                 log.warning(f"Forcing build for branch `{tag}`, be careful, it may or may not exist!")
                 self._versions_to_pre_build.append(PseudoBranch(tag))
@@ -113,8 +116,9 @@ class VersionedDocs:
 
         _names_versions_to_pre_build = [x.name for x in self._versions_to_pre_build]
         for tag in self.exclude_branches:
-            if tag in _names_versions_to_pre_build:
-                self._versions_to_pre_build.remove(self._lookup_branch.get(tag))
+            filtered_tags = fnmatch.filter(_names_versions_to_pre_build, tag)
+            for x in filtered_tags:
+                self._versions_to_pre_build.remove(self._lookup_branch.get(x))
 
         return
 
