@@ -41,7 +41,6 @@ class VersionedDocs:
         self._lookup_branch = {x.name: x for x in self._all_branches}
 
         self._select_exclude_branches()
-        exit(-1)
 
         # if `--force` is supplied with no `--main-branch`, make the `_active_branch` as the `main_branch`
         if not self.main_branch:
