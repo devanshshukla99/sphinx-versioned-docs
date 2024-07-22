@@ -27,7 +27,7 @@ class VersionedDocs:
     config : :class:`dict`
     """
 
-    def __init__(self, config: dict) -> None:
+    def __init__(self, config: dict, debug: bool = False) -> None:
         self.config = config
         self._parse_config(config)
         self._handle_paths()
@@ -48,6 +48,9 @@ class VersionedDocs:
                 self.main_branch = self.versions.active_branch.name
             else:
                 self.main_branch = "main"
+
+        if debug:
+            return
 
         self.prebuild()
 

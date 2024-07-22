@@ -2,7 +2,9 @@ import os
 import pytest
 import pathlib
 from bs4 import BeautifulSoup as bs
+from sphinx_versioned.build import VersionedDocs
 from sphinx_versioned.lib import parse_branch_selection
+
 
 VERSIONS_SUPPOSED = {
     "v1.0": [
@@ -27,6 +29,40 @@ def test_parse_branch_selection(branches, select, exclude):
     parsed_select, parsed_exclude = parse_branch_selection(branches)
     assert parsed_select == select
     assert parsed_exclude == exclude
+
+
+@pytest.mark.parametrize(
+    "branches, select, exclude",
+    [
+        ("main,v*", ["main", "v1.0", "v2.0"], []),
+        ("-v2.*", ["main", "v1.0"], ["v2.0"]),
+        ("-v*", ["main"], ["v1.0", "v2.0"]),
+    ],
+)
+def test_parse_branch_selection_regex(branches, select, exclude):
+    parsed_select, parsed_exclude = parse_branch_selection(branches)
+
+    ver = VersionedDocs(
+        {
+            "chdir": ".",
+            "output_dir": OUTPATH,
+            "git_root": BASEPATH.parent,
+            "local_conf": "docs/conf.py",
+            "select_branches": parsed_select,
+            "exclude_branches": parsed_exclude,
+            "main_branch": "main",
+            "quite": False,
+            "verbose": True,
+            "force_branches": True,
+        },
+        debug=True,
+    )
+    _names_versions_to_pre_build = [x.name for x in ver._versions_to_pre_build]
+    for tag in select:
+        assert tag in _names_versions_to_pre_build
+    for tag in exclude:
+        assert tag not in _names_versions_to_pre_build
+    return
 
 
 def test_top_level_index():
