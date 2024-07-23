@@ -3,5 +3,7 @@ Now, any branch can be selected by mentioning it in ``--branch``/ ``--b`` and an
 infront of the branch/tag name in the argument.
 
 Suppose there are 3 branches and tags: ``main, v1.0, v2.0``.
-The argument ``--branch main,-v*`` will select ``main`` and will exclude ``v1.0`` and will exclude ``v2.0``.
+The argument ``--branch main,-v*`` will select ``main`` and will exclude ``v1.0`` and ``v2.0``.
 Similarly, the argument ``--branch -main,v*`` will select ``v1.0`` and ``v2.0`` and will exclude ``main``.
+
+Note: selecting a branch takes presidence over excluding one.

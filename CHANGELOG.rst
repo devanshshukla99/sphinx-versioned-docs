@@ -1,3 +1,35 @@
+1.3.2.dev8+gd45a443.d20240722 (2024-07-23)
+==========================================
+
+Deprecations and Removals
+-------------------------
+
+- The theme specific versions selector menu/badge is deprecated in favour of consistent experience
+  across themes. Now, every theme will have the selector menu either in its sidebar or in its
+  footer(if the theme supports it). (`#47 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/47>`__)
+- The CLI option ``--branches`` is removed in favour of ``--branch`` and ``-b``. (`#67 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/67>`__)
+
+
+Features
+--------
+
+- Added a feature to either have the vanilla versions selector menu or have it as a floating badge via
+  using either ``--floating-badge`` or ``--badge`` option available through command-line. (`#47 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/47>`__)
+- Modified the ``--branch``/ ``-b`` to accomodate branch selection/exclusion. Now, any branch can be selected
+  by mentioning it in ``--branch``/``--b`` and any can be excluded by adding a ``-`` infront of the branch/tag
+  name in the cli argument.
+  Like ``--branch main,-v1.0,v2.0`` will select ``main``, ``v2.0`` and will exclude ``v1.0``. (`#69 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/69>`__)
+- Added regex support for selecting and excluding branches and tags.
+  Now, any branch can be selected by mentioning it in ``--branch``/ ``--b`` and any can be excluded by adding a ``-``
+  infront of the branch/tag name in the argument.
+
+  Suppose there are 3 branches and tags: ``main, v1.0, v2.0``.
+  The argument ``--branch main,-v*`` will select ``main`` and will exclude ``v1.0`` and ``v2.0``.
+  Similarly, the argument ``--branch -main,v*`` will select ``v1.0`` and ``v2.0`` and will exclude ``main``.
+
+  Note: selecting a branch takes presidence over excluding one. (`#80 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/80>`__)
+
+
 1.3.1 (2024-02-28)
 ==================
 
