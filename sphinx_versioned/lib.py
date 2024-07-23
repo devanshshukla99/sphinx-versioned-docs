@@ -103,7 +103,7 @@ def parse_branch_selection(branches: str) -> tuple:
     ----------
     branches : :class:`str`
         Input CLI-argument.
-    
+
     Returns
     -------
     select_branches, exclude_branches : :class:`list`, :class:`list`

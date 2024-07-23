@@ -1,4 +1,5 @@
 import os
+import fnmatch
 import shutil
 import pathlib
 from sphinx import application
@@ -26,7 +27,7 @@ class VersionedDocs:
     config : :class:`dict`
     """
 
-    def __init__(self, config: dict) -> None:
+    def __init__(self, config: dict, debug: bool = False) -> None:
         self.config = config
         self._parse_config(config)
         self._handle_paths()
@@ -47,6 +48,9 @@ class VersionedDocs:
                 self.main_branch = self.versions.active_branch.name
             else:
                 self.main_branch = "main"
+
+        if debug:
+            return
 
         self.prebuild()
 
@@ -97,8 +101,9 @@ class VersionedDocs:
             return
 
         for tag in self.select_branches:
-            if tag in self._lookup_branch.keys():
-                self._versions_to_pre_build.append(self._lookup_branch.get(tag))
+            filtered_tags = fnmatch.filter(self._lookup_branch.keys(), tag)
+            if filtered_tags:
+                self._versions_to_pre_build.extend([self._lookup_branch.get(x) for x in filtered_tags])
             elif self.force_branches:
                 log.warning(f"Forcing build for branch `{tag}`, be careful, it may or may not exist!")
                 self._versions_to_pre_build.append(PseudoBranch(tag))
@@ -113,8 +118,9 @@ class VersionedDocs:
 
         _names_versions_to_pre_build = [x.name for x in self._versions_to_pre_build]
         for tag in self.exclude_branches:
-            if tag in _names_versions_to_pre_build:
-                self._versions_to_pre_build.remove(self._lookup_branch.get(tag))
+            filtered_tags = fnmatch.filter(_names_versions_to_pre_build, tag)
+            for x in filtered_tags:
+                self._versions_to_pre_build.remove(self._lookup_branch.get(x))
 
         return
 

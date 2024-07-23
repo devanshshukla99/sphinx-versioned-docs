@@ -57,10 +57,12 @@ These command line options must be specified when executing the ``sphinx-version
 
 .. option:: -b <branch names>, --branch <branch names>
 
-    Build docs and the version selector menu only for certain tags and branches.
-    The branch names can be separated by ``,`` or ``|``.
+    Build documentation for selected branches and tags.
+    The branch/tag names can be separated by ``,`` or ``|`` and supports regex.
 
     Example: ``sphinx-versioned --branch="main, v1.0, v2.0"``
+    
+    ``sphinx-versioned --branch="main, -v*"``
 
 .. option:: -m <branch name>, --main-branch <branch name>
 
