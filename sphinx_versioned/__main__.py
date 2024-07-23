@@ -43,7 +43,7 @@ def main(
         help="Adds compatibility for older sphinx versions by monkey patching certain functions.",
     ),
     prebuild: bool = typer.Option(
-        True, help="Pre-builds the documentations; Use `--no-prebuild` to half the runtime."
+        False, help="Pre-builds the documentations; Use `--no-prebuild` to half the runtime."
     ),
     branches: str = typer.Option(
         None,
