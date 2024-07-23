@@ -69,11 +69,15 @@ class GitVersions(_BranchTag):
         Git repository root directory.
     build_directory : :class:`str`
         Path of build directory.
+    force_branches : :class:`bool`
+        This option allows `GitVersions` to treat the detached commits as normal branches.
+        Use this option to build docs for detached head/commits.
     """
 
-    def __init__(self, git_root: str, build_directory: str) -> None:
+    def __init__(self, git_root: str, build_directory: str, force_branches: bool) -> None:
         self.git_root = git_root
         self.build_directory = pathlib.Path(build_directory)
+        self.force_branches = force_branches
 
         # for detached head
         self._active_branch = None
@@ -95,6 +99,10 @@ class GitVersions(_BranchTag):
     def _parse_branches(self) -> bool:
         """Parse branches and tags into separate variables.
 
+        Collect all branches and tags in `GitVersions.all_versions`.
+        Additionally, if the head is detached and `--force` is supplied, then append
+        a PseudoBranch representing the detached commit sha.
+
         Returns
         -------
         :class:`bool`
@@ -103,6 +111,16 @@ class GitVersions(_BranchTag):
         self._raw_tags = self.repo.tags
         self._branches = {x.name: self.build_directory / x.name for x in self._raw_branches}
         self._tags = {x.name: self.build_directory / x.name for x in self._raw_tags}
+        self.all_versions = [*self._raw_tags, *self._raw_branches]
+
+        # check if if the current git status is detached, if yes, and if `--force` is supplied -> append:
+        if self.repo.head.is_detached:
+            log.warning(f"git head detached {self.repo.head.is_detached}")
+            if self.force_branches:
+                log.debug("Forcing detached commit into PseudoBranch")
+                self.all_versions.append(PseudoBranch(self.repo.head.object.hexsha))
+
+        log.debug(f"Found versions: {[x.name for x in self.all_versions]}")
         return True
 
     def checkout(self, name, *args, **kwargs) -> bool:
@@ -137,13 +155,13 @@ class BuiltVersions(_BranchTag):
 
     Parameters
     ----------
-    versions : :class:`~sphinx_versioned.versions.GitVersions`
-        Git repository root
+    versions : :class:`list`
+        Versions to be build.
     build_directory : :class:`str`
-        Path of build directory
+        Path of the build directory.
     """
 
-    def __init__(self, versions: GitVersions, build_directory: str) -> None:
+    def __init__(self, versions: list, build_directory: str) -> None:
         self._versions = versions
         self.build_directory = pathlib.Path(build_directory)
 
