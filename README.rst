@@ -15,7 +15,6 @@ sphinx-versioned-docs
 +-------------------------+-----------------------+
 
 Sphinx extension that allows building versioned docs for self-hosting.
-Supported on Linux and macOS.
 
 It works by producing docs for all(specified) branches in separate folders and injects a readthedocs-like version selector menu/badge.
 
