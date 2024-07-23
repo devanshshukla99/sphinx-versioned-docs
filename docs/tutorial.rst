@@ -95,6 +95,12 @@ some particular branch(s) and tag(s), they can be specified in the ``--branch`` 
 
     Either of the two options above will select ``main``, ``v2.0`` and will only build these.
 
+    .. code-block:: console
+
+        $ sphinx-versioned --branch "main,v*"
+
+    The above argument will select ``main``, ``v1.0`` and ``v2.0`` and will only build these.
+
 #. **For excluding a branch:** mention the branch/tag name with ``-`` in the CLI argument like:
 
     .. code-block:: console
@@ -103,7 +109,13 @@ some particular branch(s) and tag(s), they can be specified in the ``--branch`` 
 
     The above command will build all available branches and tags except ``main``, ``v2.0``
 
-#. **For selecting and excluding simultaneously:** mention the branch/tag name with ``-`` in the CLI argument like:
+    .. code-block:: console
+
+        $ sphinx-versioned --branch "-v*"
+
+    The above command will build all available branches and tags except ``v1.0``, ``v2.0``
+
+#. **For selecting and excluding simultaneously:** mention the branch/tag name with ``-`` in the CLI argument like (mind you selecting takes presidence over excluding one):
 
     .. code-block:: console
 
