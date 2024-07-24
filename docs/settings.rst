@@ -104,7 +104,7 @@ Configuration File Arguments
 .. warning::
 
     Unfortunately, due to limitations of the current implementation, all path variables
-    like git-path, output path, local ``conf.py`` path cannot be select
+    like git-path, output path, local conf.py path cannot be select
     via configuration file argument and must be specified in CLI arguments.
 
 .. option:: sv_project_url: <url>
@@ -115,7 +115,7 @@ Configuration File Arguments
 
     Select any particular branches/tags to build.
 
-    The branch/tag names can be specified in an array with names separated by ``,`` or ``|``.
+    The branch/tag names can be separated by ``,`` or ``|`` and supports regex.
 
     Example: ``sv_select_branch=["main", "v2.0"]``
 

@@ -115,7 +115,7 @@ def main(
         Passed directly to sphinx. Specify more than once for more logging in sphinx. [Default = `False`]
     loglevel : :class:`str`
         Provide logging level. Example `--log` debug, [Default='info']
-    force_branch : :class:`str`
+    force_branch : :class:`bool`
         Force branch selection. Use this option to build detached head/commits. [Default = `False`]
 
     Returns

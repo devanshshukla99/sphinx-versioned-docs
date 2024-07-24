@@ -254,5 +254,3 @@ intersphinx_mapping = {
     "sphinx": ("https://www.sphinx-doc.org/", None),
     "gitpython": ("https://gitpython.readthedocs.io/en/stable/", None),
 }
-
-pygments_style = "github-dark"

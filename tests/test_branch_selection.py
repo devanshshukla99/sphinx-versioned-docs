@@ -51,7 +51,7 @@ def test_parse_branch_selection_regex(branches, select, exclude):
             "quite": False,
             "verbose": True,
             "main_branch": "main",
-            "force_branches": True,
+            "force_branch": True,
             "select_branch": parsed_select,
             "exclude_branch": parsed_exclude,
         },
