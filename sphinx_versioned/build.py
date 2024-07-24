@@ -39,8 +39,26 @@ class VersionedDocs:
         CLI configuration arguments.
     """
 
-    def __init__(self, config: dict, debug: bool = False) -> None:
-        self.config = config
+    def __init__(
+        self,
+        chdir: str,
+        output_dir: str,
+        git_root: str,
+        local_conf: str,
+        config: dict,
+        ignore_conf: bool = False,
+        debug: bool = False,
+    ) -> None:
+        if chdir:
+            log.debug(f"chdir: {chdir}")
+            os.chdir(chdir)
+
+        self.local_conf = pathlib.Path(local_conf)
+        self.output_dir = pathlib.Path(output_dir)
+        self.git_root = git_root
+
+        self._raw_cli_config = config
+        self.ignore_conf = ignore_conf
 
         # Read sphinx-conf.py variables
         self.read_conf()
@@ -144,11 +162,11 @@ class VersionedDocs:
             self._exclude_branch()
             return
 
-        for tag in self.select_branches:
+        for tag in self.config.get("select_branch"):
             filtered_tags = fnmatch.filter(self._lookup_branch.keys(), tag)
             if filtered_tags:
                 self._versions_to_pre_build.extend([self._lookup_branch.get(x) for x in filtered_tags])
-            elif self.force_branches:
+            elif self.config.get("force_branch"):
                 log.warning(f"Forcing build for branch `{tag}`, be careful, it may or may not exist!")
                 self._versions_to_pre_build.append(PseudoBranch(tag))
             else:
@@ -161,7 +179,7 @@ class VersionedDocs:
             return
 
         _names_versions_to_pre_build = [x.name for x in self._versions_to_pre_build]
-        for tag in self.exclude_branches:
+        for tag in self.config.get("exclude_branch"):
             filtered_tags = fnmatch.filter(_names_versions_to_pre_build, tag)
             for x in filtered_tags:
                 self._versions_to_pre_build.remove(self._lookup_branch.get(x))
@@ -264,7 +282,7 @@ class VersionedDocs:
                 log.critical(f"Pre-build failed for {tag}")
             finally:
                 # restore to active branch
-                self.versions.checkout(self._active_branch.name)
+                self.versions.checkout(self._active_branch)
 
         log.success(f"Prebuilding successful for {', '.join([x.name for x in self._versions_to_build])}")
         return

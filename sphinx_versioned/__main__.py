@@ -131,16 +131,16 @@ def main(
     select_branch, exclude_branch = parse_branch_selection(branches)
 
     config = {
-        "reset_intersphinx_mapping": reset_intersphinx_mapping,
-        "sphinx_compatibility": sphinx_compatibility,
-        "force_branch": force_branch,
-        "exclude_branch": exclude_branch,
-        "floating_badge": floating_badge,
-        "select_branch": select_branch,
+        "quite": quite,
+        "verbose": verbose,
         "prebuild": prebuild,
         "main_branch": main_branch,
-        "verbose": verbose,
-        "quite": quite,
+        "force_branch": force_branch,
+        "select_branch": select_branch,
+        "exclude_branch": exclude_branch,
+        "floating_badge": floating_badge,
+        "sphinx_compatibility": sphinx_compatibility,
+        "reset_intersphinx_mapping": reset_intersphinx_mapping,
     }
     # Filtered config dict, containing only variables which are `True`
     filtered_config = {x: y for x, y in config.items() if y}
@@ -148,11 +148,11 @@ def main(
     # VersionedDocs instance
     DocsBuilder = VersionedDocs(
         chdir=chdir,
+        git_root=git_root,
         local_conf=local_conf,
         output_dir=output_dir,
-        git_root=git_root,
-        ignore_conf=ignore_conf,
         config=filtered_config,
+        ignore_conf=ignore_conf,
     )
     return DocsBuilder.run()
 
