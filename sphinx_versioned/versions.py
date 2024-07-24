@@ -69,15 +69,15 @@ class GitVersions(_BranchTag):
         Git repository root directory.
     build_directory : :class:`str`
         Path of build directory.
-    force_branches : :class:`bool`
+    force_branch : :class:`bool`
         This option allows `GitVersions` to treat the detached commits as normal branches.
         Use this option to build docs for detached head/commits.
     """
 
-    def __init__(self, git_root: str, build_directory: str, force_branches: bool) -> None:
+    def __init__(self, git_root: str, build_directory: str, force_branch: bool) -> None:
         self.git_root = git_root
         self.build_directory = pathlib.Path(build_directory)
-        self.force_branches = force_branches
+        self.force_branch = force_branch
 
         # for detached head
         self._active_branch = None
@@ -116,7 +116,7 @@ class GitVersions(_BranchTag):
         # check if if the current git status is detached, if yes, and if `--force` is supplied -> append:
         if self.repo.head.is_detached:
             log.warning(f"git head detached {self.repo.head.is_detached}")
-            if self.force_branches:
+            if self.force_branch:
                 log.debug("Forcing detached commit into PseudoBranch")
                 self.all_versions.append(PseudoBranch(self.repo.head.object.hexsha))
 

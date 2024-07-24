@@ -1,12 +1,10 @@
-import re
 import sys
 import typer
 
 from loguru import logger as log
 
 from sphinx_versioned.build import VersionedDocs
-from sphinx_versioned.sphinx_ import EventHandlers
-from sphinx_versioned.lib import mp_sphinx_compatibility, parse_branch_selection
+from sphinx_versioned.lib import parse_branch_selection
 
 app = typer.Typer(add_completion=False)
 
@@ -61,6 +59,11 @@ def main(
     floating_badge: bool = typer.Option(
         False, "--floating-badge", "--badge", help="Turns the version selector menu into a floating badge."
     ),
+    ignore_conf: bool = typer.Option(
+        False,
+        "--ignore-conf",
+        help="Ignores conf.py configuration file arguments for sphinx-versioned-docs. Warning: conf.py will still be used in sphinx!",
+    ),
     quite: bool = typer.Option(
         True, help="Silent `sphinx`. Use `--no-quite` to get build output from `sphinx`."
     ),
@@ -73,7 +76,7 @@ def main(
     loglevel: str = typer.Option(
         "info", "-log", "--log", help="Provide logging level. Example --log debug, default=info"
     ),
-    force_branches: bool = typer.Option(
+    force_branch: bool = typer.Option(
         False,
         "--force",
         help="Force branch selection. Use this option to build detached head/commits. [Default: False]",
@@ -104,51 +107,54 @@ def main(
         Main branch to which the top-level `index.html` redirects to. [Default = 'main']
     floating_badge : :class:`bool`
         Turns the version selector menu into a floating badge. [Default = `False`]
+    ignore_conf : :class:`bool`
+        Ignores conf.py configuration file arguments for sphinx-versioned-docs. Warning: conf.py will still be used in sphinx!
     quite : :class:`bool`
         Quite output from `sphinx`. Use `--no-quite` to get output from `sphinx`. [Default = `True`]
     verbose : :class:`bool`
         Passed directly to sphinx. Specify more than once for more logging in sphinx. [Default = `False`]
     loglevel : :class:`str`
         Provide logging level. Example `--log` debug, [Default='info']
-    force_branches : :class:`str`
+    force_branch : :class:`bool`
         Force branch selection. Use this option to build detached head/commits. [Default = `False`]
 
     Returns
     -------
     :class:`sphinx_versioned.build.VersionedDocs`
     """
-    logger_format = "| <level>{level: <8}</level> | - <level>{message}</level>"
-
+    # Logger init
     log.remove()
+    logger_format = "| <level>{level: <8}</level> | - <level>{message}</level>"
     log.add(sys.stderr, format=logger_format, level=loglevel.upper())
 
-    select_branches, exclude_branches = parse_branch_selection(branches)
+    # Parse --branch into either select/exclude variables
+    select_branch, exclude_branch = parse_branch_selection(branches)
 
-    EventHandlers.RESET_INTERSPHINX_MAPPING = reset_intersphinx_mapping
-    EventHandlers.FLYOUT_FLOATING_BADGE = floating_badge
+    config = {
+        "quite": quite,
+        "verbose": verbose,
+        "prebuild": prebuild,
+        "main_branch": main_branch,
+        "force_branch": force_branch,
+        "select_branch": select_branch,
+        "exclude_branch": exclude_branch,
+        "floating_badge": floating_badge,
+        "sphinx_compatibility": sphinx_compatibility,
+        "reset_intersphinx_mapping": reset_intersphinx_mapping,
+    }
+    # Filtered config dict, containing only variables which are `True`
+    filtered_config = {x: y for x, y in config.items() if y}
 
-    if reset_intersphinx_mapping:
-        log.warning("Forcing --no-prebuild")
-        prebuild = False
-
-    if sphinx_compatibility:
-        mp_sphinx_compatibility()
-
-    return VersionedDocs(
-        {
-            "chdir": chdir,
-            "output_dir": output_dir,
-            "git_root": git_root,
-            "local_conf": local_conf,
-            "prebuild_branches": prebuild,
-            "select_branches": select_branches,
-            "exclude_branches": exclude_branches,
-            "main_branch": main_branch,
-            "quite": quite,
-            "verbose": verbose,
-            "force_branches": force_branches,
-        }
+    # VersionedDocs instance
+    DocsBuilder = VersionedDocs(
+        chdir=chdir,
+        git_root=git_root,
+        local_conf=local_conf,
+        output_dir=output_dir,
+        config=filtered_config,
+        ignore_conf=ignore_conf,
     )
+    return DocsBuilder.run()
 
 
 if __name__ == "__main__":
