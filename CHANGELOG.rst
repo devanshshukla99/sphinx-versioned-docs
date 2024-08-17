@@ -1,5 +1,5 @@
-1.3.2.dev8+gd45a443.d20240722 (2024-07-23)
-==========================================
+1.4 (2024-08-17)
+================
 
 Deprecations and Removals
 -------------------------
@@ -19,6 +19,7 @@ Features
   by mentioning it in ``--branch``/``--b`` and any can be excluded by adding a ``-`` infront of the branch/tag
   name in the cli argument.
   Like ``--branch main,-v1.0,v2.0`` will select ``main``, ``v2.0`` and will exclude ``v1.0``. (`#69 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/69>`__)
+- Adds windows compatibility. (`#76 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/76>`__)
 - Added regex support for selecting and excluding branches and tags.
   Now, any branch can be selected by mentioning it in ``--branch``/ ``--b`` and any can be excluded by adding a ``-``
   infront of the branch/tag name in the argument.
@@ -28,6 +29,15 @@ Features
   Similarly, the argument ``--branch -main,v*`` will select ``v1.0`` and ``v2.0`` and will exclude ``main``.
 
   Note: selecting a branch takes presidence over excluding one. (`#80 <https://github.com/devanshshukla99/sphinx-versioned-docs/pull/80>`__)
+
+
+1.3.2 (2024-03-08)
+==================
+
+Bug Fixes
+---------
+
+- Fixed `branch not found` bug when selecting branches using `-b` in CLI.
 
 
 1.3.1 (2024-02-28)
@@ -70,7 +80,7 @@ Added/Improved Documentation
 
 
 1.2 (2024-02-01)
-=========================================
+================
 
 Deprecations and Removals
 -------------------------

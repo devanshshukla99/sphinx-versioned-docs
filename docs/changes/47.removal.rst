@@ -1,3 +1,0 @@
-The theme specific versions selector menu/badge is deprecated in favour of consistent experience
-across themes. Now, every theme will have the selector menu either in its sidebar or in its
-footer(if the theme supports it).
