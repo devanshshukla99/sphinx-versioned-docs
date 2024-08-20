@@ -43,17 +43,17 @@ def test_parse_branch_selection_regex(branches, select, exclude):
     parsed_select, parsed_exclude = parse_branch_selection(branches)
 
     ver = VersionedDocs(
-        {
-            "chdir": ".",
-            "output_dir": OUTPATH,
-            "git_root": BASEPATH.parent,
-            "local_conf": "docs/conf.py",
-            "select_branches": parsed_select,
-            "exclude_branches": parsed_exclude,
-            "main_branch": "main",
+        chdir=".",
+        output_dir=OUTPATH,
+        git_root=BASEPATH.parent,
+        local_conf="docs/conf.py",
+        config={
             "quite": False,
             "verbose": True,
-            "force_branches": True,
+            "main_branch": "main",
+            "force_branch": True,
+            "select_branch": parsed_select,
+            "exclude_branch": parsed_exclude,
         },
         debug=True,
     )
