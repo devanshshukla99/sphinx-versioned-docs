@@ -18,6 +18,11 @@ loguru = "^0.7.0"
 sphinx = "^8.2.3"
 typer = "^0.20.0"
 
+[tool.poetry.group.test.dependencies]
+pytest = "^9.0.2"
+beautifulsoup4 = "^4.14.3"
+pytest-cov = "^7.0.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
